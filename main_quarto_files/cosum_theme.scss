@@ -1,0 +1,16 @@
+/* costum_theme.scss */
+
+/* 1) Define an obvious override to confirm it’s loading (test with bright color) */
+body {
+  background-color: pink;  // For quick visual test
+}
+
+/* 2) If you're using Quarto's built-in TOC variables, override them here */
+$toc-color: #921539;    // or a different color to confirm the override
+$toc-font-size: 1rem;
+$toc-active-border: 0.2rem solid #921539;
+
+/* 3) Optionally override hover states, etc. */
+.sidebar nav[role="doc-toc"] ul > li > a:hover {
+  color: #921539 !important;
+}

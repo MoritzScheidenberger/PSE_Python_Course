@@ -1,0 +1,119 @@
+
+/* Define the accent color as a CSS variable */
+:root {
+  --accent-color: #921539;  /* Example: Dodger Blue as the accent color */
+}
+
+/* Use the accent color for emphasized text (usually <em> elements) */
+
+
+/* Accent color for links */
+a {
+  color: #5f3d47; /* Replace with your preferred accent color */
+  text-decoration: none; /* Optional: remove underline */
+}
+
+a:hover {
+  color: var(--accent-color); /* Change color when the link is hovered over */
+  text-decoration: underline; /* Optional: underline on hover */
+}
+
+
+a.header-anchor {
+  color: var(--accent-color);       /* Set to your preferred accent color */
+}
+
+a.header-anchor:hover {
+  color: #5f3d47;       /* Hover color */
+}
+
+
+
+/* Old attempt at formatting the toc */
+/*
+/*
+/* Define the accent color as a CSS variable */
+/* This allows for easy adjustments of primary colors throughout the document */
+/*:root {*/
+/*  --accent-color: #921539; /* Your primary accent color */*/
+/*}*/
+
+/*
+/* ----- Global link styles ----- */
+/* Default link styling */
+/*a {*/
+/*  color: #5f3d47; /* Default link color */*/
+/*  text-decoration: none; /* Remove underlining for links */*/
+/*}*/
+
+/* Hover effect for links */
+/*a:hover {*/
+/*  color: var(--accent-color); /* Change to accent color on hover */*/
+/*  text-decoration: underline; /* Add underline on hover */*/
+/*}*/
+
+/*
+/* Header anchor link colors */
+/* Styling for anchors linked to headers */
+/*a.header-anchor {*/
+/*  color: var(--accent-color); /* Use the accent color for these links */*/
+/*}*/
+
+/* Hover effect for header anchor links */
+/*a.header-anchor:hover {*/
+/*  color: #5f3d47; /* Change to a specific shade on hover */*/
+/*}*/
+
+/*
+/* ----- TOC HOVER: Force red color on hover ----- */
+/* Styling for the table of contents links when hovered */
+/*.sidebar nav[role="doc-toc"] ul > li > a:hover {*/
+/*  color: red !important; /* Force red color on hover */*/
+/*}*/
+
+/*
+/* ----- TOC ACTIVE: Style the currently active section ----- */
+/* Styling for the active section in the TOC */
+/*.sidebar nav[role="doc-toc"] ul > li > a.active {*/
+/*  color: red !important; /* Active section link appears red */*/
+/*  background-color: transparent; /* No background color for active section */*/
+/*  font-weight: bold; /* Highlight active section link as bold */*/
+/*}*/
+
+/*
+/* ----- Subsections and Subsubsections in TOC ----- */
+/* Styling for subsection links in the TOC */
+/*.sidebar nav[role="doc-toc"] ul > li > ul > li > a {*/
+/*  color: red; /* Red color for subsection links */*/
+/*  font-weight: bold; /* Bold text for subsection links */*/
+/*}*/
+
+/* Styling for subsubsection links in the TOC */
+/*.sidebar nav[role="doc-toc"] ul > li > ul > li > ul > li > a {*/
+/*  color: red; /* Red color for subsubsection links */*/
+/*  font-weight: bold; /* Bold text for subsubsection links */*/
+/*}*/
+
+/*
+/* ----- Small Scroll Bar Styling for TOC ----- */
+/* Styling for the small scrollbar within the TOC */
+/*.sidebar nav[role="doc-toc"] {*/
+/*  scrollbar-width: thin; /* Use a thin scrollbar */*/
+/*  scrollbar-color: red transparent; /* Red scrollbar handle with a transparent track */*/
+/*}*/
+
+/* Styling for the scrollbar in WebKit browsers */
+/*.sidebar nav[role="doc-toc"]::-webkit-scrollbar {*/
+/*  width: 8px; /* Set the width of the scrollbar */*/
+/*}*/
+
+/* Styling for the scrollbar handle (thumb) */
+/*.sidebar nav[role="doc-toc"]::-webkit-scrollbar-thumb {*/
+/*  background-color: red; /* Set the scrollbar handle color to red */*/
+/*  border-radius: 4px; /* Add rounded corners to the scrollbar handle */*/
+/*}*/
+
+/* Styling for the scrollbar track (background area) */
+/*.sidebar nav[role="doc-toc"]::-webkit-scrollbar-track {*/
+/*  background-color: transparent; /* Make the scrollbar track transparent */*/
+/*}*/

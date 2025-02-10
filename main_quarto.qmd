@@ -1,5 +1,43 @@
 ---
-title: "Untitled"
-format: html
+title: |
+  ![](main_quarto_files/pse_logo.png){style="float: right; width: 100px;"}
+  Writing a Story
+subtitle: "Understanding the Impact of Uncertainty on Replacement Hiring"
+author: "Moritz Scheidenberger"
+date-modified: "today"
+abstract: "In the labor market, transitions in and out of unemployment are driven by two wheels.
+One wheel is the classical cycle of job creation and job destruction. Firms create jobs for which they hire unemployed workers. Simulatenously, some already filled jobs are destroyed and the associated workers become unemployed.
+The second wheel is driven by churn. Some already employed workers are hired by another firm and leave behind an empty position which, subsequently, may be filled by another already employed worker who themselves leaves behind a position. So the churn wheel keeps turning until the empty position is filled by a previously unemployed worker.
+The conventional view is that models of the labor market model can abstract from the churn wheel when mainly interested in unemployment dynamics. Since job creation must equal job destruction, the number of UE transitions is determined by the EU transitions. EE transitions offset eachother and do not matter for unemploymend dynamics. Yet, disregarding replacement hiring dynamics risks missing essential labor market effects when economic shocks alter firms' quit replacement decisions through mechanisms beyond the usual business cycle impact.
+I provide novel evidence that uncertainty shocks directly impact firms' replacement hiring decisions. The reluctance to rehire under uncertainty arises because firms treat existing positions as valuable but sunk investments, leading to a wait-and-see approach."
+
+format:
+  html:
+    theme:
+      light: flatly  # Set light mode as default
+      dark: darkly   # Fallback for dark mode
+    css: main_quarto_files/costum_style.css
+    include-in-header: main_quarto_files/force_light.js
+    fig-format: svg
+    fig-dpi: 600
+    code-fold: true
+    toc: true
+    toc-location: right
+    toc-title: "Contents"
+    toc-depth: 3
+    smooth-scroll: true
+
+title-block-style: "default"
+title-block-banner: "#921539"
+title-block-banner-color: "white"
+mainfont: "Segoe UI"
+
+number-sections: true
+
+execute:
+ cache: true
 ---
+
+# Data and Methodology
+
 
