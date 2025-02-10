@@ -17,7 +17,6 @@ format:
       light: flatly  # Set light mode as default
       dark: darkly   # Fallback for dark mode
     css: main_quarto_files/costum_style.css
-    include-in-header: main_quarto_files/force_light.js
     fig-format: svg
     fig-dpi: 600
     code-fold: true
@@ -34,10 +33,28 @@ mainfont: "Segoe UI"
 
 number-sections: true
 
-execute:
- cache: true
+jupyter: quarto_env  # Use the Conda environment
+#jupyter: python3
+
+#execute:
+# cache: true
+#execute:
+#  python-path: "C:/ProgramData/anaconda3/python.exe"  # Replace with your actual base Python path
 ---
 
 # Data and Methodology
 
+```{python}
 
+
+# Importing libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Sample Data
+data = {"Year": [2020, 2021, 2022], "Sales": [100, 150, 200]}
+df = pd.DataFrame(data)
+
+# Display DataFrame
+df
+```

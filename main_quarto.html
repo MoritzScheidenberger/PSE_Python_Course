@@ -21,10 +21,44 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="main_quarto_files/libs/clipboard/clipboard.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="main_quarto_files/libs/clipboard/clipboard.min.js"></script>
 <script src="main_quarto_files/libs/quarto-html/quarto.js"></script>
 <script src="main_quarto_files/libs/quarto-html/popper.min.js"></script>
 <script src="main_quarto_files/libs/quarto-html/tippy.umd.min.js"></script>
@@ -54,6 +88,9 @@ ul.task-list li input[type="checkbox"] {
 background: #921539;
       }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="main_quarto_files/costum_style.css">
@@ -92,13 +129,19 @@ background: #921539;
   <div>
     <div class="abstract">
       <div class="block-title">Abstract</div>
-      In the labor market, transitions in and out of unemployment are driven by two wheels. One wheel is the classical cycle of job creation and job destruction. Firms create jobs for which they hire unemployed workers. Simulatenously, some already filled jobs are destroyed and the associated workers become unemployed. The second wheel is driven by churn. Some already employed workers are hired by another firm and leave behind an empty position which, subsequently, may be filled by another already employed worker who themselves leaves behind a position. So the churn wheel keeps turning until the empty position is filled by a previously unemployed worker. In the standard labor market model, one can abstract from the churn wheel when mainly interested in unemployment dynamics. Since job creation must equal job destruction, the number of UE transitions is determined by the EU transitions. EE transitions offset eachother and do not matter for unemploymend dynamics. Yet, disregarding replacement hiring dynamics risks missing essential labor market effects when economic shocks alter firms’ quit replacement decisions through mechanisms beyond the usual business cycle impact. I provide novel evidence that uncertainty shocks directly impact firms’ replacement hiring decisions. The reluctance to rehire under uncertainty arises because firms treat existing positions as valuable but sunk investments, leading to a wait-and-see approach.
+      In the labor market, transitions in and out of unemployment are driven by two wheels. One wheel is the classical cycle of job creation and job destruction. Firms create jobs for which they hire unemployed workers. Simulatenously, some already filled jobs are destroyed and the associated workers become unemployed. The second wheel is driven by churn. Some already employed workers are hired by another firm and leave behind an empty position which, subsequently, may be filled by another already employed worker who themselves leaves behind a position. So the churn wheel keeps turning until the empty position is filled by a previously unemployed worker. The conventional view is that models of the labor market model can abstract from the churn wheel when mainly interested in unemployment dynamics. Since job creation must equal job destruction, the number of UE transitions is determined by the EU transitions. EE transitions offset eachother and do not matter for unemploymend dynamics. Yet, disregarding replacement hiring dynamics risks missing essential labor market effects when economic shocks alter firms’ quit replacement decisions through mechanisms beyond the usual business cycle impact. I provide novel evidence that uncertainty shocks directly impact firms’ replacement hiring decisions. The reluctance to rehire under uncertainty arises because firms treat existing positions as valuable but sunk investments, leading to a wait-and-see approach.
     </div>
   </div>
   
   </header><div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-  
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul>
+  <li><a href="#data-and-methodology" id="toc-data-and-methodology" class="nav-link active" data-scroll-target="#data-and-methodology"><span class="header-section-number">1</span> Data and Methodology</a></li>
+  </ul>
+</nav>
 </div>
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -106,7 +149,57 @@ background: #921539;
 
 
 
+<section id="data-and-methodology" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Data and Methodology</h1>
+<div id="84ac48c5" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Importing libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample Data</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {<span class="st">"Year"</span>: [<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>], <span class="st">"Sales"</span>: [<span class="dv">100</span>, <span class="dv">150</span>, <span class="dv">200</span>]}</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Display DataFrame</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div>
 
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Sales</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2020</td>
+<td>100</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2021</td>
+<td>150</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2022</td>
+<td>200</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
 
 </main>
 <!-- /main column -->
