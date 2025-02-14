@@ -36,25 +36,513 @@ number-sections: true
 jupyter: quarto_env  # Use the Conda environment
 #jupyter: python3
 
-#execute:
-# cache: true
-#execute:
-#  python-path: "C:/ProgramData/anaconda3/python.exe"  # Replace with your actual base Python path
+execute:
+#  cache: true # Breaks things with pyhton code
+ freeze: auto
+
 ---
 
 # Data and Methodology
 
+## File Naming Convention for LEHD Data
+
+The LEHD provides various data sets for the US based on Census data. ...
+
+<details>
+<summary> **LEHD Data Naming Convention** (Click to Expand)</summary>
+
+| **Component** | **Code** | **Description** |
+|--------------|---------|----------------|
+| **GEOHI (Geography Identifier)** | `all` | All available states |
+| | `us` | National data (50 states + DC) |
+| | `metro` | CBSA-level collection (metropolitan areas) |
+| | `[st]` | Two-letter state postal code (e.g., `ca` for California) |
+| | `[NNNNN]` | CBSA-derived code for metro areas |
+| **DEMO (Demographic Breakdown)** | `d` | No demographic detail |
+| | `rh` | Race by Ethnicity |
+| | `sa` | Sex by Age |
+| | `se` | Sex by Education |
+| | `sarhe` | Combined `sa`, `rh`, and `se` |
+| **FAS (Firm Age & Size Breakdown)** | `f` | No firm size or age breakdown |
+| | `fa` | Firm age tabulations |
+| | `fs` | Firm size tabulations |
+| **GEOCAT (Geographic Category)** | `gb` | Metropolitan (complete) |
+| | `gc` | Counties |
+| | `gm` | Metropolitan/Micropolitan (state parts) |
+| | `gn` | National (50 States + DC) |
+| | `gs` | States |
+| | `gw` | Workforce Investment Areas |
+| **INDCAT (Industry Classification)** | `n` | All industries |
+| | `ns` | NAICS sectors |
+| | `n3` | NAICS subsectors |
+| | `n4` | NAICS industry groups |
+| **OWNCAT (Ownership Classification)** | `of` | Federal Government |
+| | `op` | All Private |
+| | `oslp` | State, Local, and Private ownership |
+| **SA (Seasonal Adjustment)** | `s` | Seasonally adjusted |
+| | `u` | Not seasonally adjusted |
+| **EXT (File Format)** | `csv` | Comma-Separated file |
+| | `pdf` | Printable PDF |
+| | `xls` | Excel (limited availability) |
+| | `xlsx` | Excel (not available for large files) |
+*Source: [LEHD CSV Naming Convention](https://lehd.ces.census.gov/data/schema/V4.12.0/lehd_csv_naming.html)*
+
+**Quick Example Breakdown**
+- **qwi** → Quarterly Workforce Indicators (QWI) Counts
+- **us** → National-level data
+- **sa** → Sex by Age
+- **f** → No firm size or age breakdown
+- **gn** → National (50 states + DC)
+- **ns** → NAICS sectors
+- **op** → All Private ownership
+- **u** → Not seasonally adjusted
+
+</details>
+
+<span style="color: red;">**Note: National QWI data is only available for Private ownership!**</span>
+
+---
+
 ```{python}
+#| label: obtain_data
+#| echo: true
 
+## Downloading and extracting the data
 
-# Importing libraries
+import os
+import requests
+import gzip
+import shutil
 import pandas as pd
+from bs4 import BeautifulSoup
+
+# Base URL
+BASE_URL = "https://lehd.ces.census.gov/data/qwi/latest_release/us/"
+
+# Directory setup
+BASE_PATH = r"C:\Users\moritz\Nextcloud\PhD\Projects\uncertainty_labor\data"
+DOWNLOAD_DIR = os.path.join(BASE_PATH, "qwi_data")
+EXTRACT_DIR = os.path.join(BASE_PATH, "qwi_extracted")
+os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+os.makedirs(EXTRACT_DIR, exist_ok=True)
+
+# User-defined filter (Set to None for all files, or specify exact match criteria)
+FILTER_CRITERIA = "qwi_us_sa_f_gn_ns_op_u.csv.gz"  # Specify the exact filename needed
+# turns out that not all versions of the data are available through this site. Seasonally adjusted is not.
+
+# Fetch webpage content
+response = requests.get(BASE_URL)
+if response.status_code != 200:
+    print("Failed to access the website")
+    exit()
+
+# Parse HTML
+soup = BeautifulSoup(response.text, "html.parser")
+
+# Extract .csv.gz file links
+file_links = [BASE_URL + a['href'] for a in soup.find_all('a', href=True) if a['href'].endswith('.csv.gz')]
+
+# Apply exact filename filtering
+if FILTER_CRITERIA:
+    file_links = [link for link in file_links if FILTER_CRITERIA in link]
+
+if not file_links:
+    print("No matching CSV files found.")
+else:
+    print(f"Found {len(file_links)} CSV file matching criteria. Downloading...")
+
+    for file_url in file_links:
+        file_name = os.path.join(DOWNLOAD_DIR, os.path.basename(file_url))
+
+        # Download file
+        with requests.get(file_url, stream=True) as r:
+            with open(file_name, "wb") as f:
+                for chunk in r.iter_content(chunk_size=8192):
+                    f.write(chunk)
+        print(f"Downloaded: {file_name}")
+
+        # Extract file
+        extracted_file_name = os.path.join(EXTRACT_DIR, os.path.basename(file_name).replace(".gz", ""))
+        with gzip.open(file_name, 'rb') as f_in:
+            with open(extracted_file_name, 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+        print(f"Extracted: {extracted_file_name}")
+
+        # Read the CSV
+        df = pd.read_csv(extracted_file_name)
+        print(df.head())  # Display first few rows
+
+print("Data downloaded & extracted successfully.")
+
+# Load dataset into a DataFrame for further analysis
+def load_qwi_data():
+    data_path = os.path.join(EXTRACT_DIR, FILTER_CRITERIA.replace(".gz", ""))
+    if os.path.exists(data_path):
+        df = pd.read_csv(data_path)
+        print("Data successfully loaded.")
+        return df
+    else:
+        print("Extracted file not found.")
+        return None
+
+```
+
+---
+Now let's take a quick look at the data to know what we are working with and how to proceed.
+
+```{python}
+#| label: select_data
+#| echo: true
+
+## Work with the data
+
+# Take a look at all the different variables
+df_qwi = load_qwi_data()
+if df_qwi is not None:
+    print("Column Names (formatted):")
+    import textwrap
+column_list = " | ".join(df_qwi.columns)
+print(textwrap.fill(column_list, width=100))
+display(df_qwi)
+
+# Print unique values for specific columns
+columns_to_check = ["seasonadj", "geo_level", "ind_level", "industry", "ownercode", "sex", "agegrp",
+                    "race", "ethnicity", "education", "firmage", "firmsize"]  # Adjust column names as needed
+
+for col in columns_to_check:
+    if col in df_qwi.columns:
+        unique_values = ", ".join(map(str, sorted(df_qwi[col].dropna().unique())))
+        print(f"{col}: {unique_values}")
+    else:
+        print(f"Warning: Column '{col}' not found in DataFrame.")
+
+```
+
+Now that we can see the data and know which variables have various cateogries, we can proceed by extracting the time series that we are most interested in.
+
+The variables typically contained in the QWI data follow in a table below:
+
+
+<details>
+<summary> **Variables Table** (Click to Expand)</summary>
+
+| Indicator Variable | Alternate Name | Status Flag | Indicator Name | Description | Units | Concept | Base |
+|-------------------|---------------|-------------|---------------|-------------|-------|---------|------|
+| Emp | B | sEmp | Beginning-of-Quarter Employment | Estimate of the total number of jobs on the first day of the reference quarter | Count | Employment | 1 |
+| EmpEnd | E | sEmpEnd | End-of-Quarter Employment | Estimate of the number of jobs on the last day of the quarter | Count | Employment | 1 |
+| EmpS | F | sEmpS | Full-Quarter Employment (Stable) | Estimate of stable jobs - the number of jobs that are held on both the first and last day of the quarter with the same employer | Count | Employment | 1 |
+| EmpTotal | M | sEmpTotal | Employment - Reference Quarter | Estimated count of people employed in a firm at any time during the quarter | Count | Employment | 1 |
+| EmpSpv | Fpv | sEmpSpv | Full-Quarter Employment in the Previous Quarter | Estimate of stable jobs in the quarter before the reference quarter | Count | Employment | 1 |
+| HirA | A | sHirA | Hires (All Accessions) | Estimated number of workers who started a new job in the specified quarter | Count | Hire | 1 |
+| HirN | H | sHirN | New Hires | Estimated number of workers who started a new job excluding recall hires | Count | Hire | 1 |
+| HirR | R | sHirR | Recall Hires | Estimated number of workers who returned to the same employer where they had worked within the previous year | Count | Hire | 1 |
+| Sep | S | sSep | Separations (All) | Estimated number of workers whose job with a given employer ended in the specified quarter | Count | Separation | 1 |
+| HirAEnd | CA | sHirAEnd | End-of-Quarter Hires | Estimated number of workers who started a new job in the specified quarter, which continued into next quarter | Count | Hire | 1 |
+| SepBeg | CS | sSepBeg | Beginning-of-Quarter Separations | Estimated number of workers whose job in the previous quarter continued and ended in the given quarter | Count | Separation | 1 |
+| HirAEndRepl | EI | sHirAEndRepl | Replacement Hires | Hires into continuous quarter employment in excess of job creation | Count | Hire | 1 |
+| HirAEndR | CAR | sHirAEndR | End-of-Quarter Hiring Rate | Hires as a percent of average employment | Rate | Hire | (Emp + EmpEnd)/2 |
+| SepBegR | CSR | sSepBegR | Beginning-of-Quarter Separation Rate | Separations as a percent of average employment | Rate | Separation | (Emp + EmpEnd)/2 |
+| HirAEndReplR | EIR | sHirAEndReplR | Replacement Hiring Rate | Replacement hires as a percent of the average of beginning- and end-of-quarter employment | Rate | Hire | (Emp + EmpEnd)/2 |
+| HirAS | FA | sHirAS | Hires (All Hires into Full-Quarter Employment) | Estimated number of workers that started a job that lasted at least one full quarter with a given employer | Count | Hire | 1 |
+| HirNS | FH | sHirNS | New Hires (New Hires into Full-Quarter Employment) | Estimated number of workers who started a job that they had not held within the past year and the job turned into a job that lasted at least a full quarter with a given employer | Count | Hire | 1 |
+| SepS | FS | sSepS | Separations (Flows out of Full-Quarter Employment) | Estimated number of workers who had a job for at least a full quarter and then the job ended | Count | Separation | 1 |
+| SepSnx | FSnx | sSepSnx | Separations in the Next Quarter (Flows out of Full-Quarter Employment) | Estimated number of workers in the next quarter who had a job for at least a full quarter and then the job ended | Count | Separation | 1 |
+| TurnOvrS | FT | sTurnOvrS | Turnover (Stable) | The rate at which stable jobs begin and end | Rate | Turnover | 2*EmpS |
+| FrmJbGn | JC | sFrmJbGn | Firm Job Gains (Job Creation) | Estimated number of jobs gained at firms throughout the quarter | Count | Job Flows | 1 |
+| FrmJbLs | JD | sFrmJbLs | Firm Job Loss (Job Destruction) | Estimated number of jobs lost at firms throughout the quarter | Count | Job Flows | 1 |
+| FrmJbC | JF | sFrmJbC | Firm Job Change (Net Change) | Difference between firm job gain and firm job loss | Count | Job Flows | 1 |
+| FrmJbGnS | FJC | sFrmJbGnS | Firm Job Gains (Stable) | Estimated number of full-quarter jobs gained at firms | Count | Job Flows | 1 |
+| FrmJbLsS | FJD | sFrmJbLsS | Firm Job Loss (Stable) | Estimated number of full-quarter jobs lost at firms | Count | Job Flows | 1 |
+| FrmJbCS | FJF | sFrmJbCS | Firm Job Change (Stable; Net Change) | Net growth in jobs that last a full quarter | Count | Job Flows | 1 |
+| EarnS | ZW3 | sEarnS | Average Monthly Earnings (Full-Quarter Employment) | Average monthly earnings of employees with stable jobs | Dollars | Earnings | EmpS |
+| EarnBeg | ZW2B | sEarnBeg | Average Monthly Earnings (Beginning-of-Quarter Employment) | Average monthly earnings of employees who worked on the first day of the reference quarter | Dollars | Earnings | Emp |
+| EarnHirAS | ZWFA | sEarnHirAS | Average Monthly Earnings (All Hires into Full-Quarter Employment) | Average monthly earnings for workers who started a job that turned into a job lasting a full quarter | Dollars | Earnings | HirAS |
+| EarnHirNS | ZWFH | sEarnHirNS | Average Monthly Earnings (New Hires into Full-Quarter Employment) | Average monthly earnings of newly stable employees | Dollars | Earnings | HirNS |
+| EarnSepS | ZWFS | sEarnSepS | Average Monthly Earnings (Flows out of Full-Quarter Employment) | Average monthly earnings of separations from full-quarter status at an establishment | Dollars | Earnings | SepSnx |
+| Payroll | W1 | sPayroll | Total Quarterly Payroll | Total quarterly payroll for all jobs | Dollars | Earnings | 1 |
+
+*Source: [LEHD Public Use Schema](https://lehd.ces.census.gov/data/schema/V4.12.0/lehd_public_use_schema.html)*
+</details>
+
+
+
+<details>
+<summary> **Categorical Variables Table** (Click to Expand)</summary>
+
+**5.1. Agegrp**
+
+| **agegrp** | **Label** |
+|-----------|--------------------------------|
+| A00       | All Ages (14-99)               |
+| A01       | 14-18                          |
+| A02       | 19-21                          |
+| A03       | 22-24                          |
+| A04       | 25-34                          |
+| A05       | 35-44                          |
+| A06       | 45-54                          |
+| A07       | 55-64                          |
+| A08       | 65-99                          |
+
+**5.2. Education**
+
+| **education** | **Label** |
+|--------------|--------------------------------------------------------|
+| E0          | All Education Categories                              |
+| E1          | Less than high school                                 |
+| E2          | High school or equivalent, no college                 |
+| E3          | Some college or Associate degree                      |
+| E4          | Bachelor’s degree or advanced degree                  |
+| E5          | Educational attainment not available (workers < 24)    |
+
+**5.3. Ethnicity**
+
+| **ethnicity** | **Label** |
+|-------------|---------------------------|
+| A0          | All Ethnicities            |
+| A1          | Not Hispanic or Latino     |
+| A2          | Hispanic or Latino         |
+
+**5.4. Firmage**
+
+| **firmage** | **Label** |
+|-----------|------------------------------|
+| 0         | All Firm Ages                |
+| 1         | 0-1 Years                    |
+| 2         | 2-3 Years                    |
+| 3         | 4-5 Years                    |
+| 4         | 6-10 Years                   |
+| 5         | 11+ Years                    |
+| N         | Firm Age Not Available       |
+
+**5.5. Firmsize**
+
+| **firmsize** | **Label** |
+|------------|------------------------------|
+| 0         | All Firm Sizes                |
+| 1         | 0-19 Employees                |
+| 2         | 20-49 Employees               |
+| 3         | 50-249 Employees              |
+| 4         | 250-499 Employees             |
+| 5         | 500+ Employees                |
+| N         | Firm Size Not Available       |
+
+**5.6. Ownercode**
+
+| **ownercode** | **Label** |
+|-------------|------------------------------------------|
+| A00        | State and local government + private    |
+| A01        | Federal government                      |
+| A05        | All Private                             |
+
+**5.7. Periodicity**
+
+| **periodicity** | **Label** |
+|--------------|-----------------|
+| A          | Annual data      |
+| Q          | Quarterly data   |
+
+**5.8. Quarter**
+
+| **quarter** | **Label** |
+|---------|------------------------------------|
+| 1       | 1st Quarter (Jan-Mar)            |
+| 2       | 2nd Quarter (Apr-Jun)            |
+| 3       | 3rd Quarter (Jul-Sep)            |
+| 4       | 4th Quarter (Oct-Dec)            |
+
+**5.9. Race**
+
+| **race** | **Label** |
+|--------|---------------------------------------------|
+| A0     | All Races                                  |
+| A1     | White Alone                                |
+| A2     | Black or African American Alone           |
+| A3     | American Indian or Alaska Native Alone    |
+| A4     | Asian Alone                               |
+| A5     | Native Hawaiian or Other Pacific Islander |
+| A6     | Some Other Race Alone (Not Used)         |
+| A7     | Two or More Race Groups                   |
+
+**5.10. Seasonadj**
+
+| **seasonadj** | **Label** |
+|-----------|-----------------------|
+| S         | Seasonally adjusted   |
+| U         | Not seasonally adjusted |
+
+**5.11. Sex**
+
+| **sex** | **Label** |
+|------|--------------|
+| 0    | All Sexes   |
+| 1    | Male       |
+| 2    | Female     |
+
+
+**5.12.1. Industry Levels**
+
+| **ind_level** | **Label** |
+|-------------|----------------------|
+| A         | All Industries       |
+| S         | NAICS Sectors        |
+| 3         | NAICS Subsectors     |
+| 4         | NAICS Industry Groups |
+
+**5.12.2. Industry**
+
+| **industry** | **Label** | **ind_level** |
+|------------|-------------------------------------------------|-------------|
+| 00         | All NAICS Sectors                               | A           |
+| 000        | All NAICS Subsectors                           | A           |
+| 0000       | All NAICS Industry Groups                     | A           |
+| 11         | Agriculture, Forestry, Fishing and Hunting    | S           |
+| 111        | Crop Production                               | 3           |
+| 1111       | Oilseed and Grain Farming                    | 4           |
+| 1112       | Vegetable and Melon Farming                  | 4           |
+| ...        | ...                                           | ...         |
+| 2383       | Building Finishing Contractors               | 4           |
+| 2389       | Other Specialty Trade Contractors            | 4           |
+| 31-33      | Manufacturing                                | S           |
+| 311        | Food Manufacturing                          | 3           |
+| 3111       | Animal Food Manufacturing                   | 4           |
+| 3112       | Grain and Oilseed Milling                   | 4           |
+| 3113       | Sugar and Confectionery Product Manufacturing | 4           |
+| ...        | ...                                           | ...         |
+
+
+**5.13. Degree Level**
+
+| **degree_level** | **Label** |
+|--------------|----------------------------------|
+| 00         | All Degree Levels                |
+| 01         | Certificate < 1 year             |
+| 02         | Certificate 1-2 years            |
+| 03         | Associate's Degree               |
+| 04         | Certificate 2-4 years            |
+| 05         | Baccalaureate                     |
+| 06         | Post-Baccalaureate Certificate   |
+| 07         | Master's Degree                  |
+| 08         | Post-Master's Certificate        |
+| 17         | Doctoral - Research/Scholarship  |
+| 18         | Doctoral - Professional Practice |
+
+*Source: [LEHD Public Use Schema](https://lehd.ces.census.gov/data/schema/V4.12.0/lehd_public_use_schema.html)*
+
+<details>
+
+
+```{python}
+#| label: View_the_data
+#| echo: true
+
+
+## Create date variable
+df_qwi_filtered = df_qwi[
+    (df_qwi["sex"] == 0) &
+    (df_qwi["agegrp"] == "A00") &
+    (df_qwi["industry"] == "00") &
+    (df_qwi["ind_level"] == "A")
+].copy() # copy here for sure to not mess up pointers!
+
+df_qwi_filtered["date"] = pd.PeriodIndex(
+    df_qwi_filtered["year"].astype(str) + "Q" + df_qwi_filtered["quarter"].astype(str),
+    freq="Q"
+).to_timestamp()
+
+
+## Seasonal adjustment
+import os
+import statsmodels.api as sm
+
+# Set the correct path to X-13ARIMA-SEATS (Adjust path if necessary)
+os.environ["X13PATH"] = r"C:\Users\moritz\.conda\envs\quarto_env\Library\bin"
+
+## Ensure the date column exists before filtering
+df_qwi["date"] = pd.PeriodIndex(
+    df_qwi["year"].astype(str) + "Q" + df_qwi["quarter"].astype(str),
+    freq="Q"
+).to_timestamp()
+
+# Filter the dataset
+df_qwi_filtered = df_qwi[
+    (df_qwi["sex"] == 0) &
+    (df_qwi["agegrp"] == "A00") &
+    (df_qwi["industry"] == "00") &
+    (df_qwi["ind_level"] == "A")
+].copy()
+
+# Create a new DataFrame with only the date column
+df_sa = pd.DataFrame({"date": df_qwi_filtered["date"]})
+df_sa = df_sa.set_index("date")  # Set date as index
+
+# List of series to be seasonally adjusted
+columns_to_adjust = ["HirAEndRepl"]  # Add more column names as needed
+
+# Apply seasonal adjustment for each variable
+for col in columns_to_adjust:
+    if col in df_qwi_filtered.columns:
+        df_qwi_filtered = df_qwi_filtered.set_index("date")  # Ensure date is the index
+        df_qwi_filtered = df_qwi_filtered.dropna(subset=[col])  # Drop NaNs to avoid issues
+
+        # Apply X-13ARIMA-SEATS
+        df_sa[col + "_sa"] = sm.tsa.x13_arima_analysis(
+            df_qwi_filtered[col],
+            freq="Q"
+        ).seasadj
+
+# Reset index for plotting
+df_sa = df_sa.reset_index()
+
+# Display the new seasonally adjusted DataFrame
+import ace_tools as tools
+tools.display_dataframe_to_user(name="Seasonally Adjusted Data", dataframe=df_sa)
+
+
+## Plotting
 import matplotlib.pyplot as plt
 
-# Sample Data
-data = {"Year": [2020, 2021, 2022], "Sales": [100, 150, 200]}
-df = pd.DataFrame(data)
+# Plot HirAEndRepl over time
+plt.figure(figsize=(10, 5))
+plt.plot(df_qwi_filtered["date"], df_qwi_filtered["HirAEndRepl"], marker="o", linestyle="-")
 
-# Display DataFrame
-df
+# Labels and title
+plt.xlabel("Date")
+plt.ylabel("HirAEndRepl")
+plt.title("Hiring Activity Over Time")
+
+# Improve readability
+plt.xticks(rotation=45)
+plt.grid(True)
+
+# Show the plot
+plt.show()
+
+import matplotlib.pyplot as plt
+
+# Plot HirAEndRepl over time
+plt.figure(figsize=(10, 5))
+plt.plot(df_qwi_filtered["date"], df_qwi_filtered["HirAEndRepl"], marker="o", linestyle="-")
+
+# Labels and title
+plt.xlabel("Date")
+plt.ylabel("HirAEndRepl")
+plt.title("Hiring Activity Over Time")
+
+# Improve readability
+plt.xticks(rotation=45)
+plt.grid(True)
+
+# Show the plot
+plt.show()
+
+
 ```
+
+
+::: {layout-ncol=2}
+<div style="text-align: center;">
+  ![](quarto_data_story_files/figure-html/employment-1.svg){.lightbox}
+  <div style="font-size: 10px; width: 100%; text-align: justify;">Notes.</div>
+</div>
+
+:::

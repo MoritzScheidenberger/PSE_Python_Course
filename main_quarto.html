@@ -120,7 +120,7 @@ background: #921539;
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">February 10, 2025</p>
+        <p class="date-modified">February 11, 2025</p>
       </div>
     </div>
       
@@ -139,7 +139,10 @@ background: #921539;
     <h2 id="toc-title">Contents</h2>
    
   <ul>
-  <li><a href="#data-and-methodology" id="toc-data-and-methodology" class="nav-link active" data-scroll-target="#data-and-methodology"><span class="header-section-number">1</span> Data and Methodology</a></li>
+  <li><a href="#data-and-methodology" id="toc-data-and-methodology" class="nav-link active" data-scroll-target="#data-and-methodology"><span class="header-section-number">1</span> Data and Methodology</a>
+  <ul class="collapse">
+  <li><a href="#file-naming-convention-for-lehd-data" id="toc-file-naming-convention-for-lehd-data" class="nav-link" data-scroll-target="#file-naming-convention-for-lehd-data"><span class="header-section-number">1.1</span> File Naming Convention for LEHD Data</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -151,21 +154,344 @@ background: #921539;
 
 <section id="data-and-methodology" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Data and Methodology</h1>
-<div id="84ac48c5" class="cell" data-execution_count="1">
+<section id="file-naming-convention-for-lehd-data" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="file-naming-convention-for-lehd-data"><span class="header-section-number">1.1</span> File Naming Convention for LEHD Data</h2>
+<p>The LEHD provides various data sets for the US based on Census data. …</p>
+<details>
+<summary>
+<strong>LEHD Data Naming Convention</strong> (Click to Expand)
+</summary>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 23%">
+<col style="width: 41%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Component</strong></th>
+<th><strong>Code</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>GEOHI (Geography Identifier)</strong></td>
+<td><code>all</code></td>
+<td>All available states</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>us</code></td>
+<td>National data (50 states + DC)</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>metro</code></td>
+<td>CBSA-level collection (metropolitan areas)</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>[st]</code></td>
+<td>Two-letter state postal code (e.g., <code>ca</code> for California)</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>[NNNNN]</code></td>
+<td>CBSA-derived code for metro areas</td>
+</tr>
+<tr class="even">
+<td><strong>DEMO (Demographic Breakdown)</strong></td>
+<td><code>d</code></td>
+<td>No demographic detail</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>rh</code></td>
+<td>Race by Ethnicity</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>sa</code></td>
+<td>Sex by Age</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>se</code></td>
+<td>Sex by Education</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>sarhe</code></td>
+<td>Combined <code>sa</code>, <code>rh</code>, and <code>se</code></td>
+</tr>
+<tr class="odd">
+<td><strong>FAS (Firm Age &amp; Size Breakdown)</strong></td>
+<td><code>f</code></td>
+<td>No firm size or age breakdown</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>fa</code></td>
+<td>Firm age tabulations</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>fs</code></td>
+<td>Firm size tabulations</td>
+</tr>
+<tr class="even">
+<td><strong>GEOCAT (Geographic Category)</strong></td>
+<td><code>gb</code></td>
+<td>Metropolitan (complete)</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>gc</code></td>
+<td>Counties</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>gm</code></td>
+<td>Metropolitan/Micropolitan (state parts)</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>gn</code></td>
+<td>National (50 States + DC)</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>gs</code></td>
+<td>States</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>gw</code></td>
+<td>Workforce Investment Areas</td>
+</tr>
+<tr class="even">
+<td><strong>INDCAT (Industry Classification)</strong></td>
+<td><code>n</code></td>
+<td>All industries</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>ns</code></td>
+<td>NAICS sectors</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>n3</code></td>
+<td>NAICS subsectors</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>n4</code></td>
+<td>NAICS industry groups</td>
+</tr>
+<tr class="even">
+<td><strong>OWNCAT (Ownership Classification)</strong></td>
+<td><code>of</code></td>
+<td>Federal Government</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>op</code></td>
+<td>All Private</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>oslp</code></td>
+<td>State, Local, and Private ownership</td>
+</tr>
+<tr class="odd">
+<td><strong>SA (Seasonal Adjustment)</strong></td>
+<td><code>s</code></td>
+<td>Seasonally adjusted</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>u</code></td>
+<td>Not seasonally adjusted</td>
+</tr>
+<tr class="odd">
+<td><strong>EXT (File Format)</strong></td>
+<td><code>csv</code></td>
+<td>Comma-Separated file</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>pdf</code></td>
+<td>Printable PDF</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>xls</code></td>
+<td>Excel (limited availability)</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>xlsx</code></td>
+<td>Excel (not available for large files)</td>
+</tr>
+</tbody>
+</table>
+<p><em>Source: <a href="https://lehd.ces.census.gov/data/schema/V4.12.0/lehd_csv_naming.html">LEHD CSV Naming Convention</a></em></p>
+<p><strong>Quick Example Breakdown</strong> - <strong>qwi</strong> → Quarterly Workforce Indicators (QWI) Counts - <strong>us</strong> → National-level data - <strong>sa</strong> → Sex by Age - <strong>f</strong> → No firm size or age breakdown - <strong>gn</strong> → National (50 states + DC) - <strong>ns</strong> → NAICS sectors - <strong>op</strong> → All Private ownership - <strong>u</strong> → Not seasonally adjusted</p>
+</details>
+<p><span style="color: red;"><strong>Note: National QWI data is only available for Private ownership!</strong></span></p>
+<hr>
+<div id="796dc26f" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Importing libraries</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample Data</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {<span class="st">"Year"</span>: [<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>], <span class="st">"Sales"</span>: [<span class="dv">100</span>, <span class="dv">150</span>, <span class="dv">200</span>]}</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(data)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Display DataFrame</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Downloading and extracting the data</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gzip</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> shutil</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Base URL</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>BASE_URL <span class="op">=</span> <span class="st">"https://lehd.ces.census.gov/data/qwi/latest_release/us/"</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Directory setup</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>BASE_PATH <span class="op">=</span> <span class="vs">r"C:\Users\moritz\Nextcloud\PhD\Projects\uncertainty_labor\data"</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>DOWNLOAD_DIR <span class="op">=</span> os.path.join(BASE_PATH, <span class="st">"qwi_data"</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>EXTRACT_DIR <span class="op">=</span> os.path.join(BASE_PATH, <span class="st">"qwi_extracted"</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>os.makedirs(DOWNLOAD_DIR, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>os.makedirs(EXTRACT_DIR, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># User-defined filter (Set to None for all files, or specify exact match criteria)</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>FILTER_CRITERIA <span class="op">=</span> <span class="st">"qwi_us_sa_f_gn_ns_op_u.csv.gz"</span>  <span class="co"># Specify the exact filename needed</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch webpage content</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(BASE_URL)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> response.status_code <span class="op">!=</span> <span class="dv">200</span>:</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Failed to access the website"</span>)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    exit()</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Parse HTML</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>soup <span class="op">=</span> BeautifulSoup(response.text, <span class="st">"html.parser"</span>)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract .csv.gz file links</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>file_links <span class="op">=</span> [BASE_URL <span class="op">+</span> a[<span class="st">'href'</span>] <span class="cf">for</span> a <span class="kw">in</span> soup.find_all(<span class="st">'a'</span>, href<span class="op">=</span><span class="va">True</span>) <span class="cf">if</span> a[<span class="st">'href'</span>].endswith(<span class="st">'.csv.gz'</span>)]</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply exact filename filtering</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> FILTER_CRITERIA:</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    file_links <span class="op">=</span> [link <span class="cf">for</span> link <span class="kw">in</span> file_links <span class="cf">if</span> FILTER_CRITERIA <span class="kw">in</span> link]</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> file_links:</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"No matching CSV files found."</span>)</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Found </span><span class="sc">{</span><span class="bu">len</span>(file_links)<span class="sc">}</span><span class="ss"> CSV file matching criteria. Downloading..."</span>)</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> file_url <span class="kw">in</span> file_links:</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>        file_name <span class="op">=</span> os.path.join(DOWNLOAD_DIR, os.path.basename(file_url))</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Download file</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> requests.get(file_url, stream<span class="op">=</span><span class="va">True</span>) <span class="im">as</span> r:</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> <span class="bu">open</span>(file_name, <span class="st">"wb"</span>) <span class="im">as</span> f:</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> chunk <span class="kw">in</span> r.iter_content(chunk_size<span class="op">=</span><span class="dv">8192</span>):</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>                    f.write(chunk)</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Downloaded: </span><span class="sc">{</span>file_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Extract file</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>        extracted_file_name <span class="op">=</span> os.path.join(EXTRACT_DIR, os.path.basename(file_name).replace(<span class="st">".gz"</span>, <span class="st">""</span>))</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> gzip.<span class="bu">open</span>(file_name, <span class="st">'rb'</span>) <span class="im">as</span> f_in:</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> <span class="bu">open</span>(extracted_file_name, <span class="st">'wb'</span>) <span class="im">as</span> f_out:</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>                shutil.copyfileobj(f_in, f_out)</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Extracted: </span><span class="sc">{</span>extracted_file_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Read the CSV</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>        df <span class="op">=</span> pd.read_csv(extracted_file_name)</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(df.head())  <span class="co"># Display first few rows</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data downloaded &amp; extracted successfully."</span>)</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="co"># Load dataset into a DataFrame for further analysis</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_qwi_data():</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>    data_path <span class="op">=</span> os.path.join(EXTRACT_DIR, FILTER_CRITERIA.replace(<span class="st">".gz"</span>, <span class="st">""</span>))</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> os.path.exists(data_path):</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>        df <span class="op">=</span> pd.read_csv(data_path)</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Data successfully loaded."</span>)</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> df</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Extracted file not found."</span>)</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="1">
+<div class="cell-output cell-output-stdout">
+<pre><code>Found 1 CSV file matching criteria. Downloading...
+Downloaded: C:\Users\moritz\Nextcloud\PhD\Projects\uncertainty_labor\data\qwi_data\qwi_us_sa_f_gn_ns_op_u.csv.gz
+Extracted: C:\Users\moritz\Nextcloud\PhD\Projects\uncertainty_labor\data\qwi_extracted\qwi_us_sa_f_gn_ns_op_u.csv
+  periodicity seasonadj geo_level  geography ind_level industry ownercode  \
+0           Q         U         N          0         A       00       A05   
+1           Q         U         N          0         A       00       A05   
+2           Q         U         N          0         A       00       A05   
+3           Q         U         N          0         A       00       A05   
+4           Q         U         N          0         A       00       A05   
+
+   sex agegrp race  ... sFrmJbC sFrmJbGnS  sFrmJbLsS  sFrmJbCS  sEarnS  \
+0    0    A00   A0  ...      -1        -1         -1        -1      -1   
+1    0    A01   A0  ...      -1        -1         -1        -1      -1   
+2    0    A02   A0  ...      -1        -1         -1        -1      -1   
+3    0    A03   A0  ...      -1        -1         -1        -1      -1   
+4    0    A04   A0  ...      -1        -1         -1        -1      -1   
+
+   sEarnBeg  sEarnHirAS  sEarnHirNS  sEarnSepS  sPayroll  
+0        -1          -1          -1         -1         5  
+1        -1          -1          -1         -1         5  
+2        -1          -1          -1         -1         5  
+3        -1          -1          -1         -1         5  
+4        -1          -1          -1         -1         5  
+
+[5 rows x 80 columns]
+Data downloaded &amp; extracted successfully.</code></pre>
+</div>
+</div>
+<hr>
+<p>Now let’s take a quick look at the data to know what we are working with and how to proceed.</p>
+<div id="aecd594a" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Work with the data</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Take a look at all the different variables</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df_qwi <span class="op">=</span> load_qwi_data()</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> df_qwi <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Column Names (formatted):"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> textwrap</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>column_list <span class="op">=</span> <span class="st">" | "</span>.join(df_qwi.columns)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(textwrap.fill(column_list, width<span class="op">=</span><span class="dv">100</span>))</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>display(df_qwi)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Print unique values for specific columns</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>columns_to_check <span class="op">=</span> [<span class="st">"geo_level"</span>, <span class="st">"ind_level"</span>, <span class="st">"industry"</span>, <span class="st">"ownercode"</span>, <span class="st">"sex"</span>, <span class="st">"agegrp"</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"race"</span>, <span class="st">"ethnicity"</span>, <span class="st">"education"</span>, <span class="st">"firmage"</span>, <span class="st">"firmsize"</span>]  <span class="co"># Adjust column names as needed</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> columns_to_check:</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> col <span class="kw">in</span> df_qwi.columns:</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        unique_values <span class="op">=</span> <span class="st">", "</span>.join(<span class="bu">map</span>(<span class="bu">str</span>, <span class="bu">sorted</span>(df_qwi[col].dropna().unique())))</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>unique_values<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Warning: Column '</span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">' not found in DataFrame."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data successfully loaded.
+Column Names (formatted):
+periodicity | seasonadj | geo_level | geography | ind_level | industry | ownercode | sex | agegrp |
+race | ethnicity | education | firmage | firmsize | year | quarter | Emp | EmpEnd | EmpS | EmpTotal
+| EmpSpv | HirA | HirN | HirR | Sep | HirAEnd | SepBeg | HirAEndRepl | HirAEndR | SepBegR |
+HirAEndReplR | HirAS | HirNS | SepS | SepSnx | TurnOvrS | FrmJbGn | FrmJbLs | FrmJbC | FrmJbGnS |
+FrmJbLsS | FrmJbCS | EarnS | EarnBeg | EarnHirAS | EarnHirNS | EarnSepS | Payroll | sEmp | sEmpEnd |
+sEmpS | sEmpTotal | sEmpSpv | sHirA | sHirN | sHirR | sSep | sHirAEnd | sSepBeg | sHirAEndRepl |
+sHirAEndR | sSepBegR | sHirAEndReplR | sHirAS | sHirNS | sSepS | sSepSnx | sTurnOvrS | sFrmJbGn |
+sFrmJbLs | sFrmJbC | sFrmJbGnS | sFrmJbLsS | sFrmJbCS | sEarnS | sEarnBeg | sEarnHirAS | sEarnHirNS
+| sEarnSepS | sPayroll</code></pre>
+</div>
+<div class="cell-output cell-output-display">
 <div>
 
 
@@ -173,32 +499,1236 @@ background: #921539;
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">Year</th>
-<th data-quarto-table-cell-role="th">Sales</th>
+<th data-quarto-table-cell-role="th">periodicity</th>
+<th data-quarto-table-cell-role="th">seasonadj</th>
+<th data-quarto-table-cell-role="th">geo_level</th>
+<th data-quarto-table-cell-role="th">geography</th>
+<th data-quarto-table-cell-role="th">ind_level</th>
+<th data-quarto-table-cell-role="th">industry</th>
+<th data-quarto-table-cell-role="th">ownercode</th>
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th">agegrp</th>
+<th data-quarto-table-cell-role="th">race</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">sFrmJbC</th>
+<th data-quarto-table-cell-role="th">sFrmJbGnS</th>
+<th data-quarto-table-cell-role="th">sFrmJbLsS</th>
+<th data-quarto-table-cell-role="th">sFrmJbCS</th>
+<th data-quarto-table-cell-role="th">sEarnS</th>
+<th data-quarto-table-cell-role="th">sEarnBeg</th>
+<th data-quarto-table-cell-role="th">sEarnHirAS</th>
+<th data-quarto-table-cell-role="th">sEarnHirNS</th>
+<th data-quarto-table-cell-role="th">sEarnSepS</th>
+<th data-quarto-table-cell-role="th">sPayroll</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
-<td>2020</td>
-<td>100</td>
+<td>Q</td>
+<td>U</td>
+<td>N</td>
+<td>0</td>
+<td>A</td>
+<td>00</td>
+<td>A05</td>
+<td>0</td>
+<td>A00</td>
+<td>A0</td>
+<td>...</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>5</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
-<td>2021</td>
-<td>150</td>
+<td>Q</td>
+<td>U</td>
+<td>N</td>
+<td>0</td>
+<td>A</td>
+<td>00</td>
+<td>A05</td>
+<td>0</td>
+<td>A01</td>
+<td>A0</td>
+<td>...</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>5</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
-<td>2022</td>
-<td>200</td>
+<td>Q</td>
+<td>U</td>
+<td>N</td>
+<td>0</td>
+<td>A</td>
+<td>00</td>
+<td>A05</td>
+<td>0</td>
+<td>A02</td>
+<td>A0</td>
+<td>...</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Q</td>
+<td>U</td>
+<td>N</td>
+<td>0</td>
+<td>A</td>
+<td>00</td>
+<td>A05</td>
+<td>0</td>
+<td>A03</td>
+<td>A0</td>
+<td>...</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Q</td>
+<td>U</td>
+<td>N</td>
+<td>0</td>
+<td>A</td>
+<td>00</td>
+<td>A05</td>
+<td>0</td>
+<td>A04</td>
+<td>A0</td>
+<td>...</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">66955</td>
+<td>Q</td>
+<td>U</td>
+<td>N</td>
+<td>0</td>
+<td>S</td>
+<td>81</td>
+<td>A05</td>
+<td>2</td>
+<td>A04</td>
+<td>A0</td>
+<td>...</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>6</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">66956</td>
+<td>Q</td>
+<td>U</td>
+<td>N</td>
+<td>0</td>
+<td>S</td>
+<td>81</td>
+<td>A05</td>
+<td>2</td>
+<td>A05</td>
+<td>A0</td>
+<td>...</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>6</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">66957</td>
+<td>Q</td>
+<td>U</td>
+<td>N</td>
+<td>0</td>
+<td>S</td>
+<td>81</td>
+<td>A05</td>
+<td>2</td>
+<td>A06</td>
+<td>A0</td>
+<td>...</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>6</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">66958</td>
+<td>Q</td>
+<td>U</td>
+<td>N</td>
+<td>0</td>
+<td>S</td>
+<td>81</td>
+<td>A05</td>
+<td>2</td>
+<td>A07</td>
+<td>A0</td>
+<td>...</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>6</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">66959</td>
+<td>Q</td>
+<td>U</td>
+<td>N</td>
+<td>0</td>
+<td>S</td>
+<td>81</td>
+<td>A05</td>
+<td>2</td>
+<td>A08</td>
+<td>A0</td>
+<td>...</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>6</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>5</td>
 </tr>
 </tbody>
 </table>
 
+<p>66960 rows × 80 columns</p>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>geo_level: N
+ind_level: A, S
+industry: 00, 11, 21, 22, 23, 31-33, 42, 44-45, 48-49, 51, 52, 53, 54, 55, 56, 61, 62, 71, 72, 81
+ownercode: A05
+sex: 0, 1, 2
+agegrp: A00, A01, A02, A03, A04, A05, A06, A07, A08
+race: A0
+ethnicity: A0
+education: E0
+firmage: 0
+firmsize: 0</code></pre>
+</div>
+</div>
+<p>Now that we can see the data and know which variables have various cateogries, we can proceed by extracting the time series that we are most interested in.</p>
+<p>The variables typically contained in the QWI data follow in a table below:</p>
+<details>
+<summary>
+<strong>Variables Table</strong> (Click to Expand)
+</summary>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 15%">
+<col style="width: 13%">
+<col style="width: 15%">
+<col style="width: 13%">
+<col style="width: 7%">
+<col style="width: 9%">
+<col style="width: 6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Indicator Variable</th>
+<th>Alternate Name</th>
+<th>Status Flag</th>
+<th>Indicator Name</th>
+<th>Description</th>
+<th>Units</th>
+<th>Concept</th>
+<th>Base</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Emp</td>
+<td>B</td>
+<td>sEmp</td>
+<td>Beginning-of-Quarter Employment</td>
+<td>Estimate of the total number of jobs on the first day of the reference quarter</td>
+<td>Count</td>
+<td>Employment</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>EmpEnd</td>
+<td>E</td>
+<td>sEmpEnd</td>
+<td>End-of-Quarter Employment</td>
+<td>Estimate of the number of jobs on the last day of the quarter</td>
+<td>Count</td>
+<td>Employment</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>EmpS</td>
+<td>F</td>
+<td>sEmpS</td>
+<td>Full-Quarter Employment (Stable)</td>
+<td>Estimate of stable jobs - the number of jobs that are held on both the first and last day of the quarter with the same employer</td>
+<td>Count</td>
+<td>Employment</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>EmpTotal</td>
+<td>M</td>
+<td>sEmpTotal</td>
+<td>Employment - Reference Quarter</td>
+<td>Estimated count of people employed in a firm at any time during the quarter</td>
+<td>Count</td>
+<td>Employment</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>EmpSpv</td>
+<td>Fpv</td>
+<td>sEmpSpv</td>
+<td>Full-Quarter Employment in the Previous Quarter</td>
+<td>Estimate of stable jobs in the quarter before the reference quarter</td>
+<td>Count</td>
+<td>Employment</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>HirA</td>
+<td>A</td>
+<td>sHirA</td>
+<td>Hires (All Accessions)</td>
+<td>Estimated number of workers who started a new job in the specified quarter</td>
+<td>Count</td>
+<td>Hire</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>HirN</td>
+<td>H</td>
+<td>sHirN</td>
+<td>New Hires</td>
+<td>Estimated number of workers who started a new job excluding recall hires</td>
+<td>Count</td>
+<td>Hire</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>HirR</td>
+<td>R</td>
+<td>sHirR</td>
+<td>Recall Hires</td>
+<td>Estimated number of workers who returned to the same employer where they had worked within the previous year</td>
+<td>Count</td>
+<td>Hire</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>Sep</td>
+<td>S</td>
+<td>sSep</td>
+<td>Separations (All)</td>
+<td>Estimated number of workers whose job with a given employer ended in the specified quarter</td>
+<td>Count</td>
+<td>Separation</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>HirAEnd</td>
+<td>CA</td>
+<td>sHirAEnd</td>
+<td>End-of-Quarter Hires</td>
+<td>Estimated number of workers who started a new job in the specified quarter, which continued into next quarter</td>
+<td>Count</td>
+<td>Hire</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>SepBeg</td>
+<td>CS</td>
+<td>sSepBeg</td>
+<td>Beginning-of-Quarter Separations</td>
+<td>Estimated number of workers whose job in the previous quarter continued and ended in the given quarter</td>
+<td>Count</td>
+<td>Separation</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>HirAEndRepl</td>
+<td>EI</td>
+<td>sHirAEndRepl</td>
+<td>Replacement Hires</td>
+<td>Hires into continuous quarter employment in excess of job creation</td>
+<td>Count</td>
+<td>Hire</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>HirAEndR</td>
+<td>CAR</td>
+<td>sHirAEndR</td>
+<td>End-of-Quarter Hiring Rate</td>
+<td>Hires as a percent of average employment</td>
+<td>Rate</td>
+<td>Hire</td>
+<td>(Emp + EmpEnd)/2</td>
+</tr>
+<tr class="even">
+<td>SepBegR</td>
+<td>CSR</td>
+<td>sSepBegR</td>
+<td>Beginning-of-Quarter Separation Rate</td>
+<td>Separations as a percent of average employment</td>
+<td>Rate</td>
+<td>Separation</td>
+<td>(Emp + EmpEnd)/2</td>
+</tr>
+<tr class="odd">
+<td>HirAEndReplR</td>
+<td>EIR</td>
+<td>sHirAEndReplR</td>
+<td>Replacement Hiring Rate</td>
+<td>Replacement hires as a percent of the average of beginning- and end-of-quarter employment</td>
+<td>Rate</td>
+<td>Hire</td>
+<td>(Emp + EmpEnd)/2</td>
+</tr>
+<tr class="even">
+<td>HirAS</td>
+<td>FA</td>
+<td>sHirAS</td>
+<td>Hires (All Hires into Full-Quarter Employment)</td>
+<td>Estimated number of workers that started a job that lasted at least one full quarter with a given employer</td>
+<td>Count</td>
+<td>Hire</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>HirNS</td>
+<td>FH</td>
+<td>sHirNS</td>
+<td>New Hires (New Hires into Full-Quarter Employment)</td>
+<td>Estimated number of workers who started a job that they had not held within the past year and the job turned into a job that lasted at least a full quarter with a given employer</td>
+<td>Count</td>
+<td>Hire</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>SepS</td>
+<td>FS</td>
+<td>sSepS</td>
+<td>Separations (Flows out of Full-Quarter Employment)</td>
+<td>Estimated number of workers who had a job for at least a full quarter and then the job ended</td>
+<td>Count</td>
+<td>Separation</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>SepSnx</td>
+<td>FSnx</td>
+<td>sSepSnx</td>
+<td>Separations in the Next Quarter (Flows out of Full-Quarter Employment)</td>
+<td>Estimated number of workers in the next quarter who had a job for at least a full quarter and then the job ended</td>
+<td>Count</td>
+<td>Separation</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>TurnOvrS</td>
+<td>FT</td>
+<td>sTurnOvrS</td>
+<td>Turnover (Stable)</td>
+<td>The rate at which stable jobs begin and end</td>
+<td>Rate</td>
+<td>Turnover</td>
+<td>2*EmpS</td>
+</tr>
+<tr class="odd">
+<td>FrmJbGn</td>
+<td>JC</td>
+<td>sFrmJbGn</td>
+<td>Firm Job Gains (Job Creation)</td>
+<td>Estimated number of jobs gained at firms throughout the quarter</td>
+<td>Count</td>
+<td>Job Flows</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>FrmJbLs</td>
+<td>JD</td>
+<td>sFrmJbLs</td>
+<td>Firm Job Loss (Job Destruction)</td>
+<td>Estimated number of jobs lost at firms throughout the quarter</td>
+<td>Count</td>
+<td>Job Flows</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>FrmJbC</td>
+<td>JF</td>
+<td>sFrmJbC</td>
+<td>Firm Job Change (Net Change)</td>
+<td>Difference between firm job gain and firm job loss</td>
+<td>Count</td>
+<td>Job Flows</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>FrmJbGnS</td>
+<td>FJC</td>
+<td>sFrmJbGnS</td>
+<td>Firm Job Gains (Stable)</td>
+<td>Estimated number of full-quarter jobs gained at firms</td>
+<td>Count</td>
+<td>Job Flows</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>FrmJbLsS</td>
+<td>FJD</td>
+<td>sFrmJbLsS</td>
+<td>Firm Job Loss (Stable)</td>
+<td>Estimated number of full-quarter jobs lost at firms</td>
+<td>Count</td>
+<td>Job Flows</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>FrmJbCS</td>
+<td>FJF</td>
+<td>sFrmJbCS</td>
+<td>Firm Job Change (Stable; Net Change)</td>
+<td>Net growth in jobs that last a full quarter</td>
+<td>Count</td>
+<td>Job Flows</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>EarnS</td>
+<td>ZW3</td>
+<td>sEarnS</td>
+<td>Average Monthly Earnings (Full-Quarter Employment)</td>
+<td>Average monthly earnings of employees with stable jobs</td>
+<td>Dollars</td>
+<td>Earnings</td>
+<td>EmpS</td>
+</tr>
+<tr class="even">
+<td>EarnBeg</td>
+<td>ZW2B</td>
+<td>sEarnBeg</td>
+<td>Average Monthly Earnings (Beginning-of-Quarter Employment)</td>
+<td>Average monthly earnings of employees who worked on the first day of the reference quarter</td>
+<td>Dollars</td>
+<td>Earnings</td>
+<td>Emp</td>
+</tr>
+<tr class="odd">
+<td>EarnHirAS</td>
+<td>ZWFA</td>
+<td>sEarnHirAS</td>
+<td>Average Monthly Earnings (All Hires into Full-Quarter Employment)</td>
+<td>Average monthly earnings for workers who started a job that turned into a job lasting a full quarter</td>
+<td>Dollars</td>
+<td>Earnings</td>
+<td>HirAS</td>
+</tr>
+<tr class="even">
+<td>EarnHirNS</td>
+<td>ZWFH</td>
+<td>sEarnHirNS</td>
+<td>Average Monthly Earnings (New Hires into Full-Quarter Employment)</td>
+<td>Average monthly earnings of newly stable employees</td>
+<td>Dollars</td>
+<td>Earnings</td>
+<td>HirNS</td>
+</tr>
+<tr class="odd">
+<td>EarnSepS</td>
+<td>ZWFS</td>
+<td>sEarnSepS</td>
+<td>Average Monthly Earnings (Flows out of Full-Quarter Employment)</td>
+<td>Average monthly earnings of separations from full-quarter status at an establishment</td>
+<td>Dollars</td>
+<td>Earnings</td>
+<td>SepSnx</td>
+</tr>
+<tr class="even">
+<td>Payroll</td>
+<td>W1</td>
+<td>sPayroll</td>
+<td>Total Quarterly Payroll</td>
+<td>Total quarterly payroll for all jobs</td>
+<td>Dollars</td>
+<td>Earnings</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<em>Source: <a href="https://lehd.ces.census.gov/data/schema/V4.12.0/lehd_public_use_schema.html">LEHD Public Use Schema</a></em>
+</details>
+<details>
+<summary>
+<strong>Categorical Variables Table</strong> (Click to Expand)
+</summary>
+<p><strong>5.1. Agegrp</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><strong>agegrp</strong></th>
+<th><strong>Label</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A00</td>
+<td>All Ages (14-99)</td>
+</tr>
+<tr class="even">
+<td>A01</td>
+<td>14-18</td>
+</tr>
+<tr class="odd">
+<td>A02</td>
+<td>19-21</td>
+</tr>
+<tr class="even">
+<td>A03</td>
+<td>22-24</td>
+</tr>
+<tr class="odd">
+<td>A04</td>
+<td>25-34</td>
+</tr>
+<tr class="even">
+<td>A05</td>
+<td>35-44</td>
+</tr>
+<tr class="odd">
+<td>A06</td>
+<td>45-54</td>
+</tr>
+<tr class="even">
+<td>A07</td>
+<td>55-64</td>
+</tr>
+<tr class="odd">
+<td>A08</td>
+<td>65-99</td>
+</tr>
+</tbody>
+</table>
+<p><strong>5.2. Education</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>education</strong></th>
+<th><strong>Label</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>E0</td>
+<td>All Education Categories</td>
+</tr>
+<tr class="even">
+<td>E1</td>
+<td>Less than high school</td>
+</tr>
+<tr class="odd">
+<td>E2</td>
+<td>High school or equivalent, no college</td>
+</tr>
+<tr class="even">
+<td>E3</td>
+<td>Some college or Associate degree</td>
+</tr>
+<tr class="odd">
+<td>E4</td>
+<td>Bachelor’s degree or advanced degree</td>
+</tr>
+<tr class="even">
+<td>E5</td>
+<td>Educational attainment not available (workers &lt; 24)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>5.3. Ethnicity</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><strong>ethnicity</strong></th>
+<th><strong>Label</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A0</td>
+<td>All Ethnicities</td>
+</tr>
+<tr class="even">
+<td>A1</td>
+<td>Not Hispanic or Latino</td>
+</tr>
+<tr class="odd">
+<td>A2</td>
+<td>Hispanic or Latino</td>
+</tr>
+</tbody>
+</table>
+<p><strong>5.4. Firmage</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><strong>firmage</strong></th>
+<th><strong>Label</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>All Firm Ages</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>0-1 Years</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>2-3 Years</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>4-5 Years</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>6-10 Years</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>11+ Years</td>
+</tr>
+<tr class="odd">
+<td>N</td>
+<td>Firm Age Not Available</td>
+</tr>
+</tbody>
+</table>
+<p><strong>5.5. Firmsize</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><strong>firmsize</strong></th>
+<th><strong>Label</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>All Firm Sizes</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>0-19 Employees</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>20-49 Employees</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>50-249 Employees</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>250-499 Employees</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>500+ Employees</td>
+</tr>
+<tr class="odd">
+<td>N</td>
+<td>Firm Size Not Available</td>
+</tr>
+</tbody>
+</table>
+<p><strong>5.6. Ownercode</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><strong>ownercode</strong></th>
+<th><strong>Label</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A00</td>
+<td>State and local government + private</td>
+</tr>
+<tr class="even">
+<td>A01</td>
+<td>Federal government</td>
+</tr>
+<tr class="odd">
+<td>A05</td>
+<td>All Private</td>
+</tr>
+</tbody>
+</table>
+<p><strong>5.7. Periodicity</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><strong>periodicity</strong></th>
+<th><strong>Label</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>Annual data</td>
+</tr>
+<tr class="even">
+<td>Q</td>
+<td>Quarterly data</td>
+</tr>
+</tbody>
+</table>
+<p><strong>5.8. Quarter</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><strong>quarter</strong></th>
+<th><strong>Label</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1st Quarter (Jan-Mar)</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>2nd Quarter (Apr-Jun)</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>3rd Quarter (Jul-Sep)</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>4th Quarter (Oct-Dec)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>5.9. Race</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><strong>race</strong></th>
+<th><strong>Label</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A0</td>
+<td>All Races</td>
+</tr>
+<tr class="even">
+<td>A1</td>
+<td>White Alone</td>
+</tr>
+<tr class="odd">
+<td>A2</td>
+<td>Black or African American Alone</td>
+</tr>
+<tr class="even">
+<td>A3</td>
+<td>American Indian or Alaska Native Alone</td>
+</tr>
+<tr class="odd">
+<td>A4</td>
+<td>Asian Alone</td>
+</tr>
+<tr class="even">
+<td>A5</td>
+<td>Native Hawaiian or Other Pacific Islander</td>
+</tr>
+<tr class="odd">
+<td>A6</td>
+<td>Some Other Race Alone (Not Used)</td>
+</tr>
+<tr class="even">
+<td>A7</td>
+<td>Two or More Race Groups</td>
+</tr>
+</tbody>
+</table>
+<p><strong>5.10. Seasonadj</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><strong>seasonadj</strong></th>
+<th><strong>Label</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>S</td>
+<td>Seasonally adjusted</td>
+</tr>
+<tr class="even">
+<td>U</td>
+<td>Not seasonally adjusted</td>
+</tr>
+</tbody>
+</table>
+<p><strong>5.11. Sex</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><strong>sex</strong></th>
+<th><strong>Label</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>All Sexes</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>Male</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>Female</td>
+</tr>
+</tbody>
+</table>
+<p><strong>5.12.1. Industry Levels</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><strong>ind_level</strong></th>
+<th><strong>Label</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>All Industries</td>
+</tr>
+<tr class="even">
+<td>S</td>
+<td>NAICS Sectors</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>NAICS Subsectors</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>NAICS Industry Groups</td>
+</tr>
+</tbody>
+</table>
+<p><strong>5.12.2. Industry</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 66%">
+<col style="width: 17%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>industry</strong></th>
+<th><strong>Label</strong></th>
+<th><strong>ind_level</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>00</td>
+<td>All NAICS Sectors</td>
+<td>A</td>
+</tr>
+<tr class="even">
+<td>000</td>
+<td>All NAICS Subsectors</td>
+<td>A</td>
+</tr>
+<tr class="odd">
+<td>0000</td>
+<td>All NAICS Industry Groups</td>
+<td>A</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>Agriculture, Forestry, Fishing and Hunting</td>
+<td>S</td>
+</tr>
+<tr class="odd">
+<td>111</td>
+<td>Crop Production</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>1111</td>
+<td>Oilseed and Grain Farming</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td>1112</td>
+<td>Vegetable and Melon Farming</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>2383</td>
+<td>Building Finishing Contractors</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>2389</td>
+<td>Other Specialty Trade Contractors</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td>31-33</td>
+<td>Manufacturing</td>
+<td>S</td>
+</tr>
+<tr class="even">
+<td>311</td>
+<td>Food Manufacturing</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>3111</td>
+<td>Animal Food Manufacturing</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>3112</td>
+<td>Grain and Oilseed Milling</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td>3113</td>
+<td>Sugar and Confectionery Product Manufacturing</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p><strong>5.13. Degree Level</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><strong>degree_level</strong></th>
+<th><strong>Label</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>00</td>
+<td>All Degree Levels</td>
+</tr>
+<tr class="even">
+<td>01</td>
+<td>Certificate &lt; 1 year</td>
+</tr>
+<tr class="odd">
+<td>02</td>
+<td>Certificate 1-2 years</td>
+</tr>
+<tr class="even">
+<td>03</td>
+<td>Associate’s Degree</td>
+</tr>
+<tr class="odd">
+<td>04</td>
+<td>Certificate 2-4 years</td>
+</tr>
+<tr class="even">
+<td>05</td>
+<td>Baccalaureate</td>
+</tr>
+<tr class="odd">
+<td>06</td>
+<td>Post-Baccalaureate Certificate</td>
+</tr>
+<tr class="even">
+<td>07</td>
+<td>Master’s Degree</td>
+</tr>
+<tr class="odd">
+<td>08</td>
+<td>Post-Master’s Certificate</td>
+</tr>
+<tr class="even">
+<td>17</td>
+<td>Doctoral - Research/Scholarship</td>
+</tr>
+<tr class="odd">
+<td>18</td>
+<td>Doctoral - Professional Practice</td>
+</tr>
+</tbody>
+</table>
+<p><em>Source: <a href="https://lehd.ces.census.gov/data/schema/V4.12.0/lehd_public_use_schema.html">LEHD Public Use Schema</a></em></p>
+<details>
+<div id="8d21f6d2" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered <span class="op">=</span> df_qwi[</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"sex"</span>] <span class="op">==</span> <span class="dv">0</span>) <span class="op">&amp;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"agegrp"</span>] <span class="op">==</span> <span class="st">"A00"</span>) <span class="op">&amp;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"industry"</span>] <span class="op">==</span> <span class="st">"00"</span>) <span class="op">&amp;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"ind_level"</span>] <span class="op">==</span> <span class="st">"A"</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>].copy() <span class="co"># copy here for sure to not mess up pointers!</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered[<span class="st">"date"</span>] <span class="op">=</span> pd.PeriodIndex(</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    df_qwi_filtered[<span class="st">"year"</span>].astype(<span class="bu">str</span>) <span class="op">+</span> <span class="st">"Q"</span> <span class="op">+</span> df_qwi_filtered[<span class="st">"quarter"</span>].astype(<span class="bu">str</span>),</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    freq<span class="op">=</span><span class="st">"Q"</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>).to_timestamp()</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot HirAEndRepl over time</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>plt.plot(df_qwi_filtered[<span class="st">"date"</span>], df_qwi_filtered[<span class="st">"HirAEndRepl"</span>], marker<span class="op">=</span><span class="st">"o"</span>, linestyle<span class="op">=</span><span class="st">"-"</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Labels and title</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Date"</span>)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"HirAEndRepl"</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Hiring Activity Over Time"</span>)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Improve readability</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the plot</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="main_quarto_files/figure-html/cell-4-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
 </div>
 </div>
 </div>
+</details></details></section>
 </section>
 
 </main>
