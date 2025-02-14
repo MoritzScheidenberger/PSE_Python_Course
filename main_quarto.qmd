@@ -33,14 +33,32 @@ mainfont: "Segoe UI"
 
 number-sections: true
 
-jupyter: quarto_env  # Use the Conda environment
+# jupyter: quarto_env  # Use the Conda environment
+# engine: knitr
 #jupyter: python3
 
+# This is what it takes to make things run
 execute:
-#  cache: true # Breaks things with pyhton code
- freeze: auto
+  eval: true
+  freeze: auto
+engine: knitr
+
+
 
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(reticulate)
+
+# Force Reticulate to use "quarto_env"
+use_condaenv("quarto_env", required = TRUE)
+
+# To check the current Python version:
+reticulate::py_config()
+
+```
 
 # Data and Methodology
 
@@ -105,7 +123,7 @@ The LEHD provides various data sets for the US based on Census data. ...
 
 ```{python}
 #| label: obtain_data
-#| echo: true
+#| echo: false
 
 ## Downloading and extracting the data
 
@@ -159,7 +177,8 @@ else:
             with open(file_name, "wb") as f:
                 for chunk in r.iter_content(chunk_size=8192):
                     f.write(chunk)
-        print(f"Downloaded: {file_name}")
+
+        #print(f"Downloaded: {file_name}")
 
         # Extract file
         extracted_file_name = os.path.join(EXTRACT_DIR, os.path.basename(file_name).replace(".gz", ""))
@@ -203,7 +222,7 @@ if df_qwi is not None:
     import textwrap
 column_list = " | ".join(df_qwi.columns)
 print(textwrap.fill(column_list, width=100))
-display(df_qwi)
+
 
 # Print unique values for specific columns
 columns_to_check = ["seasonadj", "geo_level", "ind_level", "industry", "ownercode", "sex", "agegrp",
@@ -430,7 +449,6 @@ The variables typically contained in the QWI data follow in a table below:
 
 <details>
 
-
 ```{python}
 #| label: View_the_data
 #| echo: true
@@ -449,54 +467,32 @@ df_qwi_filtered["date"] = pd.PeriodIndex(
     freq="Q"
 ).to_timestamp()
 
+# Export to deseasonalize in R
+df_qwi_filtered.to_csv("temp_df.csv", index=False)
 
-## Seasonal adjustment
-import os
-import statsmodels.api as sm
+```
 
-# Set the correct path to X-13ARIMA-SEATS (Adjust path if necessary)
-os.environ["X13PATH"] = r"C:\Users\moritz\.conda\envs\quarto_env\Library\bin"
+It turns out that we need to use R (together with python) to use the usual seasonal adjustment with X13-ARIMA.
 
-## Ensure the date column exists before filtering
-df_qwi["date"] = pd.PeriodIndex(
-    df_qwi["year"].astype(str) + "Q" + df_qwi["quarter"].astype(str),
-    freq="Q"
-).to_timestamp()
+```{r}
+#| label: seasonal_adjustment
+#| echo: true
 
-# Filter the dataset
-df_qwi_filtered = df_qwi[
-    (df_qwi["sex"] == 0) &
-    (df_qwi["agegrp"] == "A00") &
-    (df_qwi["industry"] == "00") &
-    (df_qwi["ind_level"] == "A")
-].copy()
+# Load the necessary libraries
+library(seasonal)
+library(readr)
 
-# Create a new DataFrame with only the date column
-df_sa = pd.DataFrame({"date": df_qwi_filtered["date"]})
-df_sa = df_sa.set_index("date")  # Set date as index
+# Load the data
+df_qwi_filtered <- read.csv("temp_df.csv")
 
-# List of series to be seasonally adjusted
-columns_to_adjust = ["HirAEndRepl"]  # Add more column names as needed
 
-# Apply seasonal adjustment for each variable
-for col in columns_to_adjust:
-    if col in df_qwi_filtered.columns:
-        df_qwi_filtered = df_qwi_filtered.set_index("date")  # Ensure date is the index
-        df_qwi_filtered = df_qwi_filtered.dropna(subset=[col])  # Drop NaNs to avoid issues
+```
 
-        # Apply X-13ARIMA-SEATS
-        df_sa[col + "_sa"] = sm.tsa.x13_arima_analysis(
-            df_qwi_filtered[col],
-            freq="Q"
-        ).seasadj
 
-# Reset index for plotting
-df_sa = df_sa.reset_index()
 
-# Display the new seasonally adjusted DataFrame
-import ace_tools as tools
-tools.display_dataframe_to_user(name="Seasonally Adjusted Data", dataframe=df_sa)
-
+```{python}
+#| label: plotting
+#| echo: true
 
 ## Plotting
 import matplotlib.pyplot as plt
@@ -517,31 +513,11 @@ plt.grid(True)
 # Show the plot
 plt.show()
 
-import matplotlib.pyplot as plt
-
-# Plot HirAEndRepl over time
-plt.figure(figsize=(10, 5))
-plt.plot(df_qwi_filtered["date"], df_qwi_filtered["HirAEndRepl"], marker="o", linestyle="-")
-
-# Labels and title
-plt.xlabel("Date")
-plt.ylabel("HirAEndRepl")
-plt.title("Hiring Activity Over Time")
-
-# Improve readability
-plt.xticks(rotation=45)
-plt.grid(True)
-
-# Show the plot
-plt.show()
-
-
 ```
-
 
 ::: {layout-ncol=2}
 <div style="text-align: center;">
-  ![](quarto_data_story_files/figure-html/employment-1.svg){.lightbox}
+  ![](quarto_data_story_files/figure-html/plotting-1.svg){.lightbox}
   <div style="font-size: 10px; width: 100%; text-align: justify;">Notes.</div>
 </div>
 

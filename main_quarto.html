@@ -58,7 +58,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="main_quarto_files/libs/clipboard/clipboard.min.js"></script>
+<script src="main_quarto_files/libs/clipboard/clipboard.min.js"></script>
 <script src="main_quarto_files/libs/quarto-html/quarto.js"></script>
 <script src="main_quarto_files/libs/quarto-html/popper.min.js"></script>
 <script src="main_quarto_files/libs/quarto-html/tippy.umd.min.js"></script>
@@ -70,6 +70,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="main_quarto_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="main_quarto_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="main_quarto_files/libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="main_quarto_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="main_quarto_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="main_quarto_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <style>html{ scroll-behavior: smooth; }</style>
 <style>
 
@@ -88,9 +91,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 background: #921539;
       }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="main_quarto_files/costum_style.css">
@@ -120,7 +120,7 @@ background: #921539;
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">February 11, 2025</p>
+        <p class="date-modified">February 14, 2025</p>
       </div>
     </div>
       
@@ -342,7 +342,7 @@ background: #921539;
 </details>
 <p><span style="color: red;"><strong>Note: National QWI data is only available for Private ownership!</strong></span></p>
 <hr>
-<div id="796dc26f" class="cell" data-execution_count="1">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Downloading and extracting the data</span></span>
@@ -366,122 +366,867 @@ background: #921539;
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># User-defined filter (Set to None for all files, or specify exact match criteria)</span></span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>FILTER_CRITERIA <span class="op">=</span> <span class="st">"qwi_us_sa_f_gn_ns_op_u.csv.gz"</span>  <span class="co"># Specify the exact filename needed</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch webpage content</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(BASE_URL)</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> response.status_code <span class="op">!=</span> <span class="dv">200</span>:</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Failed to access the website"</span>)</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    exit()</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Parse HTML</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>soup <span class="op">=</span> BeautifulSoup(response.text, <span class="st">"html.parser"</span>)</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract .csv.gz file links</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>file_links <span class="op">=</span> [BASE_URL <span class="op">+</span> a[<span class="st">'href'</span>] <span class="cf">for</span> a <span class="kw">in</span> soup.find_all(<span class="st">'a'</span>, href<span class="op">=</span><span class="va">True</span>) <span class="cf">if</span> a[<span class="st">'href'</span>].endswith(<span class="st">'.csv.gz'</span>)]</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply exact filename filtering</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> FILTER_CRITERIA:</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    file_links <span class="op">=</span> [link <span class="cf">for</span> link <span class="kw">in</span> file_links <span class="cf">if</span> FILTER_CRITERIA <span class="kw">in</span> link]</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> file_links:</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"No matching CSV files found."</span>)</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Found </span><span class="sc">{</span><span class="bu">len</span>(file_links)<span class="sc">}</span><span class="ss"> CSV file matching criteria. Downloading..."</span>)</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> file_url <span class="kw">in</span> file_links:</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>        file_name <span class="op">=</span> os.path.join(DOWNLOAD_DIR, os.path.basename(file_url))</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Download file</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> requests.get(file_url, stream<span class="op">=</span><span class="va">True</span>) <span class="im">as</span> r:</span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> <span class="bu">open</span>(file_name, <span class="st">"wb"</span>) <span class="im">as</span> f:</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> chunk <span class="kw">in</span> r.iter_content(chunk_size<span class="op">=</span><span class="dv">8192</span>):</span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>                    f.write(chunk)</span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Downloaded: </span><span class="sc">{</span>file_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># turns out that not all versions of the data are available through this site. Seasonally adjusted is not.</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch webpage content</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(BASE_URL)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> response.status_code <span class="op">!=</span> <span class="dv">200</span>:</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Failed to access the website"</span>)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    exit()</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Parse HTML</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>soup <span class="op">=</span> BeautifulSoup(response.text, <span class="st">"html.parser"</span>)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract .csv.gz file links</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>file_links <span class="op">=</span> [BASE_URL <span class="op">+</span> a[<span class="st">'href'</span>] <span class="cf">for</span> a <span class="kw">in</span> soup.find_all(<span class="st">'a'</span>, href<span class="op">=</span><span class="va">True</span>) <span class="cf">if</span> a[<span class="st">'href'</span>].endswith(<span class="st">'.csv.gz'</span>)]</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply exact filename filtering</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> FILTER_CRITERIA:</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    file_links <span class="op">=</span> [link <span class="cf">for</span> link <span class="kw">in</span> file_links <span class="cf">if</span> FILTER_CRITERIA <span class="kw">in</span> link]</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> file_links:</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"No matching CSV files found."</span>)</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Found </span><span class="sc">{</span><span class="bu">len</span>(file_links)<span class="sc">}</span><span class="ss"> CSV file matching criteria. Downloading..."</span>)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> file_url <span class="kw">in</span> file_links:</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>        file_name <span class="op">=</span> os.path.join(DOWNLOAD_DIR, os.path.basename(file_url))</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Download file</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> requests.get(file_url, stream<span class="op">=</span><span class="va">True</span>) <span class="im">as</span> r:</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> <span class="bu">open</span>(file_name, <span class="st">"wb"</span>) <span class="im">as</span> f:</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> chunk <span class="kw">in</span> r.iter_content(chunk_size<span class="op">=</span><span class="dv">8192</span>):</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>                    f.write(chunk)</span>
 <span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Extract file</span></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>        extracted_file_name <span class="op">=</span> os.path.join(EXTRACT_DIR, os.path.basename(file_name).replace(<span class="st">".gz"</span>, <span class="st">""</span>))</span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> gzip.<span class="bu">open</span>(file_name, <span class="st">'rb'</span>) <span class="im">as</span> f_in:</span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> <span class="bu">open</span>(extracted_file_name, <span class="st">'wb'</span>) <span class="im">as</span> f_out:</span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>                shutil.copyfileobj(f_in, f_out)</span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Extracted: </span><span class="sc">{</span>extracted_file_name<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Read the CSV</span></span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>        df <span class="op">=</span> pd.read_csv(extracted_file_name)</span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(df.head())  <span class="co"># Display first few rows</span></span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data downloaded &amp; extracted successfully."</span>)</span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="co"># Load dataset into a DataFrame for further analysis</span></span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_qwi_data():</span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>    data_path <span class="op">=</span> os.path.join(EXTRACT_DIR, FILTER_CRITERIA.replace(<span class="st">".gz"</span>, <span class="st">""</span>))</span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> os.path.exists(data_path):</span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>        df <span class="op">=</span> pd.read_csv(data_path)</span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Data successfully loaded."</span>)</span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> df</span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Extracted file not found."</span>)</span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>        <span class="co">#print(f"Downloaded: {file_name}")</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Extract file</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>        extracted_file_name <span class="op">=</span> os.path.join(EXTRACT_DIR, os.path.basename(file_name).replace(<span class="st">".gz"</span>, <span class="st">""</span>))</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> gzip.<span class="bu">open</span>(file_name, <span class="st">'rb'</span>) <span class="im">as</span> f_in:</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> <span class="bu">open</span>(extracted_file_name, <span class="st">'wb'</span>) <span class="im">as</span> f_out:</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>                shutil.copyfileobj(f_in, f_out)</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Extracted: </span><span class="sc">{</span>extracted_file_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Read the CSV</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>        df <span class="op">=</span> pd.read_csv(extracted_file_name)</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(df.head())  <span class="co"># Display first few rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Found 1 CSV file matching criteria. Downloading...
-Downloaded: C:\Users\moritz\Nextcloud\PhD\Projects\uncertainty_labor\data\qwi_data\qwi_us_sa_f_gn_ns_op_u.csv.gz
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+8192
+2538
 Extracted: C:\Users\moritz\Nextcloud\PhD\Projects\uncertainty_labor\data\qwi_extracted\qwi_us_sa_f_gn_ns_op_u.csv
-  periodicity seasonadj geo_level  geography ind_level industry ownercode  \
-0           Q         U         N          0         A       00       A05   
-1           Q         U         N          0         A       00       A05   
-2           Q         U         N          0         A       00       A05   
-3           Q         U         N          0         A       00       A05   
-4           Q         U         N          0         A       00       A05   
+  periodicity seasonadj geo_level  ...  sEarnHirNS sEarnSepS sPayroll
+0           Q         U         N  ...          -1        -1        5
+1           Q         U         N  ...          -1        -1        5
+2           Q         U         N  ...          -1        -1        5
+3           Q         U         N  ...          -1        -1        5
+4           Q         U         N  ...          -1        -1        5
 
-   sex agegrp race  ... sFrmJbC sFrmJbGnS  sFrmJbLsS  sFrmJbCS  sEarnS  \
-0    0    A00   A0  ...      -1        -1         -1        -1      -1   
-1    0    A01   A0  ...      -1        -1         -1        -1      -1   
-2    0    A02   A0  ...      -1        -1         -1        -1      -1   
-3    0    A03   A0  ...      -1        -1         -1        -1      -1   
-4    0    A04   A0  ...      -1        -1         -1        -1      -1   
-
-   sEarnBeg  sEarnHirAS  sEarnHirNS  sEarnSepS  sPayroll  
-0        -1          -1          -1         -1         5  
-1        -1          -1          -1         -1         5  
-2        -1          -1          -1         -1         5  
-3        -1          -1          -1         -1         5  
-4        -1          -1          -1         -1         5  
-
-[5 rows x 80 columns]
-Data downloaded &amp; extracted successfully.</code></pre>
+[5 rows x 80 columns]</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data downloaded &amp; extracted successfully."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data downloaded &amp; extracted successfully.</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Load dataset into a DataFrame for further analysis</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_qwi_data():</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    data_path <span class="op">=</span> os.path.join(EXTRACT_DIR, FILTER_CRITERIA.replace(<span class="st">".gz"</span>, <span class="st">""</span>))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> os.path.exists(data_path):</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        df <span class="op">=</span> pd.read_csv(data_path)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Data successfully loaded."</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> df</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Extracted file not found."</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <hr>
 <p>Now let’s take a quick look at the data to know what we are working with and how to proceed.</p>
-<div id="aecd594a" class="cell" data-execution_count="2">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Work with the data</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Take a look at all the different variables</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df_qwi <span class="op">=</span> load_qwi_data()</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> df_qwi <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Column Names (formatted):"</span>)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> textwrap</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>column_list <span class="op">=</span> <span class="st">" | "</span>.join(df_qwi.columns)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(textwrap.fill(column_list, width<span class="op">=</span><span class="dv">100</span>))</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>display(df_qwi)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Print unique values for specific columns</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>columns_to_check <span class="op">=</span> [<span class="st">"geo_level"</span>, <span class="st">"ind_level"</span>, <span class="st">"industry"</span>, <span class="st">"ownercode"</span>, <span class="st">"sex"</span>, <span class="st">"agegrp"</span>,</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"race"</span>, <span class="st">"ethnicity"</span>, <span class="st">"education"</span>, <span class="st">"firmage"</span>, <span class="st">"firmsize"</span>]  <span class="co"># Adjust column names as needed</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> columns_to_check:</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> col <span class="kw">in</span> df_qwi.columns:</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        unique_values <span class="op">=</span> <span class="st">", "</span>.join(<span class="bu">map</span>(<span class="bu">str</span>, <span class="bu">sorted</span>(df_qwi[col].dropna().unique())))</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>unique_values<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Warning: Column '</span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">' not found in DataFrame."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Work with the data</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Take a look at all the different variables</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>df_qwi <span class="op">=</span> load_qwi_data()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Data successfully loaded.
-Column Names (formatted):
-periodicity | seasonadj | geo_level | geography | ind_level | industry | ownercode | sex | agegrp |
+<pre><code>Data successfully loaded.</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> df_qwi <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Column Names (formatted):"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> textwrap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Column Names (formatted):</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>column_list <span class="op">=</span> <span class="st">" | "</span>.join(df_qwi.columns)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(textwrap.fill(column_list, width<span class="op">=</span><span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>periodicity | seasonadj | geo_level | geography | ind_level | industry | ownercode | sex | agegrp |
 race | ethnicity | education | firmage | firmsize | year | quarter | Emp | EmpEnd | EmpS | EmpTotal
 | EmpSpv | HirA | HirN | HirR | Sep | HirAEnd | SepBeg | HirAEndRepl | HirAEndR | SepBegR |
 HirAEndReplR | HirAS | HirNS | SepS | SepSnx | TurnOvrS | FrmJbGn | FrmJbLs | FrmJbC | FrmJbGnS |
@@ -491,310 +1236,22 @@ sHirAEndR | sSepBegR | sHirAEndReplR | sHirAS | sHirNS | sSepS | sSepSnx | sTurn
 sFrmJbLs | sFrmJbC | sFrmJbGnS | sFrmJbLsS | sFrmJbCS | sEarnS | sEarnBeg | sEarnHirAS | sEarnHirNS
 | sEarnSepS | sPayroll</code></pre>
 </div>
-<div class="cell-output cell-output-display">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">periodicity</th>
-<th data-quarto-table-cell-role="th">seasonadj</th>
-<th data-quarto-table-cell-role="th">geo_level</th>
-<th data-quarto-table-cell-role="th">geography</th>
-<th data-quarto-table-cell-role="th">ind_level</th>
-<th data-quarto-table-cell-role="th">industry</th>
-<th data-quarto-table-cell-role="th">ownercode</th>
-<th data-quarto-table-cell-role="th">sex</th>
-<th data-quarto-table-cell-role="th">agegrp</th>
-<th data-quarto-table-cell-role="th">race</th>
-<th data-quarto-table-cell-role="th">...</th>
-<th data-quarto-table-cell-role="th">sFrmJbC</th>
-<th data-quarto-table-cell-role="th">sFrmJbGnS</th>
-<th data-quarto-table-cell-role="th">sFrmJbLsS</th>
-<th data-quarto-table-cell-role="th">sFrmJbCS</th>
-<th data-quarto-table-cell-role="th">sEarnS</th>
-<th data-quarto-table-cell-role="th">sEarnBeg</th>
-<th data-quarto-table-cell-role="th">sEarnHirAS</th>
-<th data-quarto-table-cell-role="th">sEarnHirNS</th>
-<th data-quarto-table-cell-role="th">sEarnSepS</th>
-<th data-quarto-table-cell-role="th">sPayroll</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>Q</td>
-<td>U</td>
-<td>N</td>
-<td>0</td>
-<td>A</td>
-<td>00</td>
-<td>A05</td>
-<td>0</td>
-<td>A00</td>
-<td>A0</td>
-<td>...</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>5</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>Q</td>
-<td>U</td>
-<td>N</td>
-<td>0</td>
-<td>A</td>
-<td>00</td>
-<td>A05</td>
-<td>0</td>
-<td>A01</td>
-<td>A0</td>
-<td>...</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>5</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>Q</td>
-<td>U</td>
-<td>N</td>
-<td>0</td>
-<td>A</td>
-<td>00</td>
-<td>A05</td>
-<td>0</td>
-<td>A02</td>
-<td>A0</td>
-<td>...</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>5</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>Q</td>
-<td>U</td>
-<td>N</td>
-<td>0</td>
-<td>A</td>
-<td>00</td>
-<td>A05</td>
-<td>0</td>
-<td>A03</td>
-<td>A0</td>
-<td>...</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>5</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>Q</td>
-<td>U</td>
-<td>N</td>
-<td>0</td>
-<td>A</td>
-<td>00</td>
-<td>A05</td>
-<td>0</td>
-<td>A04</td>
-<td>A0</td>
-<td>...</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>5</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">66955</td>
-<td>Q</td>
-<td>U</td>
-<td>N</td>
-<td>0</td>
-<td>S</td>
-<td>81</td>
-<td>A05</td>
-<td>2</td>
-<td>A04</td>
-<td>A0</td>
-<td>...</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>6</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>5</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">66956</td>
-<td>Q</td>
-<td>U</td>
-<td>N</td>
-<td>0</td>
-<td>S</td>
-<td>81</td>
-<td>A05</td>
-<td>2</td>
-<td>A05</td>
-<td>A0</td>
-<td>...</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>6</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>5</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">66957</td>
-<td>Q</td>
-<td>U</td>
-<td>N</td>
-<td>0</td>
-<td>S</td>
-<td>81</td>
-<td>A05</td>
-<td>2</td>
-<td>A06</td>
-<td>A0</td>
-<td>...</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>6</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>5</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">66958</td>
-<td>Q</td>
-<td>U</td>
-<td>N</td>
-<td>0</td>
-<td>S</td>
-<td>81</td>
-<td>A05</td>
-<td>2</td>
-<td>A07</td>
-<td>A0</td>
-<td>...</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>6</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>5</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">66959</td>
-<td>Q</td>
-<td>U</td>
-<td>N</td>
-<td>0</td>
-<td>S</td>
-<td>81</td>
-<td>A05</td>
-<td>2</td>
-<td>A08</td>
-<td>A0</td>
-<td>...</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>6</td>
-<td>-1</td>
-<td>-1</td>
-<td>-1</td>
-<td>5</td>
-</tr>
-</tbody>
-</table>
-
-<p>66960 rows × 80 columns</p>
-</div>
-</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print unique values for specific columns</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>columns_to_check <span class="op">=</span> [<span class="st">"seasonadj"</span>, <span class="st">"geo_level"</span>, <span class="st">"ind_level"</span>, <span class="st">"industry"</span>, <span class="st">"ownercode"</span>, <span class="st">"sex"</span>, <span class="st">"agegrp"</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"race"</span>, <span class="st">"ethnicity"</span>, <span class="st">"education"</span>, <span class="st">"firmage"</span>, <span class="st">"firmsize"</span>]  <span class="co"># Adjust column names as needed</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> columns_to_check:</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> col <span class="kw">in</span> df_qwi.columns:</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        unique_values <span class="op">=</span> <span class="st">", "</span>.join(<span class="bu">map</span>(<span class="bu">str</span>, <span class="bu">sorted</span>(df_qwi[col].dropna().unique())))</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>unique_values<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Warning: Column '</span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">' not found in DataFrame."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
-<pre><code>geo_level: N
+<pre><code>seasonadj: U
+geo_level: N
 ind_level: A, S
 industry: 00, 11, 21, 22, 23, 31-33, 42, 44-45, 48-49, 51, 52, 53, 54, 55, 56, 61, 62, 71, 72, 81
 ownercode: A05
@@ -1687,44 +2144,89 @@ firmsize: 0</code></pre>
 </table>
 <p><em>Source: <a href="https://lehd.ces.census.gov/data/schema/V4.12.0/lehd_public_use_schema.html">LEHD Public Use Schema</a></em></p>
 <details>
-<div id="8d21f6d2" class="cell" data-execution_count="3">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered <span class="op">=</span> df_qwi[</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"sex"</span>] <span class="op">==</span> <span class="dv">0</span>) <span class="op">&amp;</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"agegrp"</span>] <span class="op">==</span> <span class="st">"A00"</span>) <span class="op">&amp;</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"industry"</span>] <span class="op">==</span> <span class="st">"00"</span>) <span class="op">&amp;</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"ind_level"</span>] <span class="op">==</span> <span class="st">"A"</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>].copy() <span class="co"># copy here for sure to not mess up pointers!</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered[<span class="st">"date"</span>] <span class="op">=</span> pd.PeriodIndex(</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    df_qwi_filtered[<span class="st">"year"</span>].astype(<span class="bu">str</span>) <span class="op">+</span> <span class="st">"Q"</span> <span class="op">+</span> df_qwi_filtered[<span class="st">"quarter"</span>].astype(<span class="bu">str</span>),</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    freq<span class="op">=</span><span class="st">"Q"</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>).to_timestamp()</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot HirAEndRepl over time</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>plt.plot(df_qwi_filtered[<span class="st">"date"</span>], df_qwi_filtered[<span class="st">"HirAEndRepl"</span>], marker<span class="op">=</span><span class="st">"o"</span>, linestyle<span class="op">=</span><span class="st">"-"</span>)</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Labels and title</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Date"</span>)</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"HirAEndRepl"</span>)</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Hiring Activity Over Time"</span>)</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Improve readability</span></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the plot</span></span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">## Create date variable</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered <span class="op">=</span> df_qwi[</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"sex"</span>] <span class="op">==</span> <span class="dv">0</span>) <span class="op">&amp;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"agegrp"</span>] <span class="op">==</span> <span class="st">"A00"</span>) <span class="op">&amp;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"industry"</span>] <span class="op">==</span> <span class="st">"00"</span>) <span class="op">&amp;</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"ind_level"</span>] <span class="op">==</span> <span class="st">"A"</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>].copy() <span class="co"># copy here for sure to not mess up pointers!</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered[<span class="st">"date"</span>] <span class="op">=</span> pd.PeriodIndex(</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    df_qwi_filtered[<span class="st">"year"</span>].astype(<span class="bu">str</span>) <span class="op">+</span> <span class="st">"Q"</span> <span class="op">+</span> df_qwi_filtered[<span class="st">"quarter"</span>].astype(<span class="bu">str</span>),</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    freq<span class="op">=</span><span class="st">"Q"</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>).to_timestamp()</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Export to deseasonalize in R</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered.to_csv(<span class="st">"temp_df.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display">
+</div>
+<p>It turns out that we need to use R (together with python) to use the usual seasonal adjustment with X13-ARIMA.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the necessary libraries</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(seasonal)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"temp_df.csv"</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co"># save file as csv again</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(df_qwi_filtered, <span class="st">"temp_df2.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Plotting</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot HirAEndRepl over time</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>plt.plot(df_qwi_filtered[<span class="st">"date"</span>], df_qwi_filtered[<span class="st">"HirAEndRepl"</span>], marker<span class="op">=</span><span class="st">"o"</span>, linestyle<span class="op">=</span><span class="st">"-"</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Labels and title</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Date"</span>)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"HirAEndRepl"</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Hiring Activity Over Time"</span>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Improve readability</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>(array([ 6574.,  8035.,  9496., 10957., 12418., 13879., 15340., 16801.,
+       18262., 19723., 21184.]), [Text(6574.0, 0, '1988'), Text(8035.0, 0, '1992'), Text(9496.0, 0, '1996'), Text(10957.0, 0, '2000'), Text(12418.0, 0, '2004'), Text(13879.0, 0, '2008'), Text(15340.0, 0, '2012'), Text(16801.0, 0, '2016'), Text(18262.0, 0, '2020'), Text(19723.0, 0, '2024'), Text(21184.0, 0, '2028')])</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the plot</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="main_quarto_files/figure-html/cell-4-output-1.svg" class="img-fluid figure-img"></p>
+<p><img src="main_quarto_files/figure-html/plotting-1.svg" class="img-fluid figure-img"></p>
 </figure>
+</div>
+</div>
+</div>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<a href="quarto_data_story_files/figure-html/plotting-1.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="quarto_data_story_files/figure-html/plotting-1.svg" class="img-fluid"></a>
+<div style="font-size: 10px; width: 100%; text-align: justify;">
+Notes.
+</div>
 </div>
 </div>
 </div>
@@ -2298,6 +2800,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"loop":false,"selector":".lightbox","closeEffect":"zoom","descPosition":"bottom","openEffect":"zoom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 
