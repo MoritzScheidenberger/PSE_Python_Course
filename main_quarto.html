@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -108,6 +142,7 @@ background: #921539;
   <li><a href="#data-and-methodology" id="toc-data-and-methodology" class="nav-link active" data-scroll-target="#data-and-methodology"><span class="header-section-number">1</span> Data and Methodology</a>
   <ul class="collapse">
   <li><a href="#file-naming-convention-for-lehd-data" id="toc-file-naming-convention-for-lehd-data" class="nav-link" data-scroll-target="#file-naming-convention-for-lehd-data"><span class="header-section-number">1.1</span> File Naming Convention for LEHD Data</a></li>
+  <li><a href="#first-analysis" id="toc-first-analysis" class="nav-link" data-scroll-target="#first-analysis"><span class="header-section-number">1.2</span> First Analysis</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -308,771 +343,17 @@ background: #921539;
 </details>
 <p><span style="color: red;"><strong>Note: National QWI data is only available for Private ownership!</strong></span></p>
 <hr>
-<div class="cell">
+<div id="obtain_data" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-stdout">
-<pre><code>8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-8192
-2538</code></pre>
+<pre><code>Data downloaded &amp; extracted successfully.</code></pre>
 </div>
 </div>
 <hr>
 <p>Now let’s take a quick look at the data to know what we are working with and how to proceed.</p>
-<div class="cell">
+<div id="select_data" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-stdout">
-<pre><code>Column Names (formatted):</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>periodicity | seasonadj | geo_level | geography | ind_level | industry | ownercode | sex | agegrp |
+<pre><code>Column Names (formatted):
+periodicity | seasonadj | geo_level | geography | ind_level | industry | ownercode | sex | agegrp |
 race | ethnicity | education | firmage | firmsize | year | quarter | Emp | EmpEnd | EmpS | EmpTotal
 | EmpSpv | HirA | HirN | HirR | Sep | HirAEnd | SepBeg | HirAEndRepl | HirAEndR | SepBegR |
 HirAEndReplR | HirAS | HirNS | SepS | SepSnx | TurnOvrS | FrmJbGn | FrmJbLs | FrmJbC | FrmJbGnS |
@@ -1080,10 +361,8 @@ FrmJbLsS | FrmJbCS | EarnS | EarnBeg | EarnHirAS | EarnHirNS | EarnSepS | Payrol
 sEmpS | sEmpTotal | sEmpSpv | sHirA | sHirN | sHirR | sSep | sHirAEnd | sSepBeg | sHirAEndRepl |
 sHirAEndR | sSepBegR | sHirAEndReplR | sHirAS | sHirNS | sSepS | sSepSnx | sTurnOvrS | sFrmJbGn |
 sFrmJbLs | sFrmJbC | sFrmJbGnS | sFrmJbLsS | sFrmJbCS | sEarnS | sEarnBeg | sEarnHirAS | sEarnHirNS
-| sEarnSepS | sPayroll</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>seasonadj: U
+| sEarnSepS | sPayroll
+seasonadj: U
 geo_level: N
 ind_level: A, S
 industry: 00, 11, 21, 22, 23, 31-33, 42, 44-45, 48-49, 51, 52, 53, 54, 55, 56, 61, 62, 71, 72, 81
@@ -1449,8 +728,9 @@ firmsize: 0</code></pre>
 </tr>
 </tbody>
 </table>
-<em>Source: <a href="https://lehd.ces.census.gov/data/schema/V4.12.0/lehd_public_use_schema.html">LEHD Public Use Schema</a></em>
+<p><em>Source: <a href="https://lehd.ces.census.gov/data/schema/V4.12.0/lehd_public_use_schema.html">LEHD Public Use Schema</a></em></p>
 </details>
+<p>The categorical variables show us additional levels of detail that we can ge, beyond the basic aggregates.</p>
 <details>
 <summary>
 <strong>Categorical Variables Table</strong> (Click to Expand)
@@ -1977,43 +1257,180 @@ firmsize: 0</code></pre>
 </table>
 <p><em>Source: <a href="https://lehd.ces.census.gov/data/schema/V4.12.0/lehd_public_use_schema.html">LEHD Public Use Schema</a></em></p>
 <details>
+</details></details></section>
+<section id="first-analysis" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="first-analysis"><span class="header-section-number">1.2</span> First Analysis</h2>
+<p>Let us further filter the data because we are only interested in the aggregate series for now.</p>
+<div id="view_the_data" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Create date variable</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered <span class="op">=</span> df_qwi[</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"sex"</span>] <span class="op">==</span> <span class="dv">0</span>) <span class="op">&amp;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"agegrp"</span>] <span class="op">==</span> <span class="st">"A00"</span>) <span class="op">&amp;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"industry"</span>] <span class="op">==</span> <span class="st">"00"</span>) <span class="op">&amp;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"ind_level"</span>] <span class="op">==</span> <span class="st">"A"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>].copy()  <span class="co"># Copy to avoid modifying the original DataFrame</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered[<span class="st">"date"</span>] <span class="op">=</span> pd.PeriodIndex(</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    df_qwi_filtered[<span class="st">"year"</span>].astype(<span class="bu">str</span>) <span class="op">+</span> <span class="st">"Q"</span> <span class="op">+</span> df_qwi_filtered[<span class="st">"quarter"</span>].astype(<span class="bu">str</span>),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    freq<span class="op">=</span><span class="st">"Q"</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>).to_timestamp()</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop unnecessary columns</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered.drop(columns<span class="op">=</span>[<span class="st">"periodicity"</span>, <span class="st">"seasonadj"</span>, <span class="st">"geo_level"</span>, <span class="st">"ind_level"</span>, <span class="st">"industry"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"ownercode"</span>, <span class="st">"sex"</span>, <span class="st">"agegrp"</span>, <span class="st">"race"</span>, <span class="st">"ethnicity"</span>, <span class="st">"education"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"firmage"</span>, <span class="st">"firmsize"</span>, <span class="st">"year"</span>, <span class="st">"quarter"</span>, <span class="st">"geography"</span>], inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure "date" is the first column</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered <span class="op">=</span> df_qwi_filtered[[<span class="st">"date"</span>] <span class="op">+</span> [col <span class="cf">for</span> col <span class="kw">in</span> df_qwi_filtered.columns <span class="cf">if</span> col <span class="op">!=</span> <span class="st">"date"</span>]]</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Export to deseasonalize in R</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered.to_csv(<span class="st">"temp_df.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data filtered and ready for deseasonalization."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data filtered and ready for deseasonalization.</code></pre>
+</div>
+</div>
 <p>It turns out that we need to use R (together with python) to use the usual seasonal adjustment with X13-ARIMA.</p>
-<div class="cell">
+<div id="seasonal_adjustment" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> subprocess</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the R script</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>subprocess.run([<span class="st">"Rscript"</span>, <span class="st">"sheet_seas_adjust.r"</span>], check<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean up by deleting the temp file</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>os.remove(<span class="st">"temp_df.csv"</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data deseasonalized successfully."</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># We still need some data from FRED</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Non-seasonal series detected for column: FrmJbLs"
-[1] "Non-seasonal series detected for column: sEmp"
-[1] "Non-seasonal series detected for column: sEmpEnd"
-[1] "Non-seasonal series detected for column: sEmpS"
-[1] "Non-seasonal series detected for column: sHirA"
-[1] "Non-seasonal series detected for column: sHirN"
-[1] "Non-seasonal series detected for column: sHirR"
-[1] "Non-seasonal series detected for column: sSep"
-[1] "Non-seasonal series detected for column: sHirAEnd"
-[1] "Non-seasonal series detected for column: sSepBeg"
-[1] "Non-seasonal series detected for column: sHirAEndRepl"
-[1] "Non-seasonal series detected for column: sHirAEndR"
-[1] "Non-seasonal series detected for column: sSepBegR"
-[1] "Non-seasonal series detected for column: sHirAEndReplR"
-[1] "Non-seasonal series detected for column: sHirNS"
-[1] "Non-seasonal series detected for column: sFrmJbGn"
-[1] "Non-seasonal series detected for column: sFrmJbLs"
-[1] "Non-seasonal series detected for column: sFrmJbC"
-[1] "Non-seasonal series detected for column: sEarnS"
-[1] "Non-seasonal series detected for column: sEarnBeg"
-[1] "Non-seasonal series detected for column: sEarnHirNS"</code></pre>
+<pre><code>Data deseasonalized successfully.</code></pre>
 </div>
 </div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123], [Text(0, 0, '1993-01-01'), Text(1, 0, '1993-04-01'), Text(2, 0, '1993-07-01'), Text(3, 0, '1993-10-01'), Text(4, 0, '1994-01-01'), Text(5, 0, '1994-04-01'), Text(6, 0, '1994-07-01'), Text(7, 0, '1994-10-01'), Text(8, 0, '1995-01-01'), Text(9, 0, '1995-04-01'), Text(10, 0, '1995-07-01'), Text(11, 0, '1995-10-01'), Text(12, 0, '1996-01-01'), Text(13, 0, '1996-04-01'), Text(14, 0, '1996-07-01'), Text(15, 0, '1996-10-01'), Text(16, 0, '1997-01-01'), Text(17, 0, '1997-04-01'), Text(18, 0, '1997-07-01'), Text(19, 0, '1997-10-01'), Text(20, 0, '1998-01-01'), Text(21, 0, '1998-04-01'), Text(22, 0, '1998-07-01'), Text(23, 0, '1998-10-01'), Text(24, 0, '1999-01-01'), Text(25, 0, '1999-04-01'), Text(26, 0, '1999-07-01'), Text(27, 0, '1999-10-01'), Text(28, 0, '2000-01-01'), Text(29, 0, '2000-04-01'), Text(30, 0, '2000-07-01'), Text(31, 0, '2000-10-01'), Text(32, 0, '2001-01-01'), Text(33, 0, '2001-04-01'), Text(34, 0, '2001-07-01'), Text(35, 0, '2001-10-01'), Text(36, 0, '2002-01-01'), Text(37, 0, '2002-04-01'), Text(38, 0, '2002-07-01'), Text(39, 0, '2002-10-01'), Text(40, 0, '2003-01-01'), Text(41, 0, '2003-04-01'), Text(42, 0, '2003-07-01'), Text(43, 0, '2003-10-01'), Text(44, 0, '2004-01-01'), Text(45, 0, '2004-04-01'), Text(46, 0, '2004-07-01'), Text(47, 0, '2004-10-01'), Text(48, 0, '2005-01-01'), Text(49, 0, '2005-04-01'), Text(50, 0, '2005-07-01'), Text(51, 0, '2005-10-01'), Text(52, 0, '2006-01-01'), Text(53, 0, '2006-04-01'), Text(54, 0, '2006-07-01'), Text(55, 0, '2006-10-01'), Text(56, 0, '2007-01-01'), Text(57, 0, '2007-04-01'), Text(58, 0, '2007-07-01'), Text(59, 0, '2007-10-01'), Text(60, 0, '2008-01-01'), Text(61, 0, '2008-04-01'), Text(62, 0, '2008-07-01'), Text(63, 0, '2008-10-01'), Text(64, 0, '2009-01-01'), Text(65, 0, '2009-04-01'), Text(66, 0, '2009-07-01'), Text(67, 0, '2009-10-01'), Text(68, 0, '2010-01-01'), Text(69, 0, '2010-04-01'), Text(70, 0, '2010-07-01'), Text(71, 0, '2010-10-01'), Text(72, 0, '2011-01-01'), Text(73, 0, '2011-04-01'), Text(74, 0, '2011-07-01'), Text(75, 0, '2011-10-01'), Text(76, 0, '2012-01-01'), Text(77, 0, '2012-04-01'), Text(78, 0, '2012-07-01'), Text(79, 0, '2012-10-01'), Text(80, 0, '2013-01-01'), Text(81, 0, '2013-04-01'), Text(82, 0, '2013-07-01'), Text(83, 0, '2013-10-01'), Text(84, 0, '2014-01-01'), Text(85, 0, '2014-04-01'), Text(86, 0, '2014-07-01'), Text(87, 0, '2014-10-01'), Text(88, 0, '2015-01-01'), Text(89, 0, '2015-04-01'), Text(90, 0, '2015-07-01'), Text(91, 0, '2015-10-01'), Text(92, 0, '2016-01-01'), Text(93, 0, '2016-04-01'), Text(94, 0, '2016-07-01'), Text(95, 0, '2016-10-01'), Text(96, 0, '2017-01-01'), Text(97, 0, '2017-04-01'), Text(98, 0, '2017-07-01'), Text(99, 0, '2017-10-01'), Text(100, 0, '2018-01-01'), Text(101, 0, '2018-04-01'), Text(102, 0, '2018-07-01'), Text(103, 0, '2018-10-01'), Text(104, 0, '2019-01-01'), Text(105, 0, '2019-04-01'), Text(106, 0, '2019-07-01'), Text(107, 0, '2019-10-01'), Text(108, 0, '2020-01-01'), Text(109, 0, '2020-04-01'), Text(110, 0, '2020-07-01'), Text(111, 0, '2020-10-01'), Text(112, 0, '2021-01-01'), Text(113, 0, '2021-04-01'), Text(114, 0, '2021-07-01'), Text(115, 0, '2021-10-01'), Text(116, 0, '2022-01-01'), Text(117, 0, '2022-04-01'), Text(118, 0, '2022-07-01'), Text(119, 0, '2022-10-01'), Text(120, 0, '2023-01-01'), Text(121, 0, '2023-04-01'), Text(122, 0, '2023-07-01'), Text(123, 0, '2023-10-01')])</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="main_quarto_files/figure-html/plotting-1.svg" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
+<div id="figure_templates" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the adjusted data</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered <span class="op">=</span> pd.read_csv(<span class="st">"qwi_data_seasadj.csv"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">## Plotting</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.dates <span class="im">as</span> mdates</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>plt.ioff()  <span class="co"># Turns off interactive mode</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fun_plot_single_ts(df, date_col, value_col, title<span class="op">=</span><span class="st">"Time Series Plot"</span>, xlabel<span class="op">=</span><span class="st">"Date"</span>, ylabel<span class="op">=</span><span class="st">"Value"</span>, color<span class="op">=</span><span class="st">"#023047"</span>, recession_shading<span class="op">=</span><span class="va">True</span>, recessions<span class="op">=</span><span class="va">None</span>, scale_factor<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert date column to datetime format</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    df[date_col] <span class="op">=</span> pd.to_datetime(df[date_col])</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define default recession periods if none are provided</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> recessions <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        recessions <span class="op">=</span> [</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"2001-03-01"</span>, <span class="st">"2001-11-01"</span>),</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"2007-12-01"</span>, <span class="st">"2009-06-01"</span>),</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"2020-02-01"</span>, <span class="st">"2020-04-01"</span>)</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert recession dates to datetime format</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    recession_periods <span class="op">=</span> [(datetime.strptime(start, <span class="st">"%Y-%m-</span><span class="sc">%d</span><span class="st">"</span>), datetime.strptime(end, <span class="st">"%Y-%m-</span><span class="sc">%d</span><span class="st">"</span>)) <span class="cf">for</span> start, end <span class="kw">in</span> recessions]</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Apply scaling</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    df[value_col] <span class="op">/=</span> scale_factor</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create the figure and axis</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Plot the time series</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    ax.plot(df[date_col], df[value_col], color<span class="op">=</span>color, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'_nolegend_'</span>)</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Highlight recession periods with lighter shading</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> recession_shading:</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> start, end <span class="kw">in</span> recession_periods:</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>            ax.axvspan(start, end, color<span class="op">=</span><span class="st">"grey"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Labels and title</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(xlabel, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(ylabel, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>    ax.set_title(title, fontsize<span class="op">=</span><span class="dv">16</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Improve readability</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_locator(mdates.YearLocator(base<span class="op">=</span><span class="dv">5</span>))  <span class="co"># Show every 5 years</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_formatter(mdates.DateFormatter(<span class="st">"%Y"</span>))</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>    ax.tick_params(axis<span class="op">=</span><span class="st">'x'</span>, rotation<span class="op">=</span><span class="dv">45</span>, labelsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>    ax.tick_params(axis<span class="op">=</span><span class="st">'y'</span>, labelsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>    ax.grid(<span class="va">False</span>)  <span class="co"># Remove grid</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Adjust layout</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Show the plot</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>    <span class="co"># plt.show()</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fun_plot_three_ts(df, date_col, value_col1, value_col2, value_col3, title<span class="op">=</span><span class="st">"Time Series Plot"</span>, xlabel<span class="op">=</span><span class="st">"Date"</span>, ylabel<span class="op">=</span><span class="st">"Value"</span>, color1<span class="op">=</span><span class="st">"#023047"</span>, color2<span class="op">=</span><span class="st">"#34a937"</span>, color3<span class="op">=</span><span class="st">"#bc5090"</span>, line_type2<span class="op">=</span><span class="st">"solid"</span>, line_type3<span class="op">=</span><span class="st">"dashed"</span>, recession_shading<span class="op">=</span><span class="va">True</span>, recessions<span class="op">=</span><span class="va">None</span>, legend1<span class="op">=</span><span class="st">"Series 1"</span>, legend2<span class="op">=</span><span class="st">"Series 2"</span>, legend3<span class="op">=</span><span class="st">"Series 3"</span>, scale_factor<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert date column to datetime format</span></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>    df[date_col] <span class="op">=</span> pd.to_datetime(df[date_col])</span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define default recession periods if none are provided</span></span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> recessions <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>        recessions <span class="op">=</span> [</span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"2001-03-01"</span>, <span class="st">"2001-11-01"</span>),</span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"2007-12-01"</span>, <span class="st">"2009-06-01"</span>),</span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"2020-02-01"</span>, <span class="st">"2020-04-01"</span>)</span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert recession dates to datetime format</span></span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>    recession_periods <span class="op">=</span> [(datetime.strptime(start, <span class="st">"%Y-%m-</span><span class="sc">%d</span><span class="st">"</span>), datetime.strptime(end, <span class="st">"%Y-%m-</span><span class="sc">%d</span><span class="st">"</span>)) <span class="cf">for</span> start, end <span class="kw">in</span> recessions]</span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Apply scaling</span></span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>    df[value_col1] <span class="op">/=</span> scale_factor</span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a>    df[value_col2] <span class="op">/=</span> scale_factor</span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>    df[value_col3] <span class="op">/=</span> scale_factor</span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create the figure and axis</span></span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Plot the three time series</span></span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a>    ax.plot(df[date_col], df[value_col1], color<span class="op">=</span>color1, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span>legend1)</span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a>    ax.plot(df[date_col], df[value_col2], color<span class="op">=</span>color2, linewidth<span class="op">=</span><span class="dv">2</span>, linestyle<span class="op">=</span>line_type2, label<span class="op">=</span>legend2)</span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a>    ax.plot(df[date_col], df[value_col3], color<span class="op">=</span>color3, linewidth<span class="op">=</span><span class="dv">2</span>, linestyle<span class="op">=</span>line_type3, label<span class="op">=</span>legend3)</span>
+<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Highlight recession periods with lighter shading</span></span>
+<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> recession_shading:</span>
+<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> start, end <span class="kw">in</span> recession_periods:</span>
+<span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a>            ax.axvspan(start, end, color<span class="op">=</span><span class="st">"grey"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Labels and title</span></span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(xlabel, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(ylabel, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a>    ax.set_title(title, fontsize<span class="op">=</span><span class="dv">16</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Improve readability</span></span>
+<span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_locator(mdates.YearLocator(base<span class="op">=</span><span class="dv">5</span>))  <span class="co"># Show every 5 years</span></span>
+<span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_formatter(mdates.DateFormatter(<span class="st">"%Y"</span>))</span>
+<span id="cb7-102"><a href="#cb7-102" aria-hidden="true" tabindex="-1"></a>    ax.tick_params(axis<span class="op">=</span><span class="st">'x'</span>, rotation<span class="op">=</span><span class="dv">45</span>, labelsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a>    ax.tick_params(axis<span class="op">=</span><span class="st">'y'</span>, labelsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a>    ax.grid(<span class="va">False</span>)  <span class="co"># Remove grid</span></span>
+<span id="cb7-105"><a href="#cb7-105" aria-hidden="true" tabindex="-1"></a>    ax.legend()</span>
+<span id="cb7-106"><a href="#cb7-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-107"><a href="#cb7-107" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Adjust layout</span></span>
+<span id="cb7-108"><a href="#cb7-108" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb7-109"><a href="#cb7-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-110"><a href="#cb7-110" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Show the plot</span></span>
+<span id="cb7-111"><a href="#cb7-111" aria-hidden="true" tabindex="-1"></a>    <span class="co"># plt.show()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div>
 
@@ -2021,14 +1438,21 @@ firmsize: 0</code></pre>
 <div class="quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<a href="quarto_data_story_files/figure-html/plotting-1.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="quarto_data_story_files/figure-html/plotting-1.svg" class="img-fluid"></a>
+<a href="main_quarto_files/figure-html/plot_series-output-1.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="main_quarto_files/figure-html/plot_series-output-1.svg" class="img-fluid"></a>
+<div style="font-size: 10px; width: 100%; text-align: justify;">
+Notes.
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<a href="main_quarto_files/figure-html/plot_series-output-2.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="main_quarto_files/figure-html/plot_series-output-2.svg" class="img-fluid"></a>
 <div style="font-size: 10px; width: 100%; text-align: justify;">
 Notes.
 </div>
 </div>
 </div>
 </div>
-</details></details></section>
+<p>Now that we know that the plots work and look ok, let</p>
+</section>
 </section>
 
 </main>
@@ -2598,7 +2022,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","loop":false,"selector":".lightbox","closeEffect":"zoom","descPosition":"bottom"});
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","descPosition":"bottom","loop":false,"selector":".lightbox","closeEffect":"zoom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {

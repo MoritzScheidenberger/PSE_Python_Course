@@ -42,7 +42,7 @@ jupyter: quarto_env  # Use the Conda environment
 execute:
   eval: true
   freeze: auto
-  warning: false  # This suppresses all warnings globally
+  # warning: false  # This suppresses all warnings globally
 # engine: knitr
 
 
@@ -133,7 +133,6 @@ The LEHD provides various data sets for the US based on Census data. ...
 ```{python}
 #| label: obtain_data
 #| echo: false
-#| warning: false
 
 ## Downloading and extracting the data
 
@@ -221,7 +220,6 @@ Now let's take a quick look at the data to know what we are working with and how
 ```{python}
 #| label: select_data
 #| echo: false
-#| warning: false
 
 ## Work with the data
 
@@ -291,8 +289,10 @@ The variables typically contained in the QWI data follow in a table below:
 | Payroll | W1 | sPayroll | Total Quarterly Payroll | Total quarterly payroll for all jobs | Dollars | Earnings | 1 |
 
 *Source: [LEHD Public Use Schema](https://lehd.ces.census.gov/data/schema/V4.12.0/lehd_public_use_schema.html)*
+
 </details>
 
+The categorical variables show us additional levels of detail that we can ge, beyond the basic aggregates.
 
 
 <details>
@@ -459,10 +459,11 @@ The variables typically contained in the QWI data follow in a table below:
 
 <details>
 
+## First Analysis
+Let us further filter the data because we are only interested in the aggregate series for now.
+
 ```{python}
 #| label: View_the_data
-#| echo: false
-#| warning: false
 
 
 ## Create date variable
@@ -490,14 +491,28 @@ df_qwi_filtered = df_qwi_filtered[["date"] + [col for col in df_qwi_filtered.col
 # Export to deseasonalize in R
 df_qwi_filtered.to_csv("temp_df.csv", index=False)
 
+print("Data filtered and ready for deseasonalization.")
+
 ```
 
 It turns out that we need to use R (together with python) to use the usual seasonal adjustment with X13-ARIMA.
 
 ```{python}
 #| label: seasonal_adjustment
-#| echo: false
-#| warning: false
+
+import subprocess
+
+# Run the R script
+subprocess.run(["Rscript", "sheet_seas_adjust.r"], check=True)
+
+# Clean up by deleting the temp file
+os.remove("temp_df.csv")
+
+print("Data deseasonalized successfully.")
+
+
+# We still need some data from FRED
+
 
 
 ```
@@ -505,40 +520,177 @@ It turns out that we need to use R (together with python) to use the usual seaso
 
 
 ```{python}
-#| label: plotting
-#| echo: false
+#| label: figure_templates
 
 # Load the adjusted data
 df_qwi_filtered = pd.read_csv("qwi_data_seasadj.csv")
 
-# Clean up by deleting the temp file
-os.remove("temp_df.csv")
 
 ## Plotting
+import os
+import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from datetime import datetime
 
-# Plot HirAEndRepl over time
-plt.figure(figsize=(10, 5))
-plt.plot(df_qwi_filtered["date"], df_qwi_filtered["HirAEndRepl"], marker="o", linestyle="-")
+plt.ioff()  # Plots only show when explicitly called in quarto
 
-# Labels and title
-plt.xlabel("Date")
-plt.ylabel("HirAEndRepl")
-plt.title("Hiring Activity Over Time")
+def fun_plot_single_ts(df, date_col, value_col, title="Time Series Plot", xlabel="Date", ylabel="Value", color="#023047", recession_shading=True, recessions=None, scale_factor=1):
+    # Convert date column to datetime format
+    df[date_col] = pd.to_datetime(df[date_col])
 
-# Improve readability
-plt.xticks(rotation=45)
-plt.grid(True)
+    # Define default recession periods if none are provided
+    if recessions is None:
+        recessions = [
+            ("2001-03-01", "2001-11-01"),
+            ("2007-12-01", "2009-06-01"),
+            ("2020-02-01", "2020-04-01")
+        ]
 
-# Show the plot
-plt.show()
+    # Convert recession dates to datetime format
+    recession_periods = [(datetime.strptime(start, "%Y-%m-%d"), datetime.strptime(end, "%Y-%m-%d")) for start, end in recessions]
 
+    # Apply scaling
+    df[value_col] /= scale_factor
+
+    # Create the figure and axis
+    fig, ax = plt.subplots(figsize=(12, 6))
+
+    # Plot the time series
+    ax.plot(df[date_col], df[value_col], color=color, linewidth=2, label='_nolegend_')
+
+    # Highlight recession periods with lighter shading
+    if recession_shading:
+        for start, end in recession_periods:
+            ax.axvspan(start, end, color="grey", alpha=0.3)
+
+    # Labels and title
+    ax.set_xlabel(xlabel, fontsize=14, fontweight="bold")
+    ax.set_ylabel(ylabel, fontsize=14, fontweight="bold")
+    ax.set_title(title, fontsize=16, fontweight="bold")
+
+    # Improve readability
+    ax.xaxis.set_major_locator(mdates.YearLocator(base=5))  # Show every 5 years
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
+    ax.tick_params(axis='x', rotation=45, labelsize=12)
+    ax.tick_params(axis='y', labelsize=12)
+    ax.grid(False)  # Remove grid
+
+    # Adjust layout
+    plt.tight_layout()
+
+    # Show the plot
+    # plt.show()
+
+def fun_plot_three_ts(df, date_col, value_col1, value_col2, value_col3, title="Time Series Plot", xlabel="Date", ylabel="Value", color1="#023047", color2="#34a937", color3="#bc5090", line_type2="solid", line_type3="dashed", recession_shading=True, recessions=None, legend1="Series 1", legend2="Series 2", legend3="Series 3", scale_factor=1):
+    # Convert date column to datetime format
+    df[date_col] = pd.to_datetime(df[date_col])
+
+    # Define default recession periods if none are provided
+    if recessions is None:
+        recessions = [
+            ("2001-03-01", "2001-11-01"),
+            ("2007-12-01", "2009-06-01"),
+            ("2020-02-01", "2020-04-01")
+        ]
+
+    # Convert recession dates to datetime format
+    recession_periods = [(datetime.strptime(start, "%Y-%m-%d"), datetime.strptime(end, "%Y-%m-%d")) for start, end in recessions]
+
+    # Apply scaling
+    df[value_col1] /= scale_factor
+    df[value_col2] /= scale_factor
+    df[value_col3] /= scale_factor
+
+    # Create the figure and axis
+    fig, ax = plt.subplots(figsize=(12, 6))
+
+    # Plot the three time series
+    ax.plot(df[date_col], df[value_col1], color=color1, linewidth=2, label=legend1)
+    ax.plot(df[date_col], df[value_col2], color=color2, linewidth=2, linestyle=line_type2, label=legend2)
+    ax.plot(df[date_col], df[value_col3], color=color3, linewidth=2, linestyle=line_type3, label=legend3)
+
+    # Highlight recession periods with lighter shading
+    if recession_shading:
+        for start, end in recession_periods:
+            ax.axvspan(start, end, color="grey", alpha=0.3)
+
+    # Labels and title
+    ax.set_xlabel(xlabel, fontsize=14, fontweight="bold")
+    ax.set_ylabel(ylabel, fontsize=14, fontweight="bold")
+    ax.set_title(title, fontsize=16, fontweight="bold")
+
+    # Improve readability
+    ax.xaxis.set_major_locator(mdates.YearLocator(base=5))  # Show every 5 years
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
+    ax.tick_params(axis='x', rotation=45, labelsize=12)
+    ax.tick_params(axis='y', labelsize=12)
+    ax.grid(False)  # Remove grid
+    ax.legend()
+
+    # Adjust layout
+    plt.tight_layout()
+
+    # Show the plot
+    # plt.show()
+
+
+```
+
+
+```{python}
+#| label: plot_series
+#| echo: false
+#| fig-show: none
+
+# Example usage:
+df_qwi_filtered = pd.read_csv("qwi_data_seasadj.csv")
+fun_plot_single_ts(
+    df=df_qwi_filtered,
+    date_col="date",
+    value_col="HirAEndRepl",
+    title="Hiring Activity Over Time",
+    xlabel="Date",
+    ylabel="Replacement Hires (in millions)",
+    color="#023047",
+    recession_shading=True,
+    scale_factor=1000000
+)
+
+# Example usage:
+df_qwi_filtered = pd.read_csv("qwi_data_seasadj.csv")
+fun_plot_three_ts(
+    df=df_qwi_filtered,
+    date_col="date",
+    value_col1="HirAEndRepl",
+    value_col2="HirAEnd",
+    value_col3="HirA",
+    title="Labor Market Indicators Over Time",
+    xlabel="Date",
+    ylabel="Levels (in millions)",
+    color1="#023047",
+    color2="#34a937",
+    color3="#bc5090",
+    recession_shading=True,
+    legend1="Replacement",
+    legend2="Hires",
+    legend3="All Hires",
+    scale_factor=1000000
+)
 ```
 
 ::: {layout-ncol=2}
 <div style="text-align: center;">
-  ![](quarto_data_story_files/figure-html/plotting-1.svg){.lightbox}
+  ![](main_quarto_files/figure-html/plot_series-output-1.svg){.lightbox}
+  <div style="font-size: 10px; width: 100%; text-align: justify;">Notes.</div>
+</div>
+
+<div style="text-align: center;">
+  ![](main_quarto_files/figure-html/plot_series-output-2.svg){.lightbox}
   <div style="font-size: 10px; width: 100%; text-align: justify;">Notes.</div>
 </div>
 
 :::
+
+
+Now that we know that the plots work and look ok, let
