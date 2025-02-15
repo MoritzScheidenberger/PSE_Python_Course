@@ -33,30 +33,39 @@ mainfont: "Segoe UI"
 
 number-sections: true
 
-# jupyter: quarto_env  # Use the Conda environment
-# engine: knitr
-#jupyter: python3
+jupyter: quarto_env  # Use the Conda environment
+
+# Turns out that one has to use knitr & R to run all the python code
+# once the quarto document also contains R code
 
 # This is what it takes to make things run
 execute:
   eval: true
   freeze: auto
-engine: knitr
+  warning: false  # This suppresses all warnings globally
+# engine: knitr
 
 
 
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{python}
+#| label: legacy_code
+#| echo: false
+#| include: false
 
-library(reticulate)
+# This would have to be an R block to work
+# But then, everything runs in R, even python code
+
+# knitr::opts_chunk$set(echo = TRUE)
+
+# library(reticulate)
 
 # Force Reticulate to use "quarto_env"
-use_condaenv("quarto_env", required = TRUE)
+# use_condaenv("quarto_env", required = TRUE)
 
 # To check the current Python version:
-reticulate::py_config()
+# reticulate::py_config()
 
 ```
 
@@ -124,6 +133,7 @@ The LEHD provides various data sets for the US based on Census data. ...
 ```{python}
 #| label: obtain_data
 #| echo: false
+#| warning: false
 
 ## Downloading and extracting the data
 
@@ -133,6 +143,7 @@ import gzip
 import shutil
 import pandas as pd
 from bs4 import BeautifulSoup
+import sys
 
 # Base URL
 BASE_URL = "https://lehd.ces.census.gov/data/qwi/latest_release/us/"
@@ -146,13 +157,11 @@ os.makedirs(EXTRACT_DIR, exist_ok=True)
 
 # User-defined filter (Set to None for all files, or specify exact match criteria)
 FILTER_CRITERIA = "qwi_us_sa_f_gn_ns_op_u.csv.gz"  # Specify the exact filename needed
-# turns out that not all versions of the data are available through this site. Seasonally adjusted is not.
 
 # Fetch webpage content
 response = requests.get(BASE_URL)
 if response.status_code != 200:
-    print("Failed to access the website")
-    exit()
+    sys.exit()  # Exit silently on failure
 
 # Parse HTML
 soup = BeautifulSoup(response.text, "html.parser")
@@ -165,31 +174,33 @@ if FILTER_CRITERIA:
     file_links = [link for link in file_links if FILTER_CRITERIA in link]
 
 if not file_links:
-    print("No matching CSV files found.")
-else:
-    print(f"Found {len(file_links)} CSV file matching criteria. Downloading...")
+    sys.exit()  # Exit silently if no files are found
 
+# Suppress all printing by redirecting stdout
+original_stdout = sys.stdout
+sys.stdout = open(os.devnull, 'w')
+
+try:
     for file_url in file_links:
         file_name = os.path.join(DOWNLOAD_DIR, os.path.basename(file_url))
 
-        # Download file
+        # Download file (silent)
         with requests.get(file_url, stream=True) as r:
             with open(file_name, "wb") as f:
                 for chunk in r.iter_content(chunk_size=8192):
                     f.write(chunk)
 
-        #print(f"Downloaded: {file_name}")
-
-        # Extract file
+        # Extract file (silent)
         extracted_file_name = os.path.join(EXTRACT_DIR, os.path.basename(file_name).replace(".gz", ""))
-        with gzip.open(file_name, 'rb') as f_in:
-            with open(extracted_file_name, 'wb') as f_out:
-                shutil.copyfileobj(f_in, f_out)
-        print(f"Extracted: {extracted_file_name}")
+        with gzip.open(file_name, 'rb') as f_in, open(extracted_file_name, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
 
-        # Read the CSV
+        # Read CSV (silent)
         df = pd.read_csv(extracted_file_name)
-        print(df.head())  # Display first few rows
+
+finally:
+    # Restore original stdout
+    sys.stdout = original_stdout
 
 print("Data downloaded & extracted successfully.")
 
@@ -197,12 +208,10 @@ print("Data downloaded & extracted successfully.")
 def load_qwi_data():
     data_path = os.path.join(EXTRACT_DIR, FILTER_CRITERIA.replace(".gz", ""))
     if os.path.exists(data_path):
-        df = pd.read_csv(data_path)
-        print("Data successfully loaded.")
-        return df
+        return pd.read_csv(data_path)  # No print statements
     else:
-        print("Extracted file not found.")
-        return None
+        return None  # Silent failure
+
 
 ```
 
@@ -211,7 +220,8 @@ Now let's take a quick look at the data to know what we are working with and how
 
 ```{python}
 #| label: select_data
-#| echo: true
+#| echo: false
+#| warning: false
 
 ## Work with the data
 
@@ -451,7 +461,8 @@ The variables typically contained in the QWI data follow in a table below:
 
 ```{python}
 #| label: View_the_data
-#| echo: true
+#| echo: false
+#| warning: false
 
 
 ## Create date variable
@@ -460,12 +471,21 @@ df_qwi_filtered = df_qwi[
     (df_qwi["agegrp"] == "A00") &
     (df_qwi["industry"] == "00") &
     (df_qwi["ind_level"] == "A")
-].copy() # copy here for sure to not mess up pointers!
+].copy()  # Copy to avoid modifying the original DataFrame
 
 df_qwi_filtered["date"] = pd.PeriodIndex(
     df_qwi_filtered["year"].astype(str) + "Q" + df_qwi_filtered["quarter"].astype(str),
     freq="Q"
 ).to_timestamp()
+
+# Drop unnecessary columns
+df_qwi_filtered.drop(columns=["periodicity", "seasonadj", "geo_level", "ind_level", "industry",
+                              "ownercode", "sex", "agegrp", "race", "ethnicity", "education",
+                              "firmage", "firmsize", "year", "quarter", "geography"], inplace=True)
+
+# Ensure "date" is the first column
+df_qwi_filtered = df_qwi_filtered[["date"] + [col for col in df_qwi_filtered.columns if col != "date"]]
+
 
 # Export to deseasonalize in R
 df_qwi_filtered.to_csv("temp_df.csv", index=False)
@@ -474,16 +494,10 @@ df_qwi_filtered.to_csv("temp_df.csv", index=False)
 
 It turns out that we need to use R (together with python) to use the usual seasonal adjustment with X13-ARIMA.
 
-```{r}
+```{python}
 #| label: seasonal_adjustment
-#| echo: true
-
-# Load the necessary libraries
-library(seasonal)
-library(readr)
-
-# Load the data
-df_qwi_filtered <- read.csv("temp_df.csv")
+#| echo: false
+#| warning: false
 
 
 ```
@@ -492,7 +506,13 @@ df_qwi_filtered <- read.csv("temp_df.csv")
 
 ```{python}
 #| label: plotting
-#| echo: true
+#| echo: false
+
+# Load the adjusted data
+df_qwi_filtered = pd.read_csv("qwi_data_seasadj.csv")
+
+# Clean up by deleting the temp file
+os.remove("temp_df.csv")
 
 ## Plotting
 import matplotlib.pyplot as plt
