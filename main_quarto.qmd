@@ -42,6 +42,8 @@ jupyter: quarto_env  # Use the Conda environment
 execute:
   eval: true
   freeze: auto
+  fig-show: false
+
   # warning: false  # This suppresses all warnings globally
 # engine: knitr
 
@@ -522,10 +524,6 @@ print("Data deseasonalized successfully.")
 ```{python}
 #| label: figure_templates
 
-# Load the adjusted data
-df_qwi_filtered = pd.read_csv("qwi_data_seasadj.csv")
-
-
 ## Plotting
 import os
 import pandas as pd
@@ -533,10 +531,16 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from datetime import datetime
 
-plt.ioff()  # Plots only show when explicitly called in quarto
+# Load the adjusted data
+df_qwi_filtered = pd.read_csv("qwi_data_seasadj.csv")
 
-def fun_plot_single_ts(df, date_col, value_col, title="Time Series Plot", xlabel="Date", ylabel="Value", color="#023047", recession_shading=True, recessions=None, scale_factor=1):
+
+# plt.ioff()  # Plots only show when explicitly called in quarto
+
+## Single Time Series
+def fun_plot_single_ts(df_orig, date_col, value_col, title="Time Series Plot", xlabel="Date", ylabel="Value", color="#023047", recession_shading=True, recessions=None, scale_factor=1):
     # Convert date column to datetime format
+    df = df_orig.copy()
     df[date_col] = pd.to_datetime(df[date_col])
 
     # Define default recession periods if none are provided
@@ -580,10 +584,12 @@ def fun_plot_single_ts(df, date_col, value_col, title="Time Series Plot", xlabel
     plt.tight_layout()
 
     # Show the plot
-    # plt.show()
+    plt.show()
 
-def fun_plot_three_ts(df, date_col, value_col1, value_col2, value_col3, title="Time Series Plot", xlabel="Date", ylabel="Value", color1="#023047", color2="#34a937", color3="#bc5090", line_type2="solid", line_type3="dashed", recession_shading=True, recessions=None, legend1="Series 1", legend2="Series 2", legend3="Series 3", scale_factor=1):
+## Three Time Series
+def fun_plot_three_ts(df_orig, date_col, value_col1, value_col2, value_col3, title="Time Series Plot", xlabel="Date", ylabel="Value", color1="#023047", color2="#34a937", color3="#bc5090", line_type2="solid", line_type3="dashed", recession_shading=True, recessions=None, legend1="Series 1", legend2="Series 2", legend3="Series 3", scale_factor=1):
     # Convert date column to datetime format
+    df = df_orig.copy()
     df[date_col] = pd.to_datetime(df[date_col])
 
     # Define default recession periods if none are provided
@@ -632,7 +638,200 @@ def fun_plot_three_ts(df, date_col, value_col1, value_col2, value_col3, title="T
     plt.tight_layout()
 
     # Show the plot
-    # plt.show()
+    plt.show()
+
+
+def fun_plot_three_bars(df_orig, date_col, value_col1, value_col2, value_col3, title="Stacked Bar Chart", xlabel="Date", ylabel="Value", color1="#023047", color2="#34a937", color3="#bc5090", legend1="Series 1", legend2="Series 2", legend3="Series 3", scale_factor=1):
+    # Convert date column to datetime format
+    df = df_orig.copy()
+    df[date_col] = pd.to_datetime(df[date_col])
+
+    # Apply scaling
+    df[value_col1] /= scale_factor
+    df[value_col2] /= scale_factor
+    df[value_col3] /= scale_factor
+
+    # Calculate bar width dynamically
+    date_range = df[date_col].max() - df[date_col].min()
+    avg_time_interval = date_range / len(df)
+    bar_width = avg_time_interval.days * 0.8  # Adjust factor to control width
+
+    # Create stacked bar chart
+    fig, ax = plt.subplots(figsize=(12, 6))
+    x = df[date_col]
+    y1 = df[value_col1]
+    y2 = df[value_col2]
+    y3 = df[value_col3]
+
+    ax.bar(x, y1, color=color1, label=legend1, width=bar_width)
+    ax.bar(x, y2, bottom=y1, color=color2, label=legend2, width=bar_width)
+    ax.bar(x, y3, bottom=y1 + y2, color=color3, label=legend3, width=bar_width)
+
+    # Format x-axis for dates with major ticks every few years
+    ax.xaxis.set_major_locator(mdates.YearLocator(base=5))  # Show every 5 years
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))  # Format as Year
+    plt.xticks(rotation=45)  # Rotate for better readability
+
+    # Labels and title
+    ax.set_xlabel(xlabel, fontsize=14, fontweight="bold")
+    ax.set_ylabel(ylabel, fontsize=14, fontweight="bold")
+    ax.set_title(title, fontsize=16, fontweight="bold")
+    ax.legend()
+
+    # Show the plot
+    plt.show()
+
+# Example usage:
+fun_plot_three_bars(
+    df_orig=df_qwi_filtered,
+    date_col="date",
+    value_col1="HirAEndRepl",
+    value_col2="HirAEnd",
+    value_col3="HirA",
+    title="Labor Market Indicators Over Time",
+    xlabel="Date",
+    ylabel="Levels (in millions)",
+    color1="#023047",
+    color2="#34a937",
+    color3="#bc5090",
+    legend1="Replacement",
+    legend2="Hires",
+    legend3="All Hires",
+    scale_factor=1000000
+)
+
+
+
+def fun_plot_three_bars_line(df_orig, date_col, value_col1, value_col2, value_col3, line_col=None, title="Stacked Bar Chart", xlabel="Date", ylabel="Value", color1="#023047", color2="#34a937", color3="#bc5090", line_color="black", line_legend="Reference Line", legend1="Series 1", legend2="Series 2", legend3="Series 3", scale_factor=1):
+    # Convert date column to datetime format
+    df = df_orig.copy()
+    df[date_col] = pd.to_datetime(df[date_col])
+
+    # Apply scaling
+    df[value_col1] /= scale_factor
+    df[value_col2] /= scale_factor
+    df[value_col3] /= scale_factor
+
+    df[line_col] /= scale_factor
+
+    # Calculate bar width dynamically
+    date_range = df[date_col].max() - df[date_col].min()
+    avg_time_interval = date_range / len(df)
+    bar_width = avg_time_interval.days * 0.8  # Adjust factor to control width
+
+    # Create stacked bar chart
+    fig, ax = plt.subplots(figsize=(12, 6))
+    x = df[date_col]
+    y1 = df[value_col1]
+    y2 = df[value_col2]
+    y3 = df[value_col3]
+
+    ax.bar(x, y1, color=color1, label=legend1, width=bar_width)
+    ax.bar(x, y2, bottom=y1, color=color2, label=legend2, width=bar_width)
+    ax.bar(x, y3, bottom=y1 + y2, color=color3, label=legend3, width=bar_width)
+
+    # Add optional line plot
+    ax.plot(x, df[line_col], color=line_color, linewidth=2, linestyle="dashed", label=line_legend)
+
+    # Format x-axis for dates with major ticks every few years
+    ax.xaxis.set_major_locator(mdates.YearLocator(base=5))  # Show every 5 years
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))  # Format as Year
+    plt.xticks(rotation=45)  # Rotate for better readability
+
+    # Labels and title
+    ax.set_xlabel(xlabel, fontsize=14, fontweight="bold")
+    ax.set_ylabel(ylabel, fontsize=14, fontweight="bold")
+    ax.set_title(title, fontsize=16, fontweight="bold")
+    ax.legend()
+
+    # Show the plot
+    plt.show()
+
+# Example usage:
+fun_plot_three_bars_line(
+    df_orig=df_qwi_filtered,
+    date_col="date",
+    value_col1="HirAEndRepl",
+    value_col2="HirAEnd",
+    value_col3="HirAEnd",
+    line_col="HirAEndRepl",  # Additional line over bars
+    title="Labor Market Indicators Over Time",
+    xlabel="Date",
+    ylabel="Levels (in millions)",
+    color1="#023047",
+    color2="#34a937",
+    color3="#bc5090",
+    line_color="black",
+    line_legend="Total Employment",
+    legend1="Replacement",
+    legend2="Hires",
+    legend3="All Hires",
+    scale_factor=1000000
+)
+
+
+def fun_plot_two_bars_line(df_orig, date_col, value_col1, value_col2, line_col=None, title="Stacked Bar Chart", xlabel="Date", ylabel="Value", color1="#023047", color2="#34a937", line_color="black", line_legend="Reference Line", legend1="Series 1", legend2="Series 2", scale_factor=1):
+    # Convert date column to datetime format
+    df = df_orig.copy()
+    df[date_col] = pd.to_datetime(df[date_col])
+
+    # Apply scaling
+    df[value_col1] /= scale_factor
+    df[value_col2] /= scale_factor
+    if line_col:
+        df[line_col] /= scale_factor
+
+    # Calculate bar width dynamically
+    date_range = df[date_col].max() - df[date_col].min()
+    avg_time_interval = date_range / len(df)
+    bar_width = avg_time_interval.days * 0.8  # Adjust factor to control width
+
+    # Create stacked bar chart
+    fig, ax = plt.subplots(figsize=(12, 6))
+    x = df[date_col]
+    y1 = df[value_col1]
+    y2 = df[value_col2]
+
+    ax.bar(x, y1, color=color1, label=legend1, width=bar_width)
+    ax.bar(x, y2, bottom=y1, color=color2, label=legend2, width=bar_width)
+
+    # Add optional line plot
+    if line_col:
+        ax.plot(x, df[line_col], color=line_color, linewidth=2, linestyle="dashed", label=line_legend)
+
+    # Format x-axis for dates
+    ax.xaxis.set_major_locator(mdates.YearLocator(base=5))  # Show every 5 years
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))  # Format as Year
+    plt.xticks(rotation=45)  # Rotate for better readability
+
+    # Labels and title
+    ax.set_xlabel(xlabel, fontsize=14, fontweight="bold")
+    ax.set_ylabel(ylabel, fontsize=14, fontweight="bold")
+    ax.set_title(title, fontsize=16, fontweight="bold")
+    ax.legend()
+
+    # Show the plot
+    plt.show()
+
+# Example usage:
+fun_plot_two_bars_line(
+    df_orig=df_qwi_filtered,
+    date_col="date",
+    value_col1="HirAEndRepl",
+    value_col2="HirAEndRepl",
+    line_col="HirAEndRepl",  # Additional line over bars
+    title="Labor Market Indicators Over Time",
+    xlabel="Date",
+    ylabel="Levels (in millions)",
+    color1="#023047",
+    color2="#34a937",
+    line_color="black",
+    line_legend="Total Employment",
+    legend1="Replacement",
+    legend2="Hires",
+    scale_factor=1000000
+)
+
 
 
 ```
@@ -646,7 +845,7 @@ def fun_plot_three_ts(df, date_col, value_col1, value_col2, value_col3, title="T
 # Example usage:
 df_qwi_filtered = pd.read_csv("qwi_data_seasadj.csv")
 fun_plot_single_ts(
-    df=df_qwi_filtered,
+    df_orig=df_qwi_filtered,
     date_col="date",
     value_col="HirAEndRepl",
     title="Hiring Activity Over Time",
@@ -658,9 +857,8 @@ fun_plot_single_ts(
 )
 
 # Example usage:
-df_qwi_filtered = pd.read_csv("qwi_data_seasadj.csv")
 fun_plot_three_ts(
-    df=df_qwi_filtered,
+    df_orig=df_qwi_filtered,
     date_col="date",
     value_col1="HirAEndRepl",
     value_col2="HirAEnd",
@@ -677,6 +875,8 @@ fun_plot_three_ts(
     legend3="All Hires",
     scale_factor=1000000
 )
+
+
 ```
 
 ::: {layout-ncol=2}
@@ -689,6 +889,11 @@ fun_plot_three_ts(
   ![](main_quarto_files/figure-html/plot_series-output-2.svg){.lightbox}
   <div style="font-size: 10px; width: 100%; text-align: justify;">Notes.</div>
 </div>
+
+<div style="text-align: center;">
+  ![](main_quarto_files/figure-html/plot_series-output-3.svg){.lightbox}
+  <div style="font-size: 10px; width: 100%; text-align: justify;">Notes.</div>
+</div>HirA
 
 :::
 
