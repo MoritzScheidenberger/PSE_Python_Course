@@ -1319,23 +1319,23 @@ firmsize: 0</code></pre>
 <div id="figure_templates" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the adjusted data</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered <span class="op">=</span> pd.read_csv(<span class="st">"qwi_data_seasadj.csv"</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">## Plotting</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.dates <span class="im">as</span> mdates</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Plotting</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.dates <span class="im">as</span> mdates</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the adjusted data</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered <span class="op">=</span> pd.read_csv(<span class="st">"qwi_data_seasadj.csv"</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.ioff()  # Plots only show when explicitly called in quarto</span></span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">## Single Time Series</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fun_plot_single_ts(df, date_col, value_col, title<span class="op">=</span><span class="st">"Time Series Plot"</span>, xlabel<span class="op">=</span><span class="st">"Date"</span>, ylabel<span class="op">=</span><span class="st">"Value"</span>, color<span class="op">=</span><span class="st">"#023047"</span>, recession_shading<span class="op">=</span><span class="va">True</span>, recessions<span class="op">=</span><span class="va">None</span>, scale_factor<span class="op">=</span><span class="dv">1</span>):</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert date column to datetime format</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">## Single Time Series</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fun_plot_single_ts(df_orig, date_col, value_col, title<span class="op">=</span><span class="st">"Time Series Plot"</span>, xlabel<span class="op">=</span><span class="st">"Date"</span>, ylabel<span class="op">=</span><span class="st">"Value"</span>, color<span class="op">=</span><span class="st">"#023047"</span>, recession_shading<span class="op">=</span><span class="va">True</span>, recessions<span class="op">=</span><span class="va">None</span>, scale_factor<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert date column to datetime format</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df_orig.copy()</span>
 <span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    df[date_col] <span class="op">=</span> pd.to_datetime(df[date_col])</span>
 <span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define default recession periods if none are provided</span></span>
@@ -1382,114 +1382,250 @@ firmsize: 0</code></pre>
 <span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
 <span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a><span class="co">## Three Time Series</span></span>
-<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fun_plot_three_ts(df, date_col, value_col1, value_col2, value_col3, title<span class="op">=</span><span class="st">"Time Series Plot"</span>, xlabel<span class="op">=</span><span class="st">"Date"</span>, ylabel<span class="op">=</span><span class="st">"Value"</span>, color1<span class="op">=</span><span class="st">"#023047"</span>, color2<span class="op">=</span><span class="st">"#34a937"</span>, color3<span class="op">=</span><span class="st">"#bc5090"</span>, line_type2<span class="op">=</span><span class="st">"solid"</span>, line_type3<span class="op">=</span><span class="st">"dashed"</span>, recession_shading<span class="op">=</span><span class="va">True</span>, recessions<span class="op">=</span><span class="va">None</span>, legend1<span class="op">=</span><span class="st">"Series 1"</span>, legend2<span class="op">=</span><span class="st">"Series 2"</span>, legend3<span class="op">=</span><span class="st">"Series 3"</span>, scale_factor<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fun_plot_three_ts(df_orig, date_col, value_col1, value_col2, value_col3, title<span class="op">=</span><span class="st">"Time Series Plot"</span>, xlabel<span class="op">=</span><span class="st">"Date"</span>, ylabel<span class="op">=</span><span class="st">"Value"</span>, color1<span class="op">=</span><span class="st">"#023047"</span>, color2<span class="op">=</span><span class="st">"#34a937"</span>, color3<span class="op">=</span><span class="st">"#bc5090"</span>, line_type2<span class="op">=</span><span class="st">"solid"</span>, line_type3<span class="op">=</span><span class="st">"dashed"</span>, recession_shading<span class="op">=</span><span class="va">True</span>, recessions<span class="op">=</span><span class="va">None</span>, legend1<span class="op">=</span><span class="st">"Series 1"</span>, legend2<span class="op">=</span><span class="st">"Series 2"</span>, legend3<span class="op">=</span><span class="st">"Series 3"</span>, scale_factor<span class="op">=</span><span class="dv">1</span>):</span>
 <span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert date column to datetime format</span></span>
-<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>    df[date_col] <span class="op">=</span> pd.to_datetime(df[date_col])</span>
-<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define default recession periods if none are provided</span></span>
-<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> recessions <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>        recessions <span class="op">=</span> [</span>
-<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"2001-03-01"</span>, <span class="st">"2001-11-01"</span>),</span>
-<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"2007-12-01"</span>, <span class="st">"2009-06-01"</span>),</span>
-<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"2020-02-01"</span>, <span class="st">"2020-04-01"</span>)</span>
-<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>        ]</span>
-<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert recession dates to datetime format</span></span>
-<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>    recession_periods <span class="op">=</span> [(datetime.strptime(start, <span class="st">"%Y-%m-</span><span class="sc">%d</span><span class="st">"</span>), datetime.strptime(end, <span class="st">"%Y-%m-</span><span class="sc">%d</span><span class="st">"</span>)) <span class="cf">for</span> start, end <span class="kw">in</span> recessions]</span>
-<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Apply scaling</span></span>
-<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a>    df[value_col1] <span class="op">/=</span> scale_factor</span>
-<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>    df[value_col2] <span class="op">/=</span> scale_factor</span>
-<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a>    df[value_col3] <span class="op">/=</span> scale_factor</span>
-<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create the figure and axis</span></span>
-<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
-<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Plot the three time series</span></span>
-<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a>    ax.plot(df[date_col], df[value_col1], color<span class="op">=</span>color1, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span>legend1)</span>
-<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a>    ax.plot(df[date_col], df[value_col2], color<span class="op">=</span>color2, linewidth<span class="op">=</span><span class="dv">2</span>, linestyle<span class="op">=</span>line_type2, label<span class="op">=</span>legend2)</span>
-<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a>    ax.plot(df[date_col], df[value_col3], color<span class="op">=</span>color3, linewidth<span class="op">=</span><span class="dv">2</span>, linestyle<span class="op">=</span>line_type3, label<span class="op">=</span>legend3)</span>
-<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Highlight recession periods with lighter shading</span></span>
-<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> recession_shading:</span>
-<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> start, end <span class="kw">in</span> recession_periods:</span>
-<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a>            ax.axvspan(start, end, color<span class="op">=</span><span class="st">"grey"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Labels and title</span></span>
-<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(xlabel, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
-<span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(ylabel, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
-<span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a>    ax.set_title(title, fontsize<span class="op">=</span><span class="dv">16</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
-<span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-102"><a href="#cb7-102" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Improve readability</span></span>
-<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_locator(mdates.YearLocator(base<span class="op">=</span><span class="dv">5</span>))  <span class="co"># Show every 5 years</span></span>
-<span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_formatter(mdates.DateFormatter(<span class="st">"%Y"</span>))</span>
-<span id="cb7-105"><a href="#cb7-105" aria-hidden="true" tabindex="-1"></a>    ax.tick_params(axis<span class="op">=</span><span class="st">'x'</span>, rotation<span class="op">=</span><span class="dv">45</span>, labelsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb7-106"><a href="#cb7-106" aria-hidden="true" tabindex="-1"></a>    ax.tick_params(axis<span class="op">=</span><span class="st">'y'</span>, labelsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb7-107"><a href="#cb7-107" aria-hidden="true" tabindex="-1"></a>    ax.grid(<span class="va">False</span>)  <span class="co"># Remove grid</span></span>
-<span id="cb7-108"><a href="#cb7-108" aria-hidden="true" tabindex="-1"></a>    ax.legend()</span>
-<span id="cb7-109"><a href="#cb7-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-110"><a href="#cb7-110" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Adjust layout</span></span>
-<span id="cb7-111"><a href="#cb7-111" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb7-112"><a href="#cb7-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-113"><a href="#cb7-113" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Show the plot</span></span>
-<span id="cb7-114"><a href="#cb7-114" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-116"><a href="#cb7-116" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fun_plot_bar_three_line(df, date_col, bar_col1, bar_col2, bar_col3, line_col, title<span class="op">=</span><span class="st">"Time Series Plot"</span>, xlabel<span class="op">=</span><span class="st">"Date"</span>, ylabel<span class="op">=</span><span class="st">"Primary Value"</span>, color_bar1<span class="op">=</span><span class="st">"#bc5090"</span>, color_bar2<span class="op">=</span><span class="st">"#58508d"</span>, color_bar3<span class="op">=</span><span class="st">"#003f5c"</span>, color_line<span class="op">=</span><span class="st">"#ffa600"</span>, recession_shading<span class="op">=</span><span class="va">True</span>, recessions<span class="op">=</span><span class="va">None</span>, scale_factor<span class="op">=</span><span class="dv">1</span>):</span>
-<span id="cb7-117"><a href="#cb7-117" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert date column to datetime format</span></span>
-<span id="cb7-118"><a href="#cb7-118" aria-hidden="true" tabindex="-1"></a>    df[date_col] <span class="op">=</span> pd.to_datetime(df[date_col])</span>
-<span id="cb7-119"><a href="#cb7-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-120"><a href="#cb7-120" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define default recession periods if none are provided</span></span>
-<span id="cb7-121"><a href="#cb7-121" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> recessions <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb7-122"><a href="#cb7-122" aria-hidden="true" tabindex="-1"></a>        recessions <span class="op">=</span> [</span>
-<span id="cb7-123"><a href="#cb7-123" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"2001-03-01"</span>, <span class="st">"2001-11-01"</span>),</span>
-<span id="cb7-124"><a href="#cb7-124" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"2007-12-01"</span>, <span class="st">"2009-06-01"</span>),</span>
-<span id="cb7-125"><a href="#cb7-125" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"2020-02-01"</span>, <span class="st">"2020-04-01"</span>)</span>
-<span id="cb7-126"><a href="#cb7-126" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df_orig.copy()</span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>    df[date_col] <span class="op">=</span> pd.to_datetime(df[date_col])</span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define default recession periods if none are provided</span></span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> recessions <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>        recessions <span class="op">=</span> [</span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"2001-03-01"</span>, <span class="st">"2001-11-01"</span>),</span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"2007-12-01"</span>, <span class="st">"2009-06-01"</span>),</span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"2020-02-01"</span>, <span class="st">"2020-04-01"</span>)</span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert recession dates to datetime format</span></span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a>    recession_periods <span class="op">=</span> [(datetime.strptime(start, <span class="st">"%Y-%m-</span><span class="sc">%d</span><span class="st">"</span>), datetime.strptime(end, <span class="st">"%Y-%m-</span><span class="sc">%d</span><span class="st">"</span>)) <span class="cf">for</span> start, end <span class="kw">in</span> recessions]</span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Apply scaling</span></span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>    df[value_col1] <span class="op">/=</span> scale_factor</span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a>    df[value_col2] <span class="op">/=</span> scale_factor</span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a>    df[value_col3] <span class="op">/=</span> scale_factor</span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create the figure and axis</span></span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Plot the three time series</span></span>
+<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a>    ax.plot(df[date_col], df[value_col1], color<span class="op">=</span>color1, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span>legend1)</span>
+<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a>    ax.plot(df[date_col], df[value_col2], color<span class="op">=</span>color2, linewidth<span class="op">=</span><span class="dv">2</span>, linestyle<span class="op">=</span>line_type2, label<span class="op">=</span>legend2)</span>
+<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a>    ax.plot(df[date_col], df[value_col3], color<span class="op">=</span>color3, linewidth<span class="op">=</span><span class="dv">2</span>, linestyle<span class="op">=</span>line_type3, label<span class="op">=</span>legend3)</span>
+<span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Highlight recession periods with lighter shading</span></span>
+<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> recession_shading:</span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> start, end <span class="kw">in</span> recession_periods:</span>
+<span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a>            ax.axvspan(start, end, color<span class="op">=</span><span class="st">"grey"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Labels and title</span></span>
+<span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(xlabel, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(ylabel, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a>    ax.set_title(title, fontsize<span class="op">=</span><span class="dv">16</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb7-102"><a href="#cb7-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Improve readability</span></span>
+<span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_locator(mdates.YearLocator(base<span class="op">=</span><span class="dv">5</span>))  <span class="co"># Show every 5 years</span></span>
+<span id="cb7-105"><a href="#cb7-105" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_formatter(mdates.DateFormatter(<span class="st">"%Y"</span>))</span>
+<span id="cb7-106"><a href="#cb7-106" aria-hidden="true" tabindex="-1"></a>    ax.tick_params(axis<span class="op">=</span><span class="st">'x'</span>, rotation<span class="op">=</span><span class="dv">45</span>, labelsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb7-107"><a href="#cb7-107" aria-hidden="true" tabindex="-1"></a>    ax.tick_params(axis<span class="op">=</span><span class="st">'y'</span>, labelsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb7-108"><a href="#cb7-108" aria-hidden="true" tabindex="-1"></a>    ax.grid(<span class="va">False</span>)  <span class="co"># Remove grid</span></span>
+<span id="cb7-109"><a href="#cb7-109" aria-hidden="true" tabindex="-1"></a>    ax.legend()</span>
+<span id="cb7-110"><a href="#cb7-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-111"><a href="#cb7-111" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Adjust layout</span></span>
+<span id="cb7-112"><a href="#cb7-112" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb7-113"><a href="#cb7-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-114"><a href="#cb7-114" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Show the plot</span></span>
+<span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb7-116"><a href="#cb7-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-117"><a href="#cb7-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-118"><a href="#cb7-118" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fun_plot_three_bars(df_orig, date_col, value_col1, value_col2, value_col3, title<span class="op">=</span><span class="st">"Stacked Bar Chart"</span>, xlabel<span class="op">=</span><span class="st">"Date"</span>, ylabel<span class="op">=</span><span class="st">"Value"</span>, color1<span class="op">=</span><span class="st">"#023047"</span>, color2<span class="op">=</span><span class="st">"#34a937"</span>, color3<span class="op">=</span><span class="st">"#bc5090"</span>, legend1<span class="op">=</span><span class="st">"Series 1"</span>, legend2<span class="op">=</span><span class="st">"Series 2"</span>, legend3<span class="op">=</span><span class="st">"Series 3"</span>, scale_factor<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb7-119"><a href="#cb7-119" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert date column to datetime format</span></span>
+<span id="cb7-120"><a href="#cb7-120" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df_orig.copy()</span>
+<span id="cb7-121"><a href="#cb7-121" aria-hidden="true" tabindex="-1"></a>    df[date_col] <span class="op">=</span> pd.to_datetime(df[date_col])</span>
+<span id="cb7-122"><a href="#cb7-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-123"><a href="#cb7-123" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Apply scaling</span></span>
+<span id="cb7-124"><a href="#cb7-124" aria-hidden="true" tabindex="-1"></a>    df[value_col1] <span class="op">/=</span> scale_factor</span>
+<span id="cb7-125"><a href="#cb7-125" aria-hidden="true" tabindex="-1"></a>    df[value_col2] <span class="op">/=</span> scale_factor</span>
+<span id="cb7-126"><a href="#cb7-126" aria-hidden="true" tabindex="-1"></a>    df[value_col3] <span class="op">/=</span> scale_factor</span>
 <span id="cb7-127"><a href="#cb7-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-128"><a href="#cb7-128" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert recession dates to datetime format</span></span>
-<span id="cb7-129"><a href="#cb7-129" aria-hidden="true" tabindex="-1"></a>    recession_periods <span class="op">=</span> [(datetime.strptime(start, <span class="st">"%Y-%m-</span><span class="sc">%d</span><span class="st">"</span>), datetime.strptime(end, <span class="st">"%Y-%m-</span><span class="sc">%d</span><span class="st">"</span>)) <span class="cf">for</span> start, end <span class="kw">in</span> recessions]</span>
-<span id="cb7-130"><a href="#cb7-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-131"><a href="#cb7-131" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Apply scaling</span></span>
-<span id="cb7-132"><a href="#cb7-132" aria-hidden="true" tabindex="-1"></a>    df[bar_col1] <span class="op">/=</span> scale_factor</span>
-<span id="cb7-133"><a href="#cb7-133" aria-hidden="true" tabindex="-1"></a>    df[bar_col2] <span class="op">/=</span> scale_factor</span>
-<span id="cb7-134"><a href="#cb7-134" aria-hidden="true" tabindex="-1"></a>    df[bar_col3] <span class="op">/=</span> scale_factor</span>
-<span id="cb7-135"><a href="#cb7-135" aria-hidden="true" tabindex="-1"></a>    df[line_col] <span class="op">/=</span> scale_factor</span>
-<span id="cb7-136"><a href="#cb7-136" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-137"><a href="#cb7-137" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create the figure and axis</span></span>
-<span id="cb7-138"><a href="#cb7-138" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb7-128"><a href="#cb7-128" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate bar width dynamically</span></span>
+<span id="cb7-129"><a href="#cb7-129" aria-hidden="true" tabindex="-1"></a>    date_range <span class="op">=</span> df[date_col].<span class="bu">max</span>() <span class="op">-</span> df[date_col].<span class="bu">min</span>()</span>
+<span id="cb7-130"><a href="#cb7-130" aria-hidden="true" tabindex="-1"></a>    avg_time_interval <span class="op">=</span> date_range <span class="op">/</span> <span class="bu">len</span>(df)</span>
+<span id="cb7-131"><a href="#cb7-131" aria-hidden="true" tabindex="-1"></a>    bar_width <span class="op">=</span> avg_time_interval.days <span class="op">*</span> <span class="fl">0.8</span>  <span class="co"># Adjust factor to control width</span></span>
+<span id="cb7-132"><a href="#cb7-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-133"><a href="#cb7-133" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create stacked bar chart</span></span>
+<span id="cb7-134"><a href="#cb7-134" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb7-135"><a href="#cb7-135" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> df[date_col]</span>
+<span id="cb7-136"><a href="#cb7-136" aria-hidden="true" tabindex="-1"></a>    y1 <span class="op">=</span> df[value_col1]</span>
+<span id="cb7-137"><a href="#cb7-137" aria-hidden="true" tabindex="-1"></a>    y2 <span class="op">=</span> df[value_col2]</span>
+<span id="cb7-138"><a href="#cb7-138" aria-hidden="true" tabindex="-1"></a>    y3 <span class="op">=</span> df[value_col3]</span>
 <span id="cb7-139"><a href="#cb7-139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-140"><a href="#cb7-140" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Plot stacked bars</span></span>
-<span id="cb7-141"><a href="#cb7-141" aria-hidden="true" tabindex="-1"></a>    ax.bar(df[date_col], df[bar_col1], color<span class="op">=</span>color_bar1, label<span class="op">=</span>bar_col1)</span>
-<span id="cb7-142"><a href="#cb7-142" aria-hidden="true" tabindex="-1"></a>    ax.bar(df[date_col], df[bar_col2], bottom<span class="op">=</span>df[bar_col1], color<span class="op">=</span>color_bar2, label<span class="op">=</span>bar_col2)</span>
-<span id="cb7-143"><a href="#cb7-143" aria-hidden="true" tabindex="-1"></a>    ax.bar(df[date_col], df[bar_col3], bottom<span class="op">=</span>df[bar_col1] <span class="op">+</span> df[bar_col2], color<span class="op">=</span>color_bar3, label<span class="op">=</span>bar_col3)</span>
-<span id="cb7-144"><a href="#cb7-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-145"><a href="#cb7-145" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Plot the line series</span></span>
-<span id="cb7-146"><a href="#cb7-146" aria-hidden="true" tabindex="-1"></a>    ax2 <span class="op">=</span> ax.twinx()</span>
-<span id="cb7-147"><a href="#cb7-147" aria-hidden="true" tabindex="-1"></a>    ax2.plot(df[date_col], df[line_col], color<span class="op">=</span>color_line, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span>line_col)</span>
+<span id="cb7-140"><a href="#cb7-140" aria-hidden="true" tabindex="-1"></a>    ax.bar(x, y1, color<span class="op">=</span>color1, label<span class="op">=</span>legend1, width<span class="op">=</span>bar_width)</span>
+<span id="cb7-141"><a href="#cb7-141" aria-hidden="true" tabindex="-1"></a>    ax.bar(x, y2, bottom<span class="op">=</span>y1, color<span class="op">=</span>color2, label<span class="op">=</span>legend2, width<span class="op">=</span>bar_width)</span>
+<span id="cb7-142"><a href="#cb7-142" aria-hidden="true" tabindex="-1"></a>    ax.bar(x, y3, bottom<span class="op">=</span>y1 <span class="op">+</span> y2, color<span class="op">=</span>color3, label<span class="op">=</span>legend3, width<span class="op">=</span>bar_width)</span>
+<span id="cb7-143"><a href="#cb7-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-144"><a href="#cb7-144" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Format x-axis for dates with major ticks every few years</span></span>
+<span id="cb7-145"><a href="#cb7-145" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_locator(mdates.YearLocator(base<span class="op">=</span><span class="dv">5</span>))  <span class="co"># Show every 5 years</span></span>
+<span id="cb7-146"><a href="#cb7-146" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_formatter(mdates.DateFormatter(<span class="st">"%Y"</span>))  <span class="co"># Format as Year</span></span>
+<span id="cb7-147"><a href="#cb7-147" aria-hidden="true" tabindex="-1"></a>    plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)  <span class="co"># Rotate for better readability</span></span>
 <span id="cb7-148"><a href="#cb7-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Highlight recession periods with lighter shading</span></span>
-<span id="cb7-150"><a href="#cb7-150" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> recession_shading:</span>
-<span id="cb7-151"><a href="#cb7-151" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> start, end <span class="kw">in</span> recession_periods:</span>
-<span id="cb7-152"><a href="#cb7-152" aria-hidden="true" tabindex="-1"></a>            ax.axvspan(start, end, color<span class="op">=</span><span class="st">"grey"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb7-153"><a href="#cb7-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-154"><a href="#cb7-154" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Labels and title</span></span>
-<span id="cb7-155"><a href="#cb7-155" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(xlabel, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
-<span id="cb7-156"><a href="#cb7-156" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(ylabel, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
-<span id="cb7-157"><a href="#cb7-157" aria-hidden="true" tabindex="-1"></a>    ax.set_title(title, fontsize<span class="op">=</span><span class="dv">16</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
-<span id="cb7-158"><a href="#cb7-158" aria-hidden="true" tabindex="-1"></a>    ax2.set_ylabel(<span class="st">"Secondary Value"</span>, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
-<span id="cb7-159"><a href="#cb7-159" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-160"><a href="#cb7-160" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Improve readability</span></span>
-<span id="cb7-161"><a href="#cb7-161" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_locator(mdates.YearLocator(base<span class="op">=</span><span class="dv">5</span>))  <span class="co"># Show every 5 years</span></span>
-<span id="cb7-162"><a href="#cb7-162" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_formatter(mdates.DateFormatter(<span class="st">"%Y"</span>))</span>
-<span id="cb7-163"><a href="#cb7-163" aria-hidden="true" tabindex="-1"></a>    ax.tick_params(axis<span class="op">=</span><span class="st">'x'</span>, rotation<span class="op">=</span><span class="dv">45</span>, labelsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb7-164"><a href="#cb7-164" aria-hidden="true" tabindex="-1"></a>    ax.tick_params(axis<span class="op">=</span><span class="st">'y'</span>, labelsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb7-165"><a href="#cb7-165" aria-hidden="true" tabindex="-1"></a>    ax.grid(<span class="va">False</span>)  <span class="co"># Remove grid</span></span>
-<span id="cb7-166"><a href="#cb7-166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-167"><a href="#cb7-167" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Adjust layout</span></span>
-<span id="cb7-168"><a href="#cb7-168" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb7-169"><a href="#cb7-169" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-170"><a href="#cb7-170" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Show the plot</span></span>
-<span id="cb7-171"><a href="#cb7-171" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Labels and title</span></span>
+<span id="cb7-150"><a href="#cb7-150" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(xlabel, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb7-151"><a href="#cb7-151" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(ylabel, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb7-152"><a href="#cb7-152" aria-hidden="true" tabindex="-1"></a>    ax.set_title(title, fontsize<span class="op">=</span><span class="dv">16</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb7-153"><a href="#cb7-153" aria-hidden="true" tabindex="-1"></a>    ax.legend()</span>
+<span id="cb7-154"><a href="#cb7-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-155"><a href="#cb7-155" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Show the plot</span></span>
+<span id="cb7-156"><a href="#cb7-156" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb7-157"><a href="#cb7-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-158"><a href="#cb7-158" aria-hidden="true" tabindex="-1"></a><span class="co">## Example usage:</span></span>
+<span id="cb7-159"><a href="#cb7-159" aria-hidden="true" tabindex="-1"></a><span class="co"># fun_plot_three_bars(</span></span>
+<span id="cb7-160"><a href="#cb7-160" aria-hidden="true" tabindex="-1"></a><span class="co">#     df_orig=df_qwi_filtered,</span></span>
+<span id="cb7-161"><a href="#cb7-161" aria-hidden="true" tabindex="-1"></a><span class="co">#     date_col="date",</span></span>
+<span id="cb7-162"><a href="#cb7-162" aria-hidden="true" tabindex="-1"></a><span class="co">#     value_col1="HirAEndRepl",</span></span>
+<span id="cb7-163"><a href="#cb7-163" aria-hidden="true" tabindex="-1"></a><span class="co">#     value_col2="HirAEnd",</span></span>
+<span id="cb7-164"><a href="#cb7-164" aria-hidden="true" tabindex="-1"></a><span class="co">#     value_col3="HirA",</span></span>
+<span id="cb7-165"><a href="#cb7-165" aria-hidden="true" tabindex="-1"></a><span class="co">#     title="Labor Market Indicators Over Time",</span></span>
+<span id="cb7-166"><a href="#cb7-166" aria-hidden="true" tabindex="-1"></a><span class="co">#     xlabel="Date",</span></span>
+<span id="cb7-167"><a href="#cb7-167" aria-hidden="true" tabindex="-1"></a><span class="co">#     ylabel="Levels (in millions)",</span></span>
+<span id="cb7-168"><a href="#cb7-168" aria-hidden="true" tabindex="-1"></a><span class="co">#     color1="#023047",</span></span>
+<span id="cb7-169"><a href="#cb7-169" aria-hidden="true" tabindex="-1"></a><span class="co">#     color2="#34a937",</span></span>
+<span id="cb7-170"><a href="#cb7-170" aria-hidden="true" tabindex="-1"></a><span class="co">#     color3="#bc5090",</span></span>
+<span id="cb7-171"><a href="#cb7-171" aria-hidden="true" tabindex="-1"></a><span class="co">#     legend1="Replacement",</span></span>
+<span id="cb7-172"><a href="#cb7-172" aria-hidden="true" tabindex="-1"></a><span class="co">#     legend2="Hires",</span></span>
+<span id="cb7-173"><a href="#cb7-173" aria-hidden="true" tabindex="-1"></a><span class="co">#     legend3="All Hires",</span></span>
+<span id="cb7-174"><a href="#cb7-174" aria-hidden="true" tabindex="-1"></a><span class="co">#     scale_factor=1000000</span></span>
+<span id="cb7-175"><a href="#cb7-175" aria-hidden="true" tabindex="-1"></a><span class="co"># )</span></span>
+<span id="cb7-176"><a href="#cb7-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-177"><a href="#cb7-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-178"><a href="#cb7-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-179"><a href="#cb7-179" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fun_plot_three_bars_line(df_orig, date_col, value_col1, value_col2, value_col3, line_col<span class="op">=</span><span class="va">None</span>, title<span class="op">=</span><span class="st">"Stacked Bar Chart"</span>, xlabel<span class="op">=</span><span class="st">"Date"</span>, ylabel<span class="op">=</span><span class="st">"Value"</span>, color1<span class="op">=</span><span class="st">"#023047"</span>, color2<span class="op">=</span><span class="st">"#34a937"</span>, color3<span class="op">=</span><span class="st">"#bc5090"</span>, line_color<span class="op">=</span><span class="st">"black"</span>, line_legend<span class="op">=</span><span class="st">"Reference Line"</span>, legend1<span class="op">=</span><span class="st">"Series 1"</span>, legend2<span class="op">=</span><span class="st">"Series 2"</span>, legend3<span class="op">=</span><span class="st">"Series 3"</span>, scale_factor<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb7-180"><a href="#cb7-180" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert date column to datetime format</span></span>
+<span id="cb7-181"><a href="#cb7-181" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df_orig.copy()</span>
+<span id="cb7-182"><a href="#cb7-182" aria-hidden="true" tabindex="-1"></a>    df[date_col] <span class="op">=</span> pd.to_datetime(df[date_col])</span>
+<span id="cb7-183"><a href="#cb7-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-184"><a href="#cb7-184" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Apply scaling</span></span>
+<span id="cb7-185"><a href="#cb7-185" aria-hidden="true" tabindex="-1"></a>    df[value_col1] <span class="op">/=</span> scale_factor</span>
+<span id="cb7-186"><a href="#cb7-186" aria-hidden="true" tabindex="-1"></a>    df[value_col2] <span class="op">/=</span> scale_factor</span>
+<span id="cb7-187"><a href="#cb7-187" aria-hidden="true" tabindex="-1"></a>    df[value_col3] <span class="op">/=</span> scale_factor</span>
+<span id="cb7-188"><a href="#cb7-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-189"><a href="#cb7-189" aria-hidden="true" tabindex="-1"></a>    df[line_col] <span class="op">/=</span> scale_factor</span>
+<span id="cb7-190"><a href="#cb7-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-191"><a href="#cb7-191" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate bar width dynamically</span></span>
+<span id="cb7-192"><a href="#cb7-192" aria-hidden="true" tabindex="-1"></a>    date_range <span class="op">=</span> df[date_col].<span class="bu">max</span>() <span class="op">-</span> df[date_col].<span class="bu">min</span>()</span>
+<span id="cb7-193"><a href="#cb7-193" aria-hidden="true" tabindex="-1"></a>    avg_time_interval <span class="op">=</span> date_range <span class="op">/</span> <span class="bu">len</span>(df)</span>
+<span id="cb7-194"><a href="#cb7-194" aria-hidden="true" tabindex="-1"></a>    bar_width <span class="op">=</span> avg_time_interval.days <span class="op">*</span> <span class="fl">0.8</span>  <span class="co"># Adjust factor to control width</span></span>
+<span id="cb7-195"><a href="#cb7-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-196"><a href="#cb7-196" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create stacked bar chart</span></span>
+<span id="cb7-197"><a href="#cb7-197" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb7-198"><a href="#cb7-198" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> df[date_col]</span>
+<span id="cb7-199"><a href="#cb7-199" aria-hidden="true" tabindex="-1"></a>    y1 <span class="op">=</span> df[value_col1]</span>
+<span id="cb7-200"><a href="#cb7-200" aria-hidden="true" tabindex="-1"></a>    y2 <span class="op">=</span> df[value_col2]</span>
+<span id="cb7-201"><a href="#cb7-201" aria-hidden="true" tabindex="-1"></a>    y3 <span class="op">=</span> df[value_col3]</span>
+<span id="cb7-202"><a href="#cb7-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-203"><a href="#cb7-203" aria-hidden="true" tabindex="-1"></a>    ax.bar(x, y1, color<span class="op">=</span>color1, label<span class="op">=</span>legend1, width<span class="op">=</span>bar_width)</span>
+<span id="cb7-204"><a href="#cb7-204" aria-hidden="true" tabindex="-1"></a>    ax.bar(x, y2, bottom<span class="op">=</span>y1, color<span class="op">=</span>color2, label<span class="op">=</span>legend2, width<span class="op">=</span>bar_width)</span>
+<span id="cb7-205"><a href="#cb7-205" aria-hidden="true" tabindex="-1"></a>    ax.bar(x, y3, bottom<span class="op">=</span>y1 <span class="op">+</span> y2, color<span class="op">=</span>color3, label<span class="op">=</span>legend3, width<span class="op">=</span>bar_width)</span>
+<span id="cb7-206"><a href="#cb7-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-207"><a href="#cb7-207" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add optional line plot</span></span>
+<span id="cb7-208"><a href="#cb7-208" aria-hidden="true" tabindex="-1"></a>    ax.plot(x, df[line_col], color<span class="op">=</span>line_color, linewidth<span class="op">=</span><span class="dv">2</span>, linestyle<span class="op">=</span><span class="st">"dashed"</span>, label<span class="op">=</span>line_legend)</span>
+<span id="cb7-209"><a href="#cb7-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-210"><a href="#cb7-210" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Format x-axis for dates with major ticks every few years</span></span>
+<span id="cb7-211"><a href="#cb7-211" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_locator(mdates.YearLocator(base<span class="op">=</span><span class="dv">5</span>))  <span class="co"># Show every 5 years</span></span>
+<span id="cb7-212"><a href="#cb7-212" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_formatter(mdates.DateFormatter(<span class="st">"%Y"</span>))  <span class="co"># Format as Year</span></span>
+<span id="cb7-213"><a href="#cb7-213" aria-hidden="true" tabindex="-1"></a>    plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)  <span class="co"># Rotate for better readability</span></span>
+<span id="cb7-214"><a href="#cb7-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-215"><a href="#cb7-215" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Labels and title</span></span>
+<span id="cb7-216"><a href="#cb7-216" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(xlabel, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb7-217"><a href="#cb7-217" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(ylabel, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb7-218"><a href="#cb7-218" aria-hidden="true" tabindex="-1"></a>    ax.set_title(title, fontsize<span class="op">=</span><span class="dv">16</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb7-219"><a href="#cb7-219" aria-hidden="true" tabindex="-1"></a>    ax.legend()</span>
+<span id="cb7-220"><a href="#cb7-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-221"><a href="#cb7-221" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Show the plot</span></span>
+<span id="cb7-222"><a href="#cb7-222" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb7-223"><a href="#cb7-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-224"><a href="#cb7-224" aria-hidden="true" tabindex="-1"></a><span class="co">## Example usage:</span></span>
+<span id="cb7-225"><a href="#cb7-225" aria-hidden="true" tabindex="-1"></a><span class="co"># fun_plot_three_bars_line(</span></span>
+<span id="cb7-226"><a href="#cb7-226" aria-hidden="true" tabindex="-1"></a><span class="co">#     df_orig=df_qwi_filtered,</span></span>
+<span id="cb7-227"><a href="#cb7-227" aria-hidden="true" tabindex="-1"></a><span class="co">#     date_col="date",</span></span>
+<span id="cb7-228"><a href="#cb7-228" aria-hidden="true" tabindex="-1"></a><span class="co">#     value_col1="HirAEndRepl",</span></span>
+<span id="cb7-229"><a href="#cb7-229" aria-hidden="true" tabindex="-1"></a><span class="co">#     value_col2="HirAEnd",</span></span>
+<span id="cb7-230"><a href="#cb7-230" aria-hidden="true" tabindex="-1"></a><span class="co">#     value_col3="HirAEnd",</span></span>
+<span id="cb7-231"><a href="#cb7-231" aria-hidden="true" tabindex="-1"></a><span class="co">#     line_col="HirAEndRepl",  # Additional line over bars</span></span>
+<span id="cb7-232"><a href="#cb7-232" aria-hidden="true" tabindex="-1"></a><span class="co">#     title="Labor Market Indicators Over Time",</span></span>
+<span id="cb7-233"><a href="#cb7-233" aria-hidden="true" tabindex="-1"></a><span class="co">#     xlabel="Date",</span></span>
+<span id="cb7-234"><a href="#cb7-234" aria-hidden="true" tabindex="-1"></a><span class="co">#     ylabel="Levels (in millions)",</span></span>
+<span id="cb7-235"><a href="#cb7-235" aria-hidden="true" tabindex="-1"></a><span class="co">#     color1="#023047",</span></span>
+<span id="cb7-236"><a href="#cb7-236" aria-hidden="true" tabindex="-1"></a><span class="co">#     color2="#34a937",</span></span>
+<span id="cb7-237"><a href="#cb7-237" aria-hidden="true" tabindex="-1"></a><span class="co">#     color3="#bc5090",</span></span>
+<span id="cb7-238"><a href="#cb7-238" aria-hidden="true" tabindex="-1"></a><span class="co">#     line_color="black",</span></span>
+<span id="cb7-239"><a href="#cb7-239" aria-hidden="true" tabindex="-1"></a><span class="co">#     line_legend="Total Employment",</span></span>
+<span id="cb7-240"><a href="#cb7-240" aria-hidden="true" tabindex="-1"></a><span class="co">#     legend1="Replacement",</span></span>
+<span id="cb7-241"><a href="#cb7-241" aria-hidden="true" tabindex="-1"></a><span class="co">#     legend2="Hires",</span></span>
+<span id="cb7-242"><a href="#cb7-242" aria-hidden="true" tabindex="-1"></a><span class="co">#     legend3="All Hires",</span></span>
+<span id="cb7-243"><a href="#cb7-243" aria-hidden="true" tabindex="-1"></a><span class="co">#     scale_factor=1000000</span></span>
+<span id="cb7-244"><a href="#cb7-244" aria-hidden="true" tabindex="-1"></a><span class="co"># )</span></span>
+<span id="cb7-245"><a href="#cb7-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-246"><a href="#cb7-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-247"><a href="#cb7-247" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fun_plot_two_bars_line(df_orig, date_col, value_col1, value_col2, line_col<span class="op">=</span><span class="va">None</span>, title<span class="op">=</span><span class="st">"Stacked Bar Chart"</span>, xlabel<span class="op">=</span><span class="st">"Date"</span>, ylabel<span class="op">=</span><span class="st">"Value"</span>, color1<span class="op">=</span><span class="st">"#023047"</span>, color2<span class="op">=</span><span class="st">"#34a937"</span>, line_color<span class="op">=</span><span class="st">"black"</span>, line_legend<span class="op">=</span><span class="st">"Reference Line"</span>, legend1<span class="op">=</span><span class="st">"Series 1"</span>, legend2<span class="op">=</span><span class="st">"Series 2"</span>, scale_factor<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb7-248"><a href="#cb7-248" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert date column to datetime format</span></span>
+<span id="cb7-249"><a href="#cb7-249" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df_orig.copy()</span>
+<span id="cb7-250"><a href="#cb7-250" aria-hidden="true" tabindex="-1"></a>    df[date_col] <span class="op">=</span> pd.to_datetime(df[date_col])</span>
+<span id="cb7-251"><a href="#cb7-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-252"><a href="#cb7-252" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Apply scaling</span></span>
+<span id="cb7-253"><a href="#cb7-253" aria-hidden="true" tabindex="-1"></a>    df[value_col1] <span class="op">/=</span> scale_factor</span>
+<span id="cb7-254"><a href="#cb7-254" aria-hidden="true" tabindex="-1"></a>    df[value_col2] <span class="op">/=</span> scale_factor</span>
+<span id="cb7-255"><a href="#cb7-255" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> line_col:</span>
+<span id="cb7-256"><a href="#cb7-256" aria-hidden="true" tabindex="-1"></a>        df[line_col] <span class="op">/=</span> scale_factor</span>
+<span id="cb7-257"><a href="#cb7-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-258"><a href="#cb7-258" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate bar width dynamically</span></span>
+<span id="cb7-259"><a href="#cb7-259" aria-hidden="true" tabindex="-1"></a>    date_range <span class="op">=</span> df[date_col].<span class="bu">max</span>() <span class="op">-</span> df[date_col].<span class="bu">min</span>()</span>
+<span id="cb7-260"><a href="#cb7-260" aria-hidden="true" tabindex="-1"></a>    avg_time_interval <span class="op">=</span> date_range <span class="op">/</span> <span class="bu">len</span>(df)</span>
+<span id="cb7-261"><a href="#cb7-261" aria-hidden="true" tabindex="-1"></a>    bar_width <span class="op">=</span> avg_time_interval.days <span class="op">*</span> <span class="fl">0.8</span>  <span class="co"># Adjust factor to control width</span></span>
+<span id="cb7-262"><a href="#cb7-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-263"><a href="#cb7-263" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create stacked bar chart</span></span>
+<span id="cb7-264"><a href="#cb7-264" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb7-265"><a href="#cb7-265" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> df[date_col]</span>
+<span id="cb7-266"><a href="#cb7-266" aria-hidden="true" tabindex="-1"></a>    y1 <span class="op">=</span> df[value_col1]</span>
+<span id="cb7-267"><a href="#cb7-267" aria-hidden="true" tabindex="-1"></a>    y2 <span class="op">=</span> df[value_col2]</span>
+<span id="cb7-268"><a href="#cb7-268" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-269"><a href="#cb7-269" aria-hidden="true" tabindex="-1"></a>    ax.bar(x, y1, color<span class="op">=</span>color1, label<span class="op">=</span>legend1, width<span class="op">=</span>bar_width)</span>
+<span id="cb7-270"><a href="#cb7-270" aria-hidden="true" tabindex="-1"></a>    ax.bar(x, y2, bottom<span class="op">=</span>y1, color<span class="op">=</span>color2, label<span class="op">=</span>legend2, width<span class="op">=</span>bar_width)</span>
+<span id="cb7-271"><a href="#cb7-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-272"><a href="#cb7-272" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add optional line plot</span></span>
+<span id="cb7-273"><a href="#cb7-273" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> line_col:</span>
+<span id="cb7-274"><a href="#cb7-274" aria-hidden="true" tabindex="-1"></a>        ax.plot(x, df[line_col], color<span class="op">=</span>line_color, linewidth<span class="op">=</span><span class="dv">2</span>, linestyle<span class="op">=</span><span class="st">"dashed"</span>, label<span class="op">=</span>line_legend)</span>
+<span id="cb7-275"><a href="#cb7-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-276"><a href="#cb7-276" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Format x-axis for dates</span></span>
+<span id="cb7-277"><a href="#cb7-277" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_locator(mdates.YearLocator(base<span class="op">=</span><span class="dv">5</span>))  <span class="co"># Show every 5 years</span></span>
+<span id="cb7-278"><a href="#cb7-278" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_formatter(mdates.DateFormatter(<span class="st">"%Y"</span>))  <span class="co"># Format as Year</span></span>
+<span id="cb7-279"><a href="#cb7-279" aria-hidden="true" tabindex="-1"></a>    plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)  <span class="co"># Rotate for better readability</span></span>
+<span id="cb7-280"><a href="#cb7-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-281"><a href="#cb7-281" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Labels and title</span></span>
+<span id="cb7-282"><a href="#cb7-282" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(xlabel, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb7-283"><a href="#cb7-283" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(ylabel, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb7-284"><a href="#cb7-284" aria-hidden="true" tabindex="-1"></a>    ax.set_title(title, fontsize<span class="op">=</span><span class="dv">16</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb7-285"><a href="#cb7-285" aria-hidden="true" tabindex="-1"></a>    ax.legend()</span>
+<span id="cb7-286"><a href="#cb7-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-287"><a href="#cb7-287" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Show the plot</span></span>
+<span id="cb7-288"><a href="#cb7-288" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb7-289"><a href="#cb7-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-290"><a href="#cb7-290" aria-hidden="true" tabindex="-1"></a><span class="co">## Example usage:</span></span>
+<span id="cb7-291"><a href="#cb7-291" aria-hidden="true" tabindex="-1"></a><span class="co"># fun_plot_two_bars_line(</span></span>
+<span id="cb7-292"><a href="#cb7-292" aria-hidden="true" tabindex="-1"></a><span class="co">#     df_orig=df_qwi_filtered,</span></span>
+<span id="cb7-293"><a href="#cb7-293" aria-hidden="true" tabindex="-1"></a><span class="co">#     date_col="date",</span></span>
+<span id="cb7-294"><a href="#cb7-294" aria-hidden="true" tabindex="-1"></a><span class="co">#     value_col1="HirAEndRepl",</span></span>
+<span id="cb7-295"><a href="#cb7-295" aria-hidden="true" tabindex="-1"></a><span class="co">#     value_col2="HirAEndRepl",</span></span>
+<span id="cb7-296"><a href="#cb7-296" aria-hidden="true" tabindex="-1"></a><span class="co">#     line_col="HirAEndRepl",  # Additional line over bars</span></span>
+<span id="cb7-297"><a href="#cb7-297" aria-hidden="true" tabindex="-1"></a><span class="co">#     title="Labor Market Indicators Over Time",</span></span>
+<span id="cb7-298"><a href="#cb7-298" aria-hidden="true" tabindex="-1"></a><span class="co">#     xlabel="Date",</span></span>
+<span id="cb7-299"><a href="#cb7-299" aria-hidden="true" tabindex="-1"></a><span class="co">#     ylabel="Levels (in millions)",</span></span>
+<span id="cb7-300"><a href="#cb7-300" aria-hidden="true" tabindex="-1"></a><span class="co">#     color1="#023047",</span></span>
+<span id="cb7-301"><a href="#cb7-301" aria-hidden="true" tabindex="-1"></a><span class="co">#     color2="#34a937",</span></span>
+<span id="cb7-302"><a href="#cb7-302" aria-hidden="true" tabindex="-1"></a><span class="co">#     line_color="black",</span></span>
+<span id="cb7-303"><a href="#cb7-303" aria-hidden="true" tabindex="-1"></a><span class="co">#     line_legend="Total Employment",</span></span>
+<span id="cb7-304"><a href="#cb7-304" aria-hidden="true" tabindex="-1"></a><span class="co">#     legend1="Replacement",</span></span>
+<span id="cb7-305"><a href="#cb7-305" aria-hidden="true" tabindex="-1"></a><span class="co">#     legend2="Hires",</span></span>
+<span id="cb7-306"><a href="#cb7-306" aria-hidden="true" tabindex="-1"></a><span class="co">#     scale_factor=1000000</span></span>
+<span id="cb7-307"><a href="#cb7-307" aria-hidden="true" tabindex="-1"></a><span class="co"># )</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div id="plot_series" class="cell" data-fig-show="none" data-execution_count="7">
@@ -1504,97 +1640,6 @@ firmsize: 0</code></pre>
 <div>
 <figure class="figure">
 <p><img src="main_quarto_files/figure-html/plot_series-output-2.svg" id="plot_series-2" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="main_quarto_files/figure-html/plot_series-output-3.svg" id="plot_series-3" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="main_quarto_files/figure-html/plot_series-output-4.svg" id="plot_series-4" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="main_quarto_files/figure-html/plot_series-output-5.svg" id="plot_series-5" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="main_quarto_files/figure-html/plot_series-output-6.svg" id="plot_series-6" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="main_quarto_files/figure-html/plot_series-output-7.svg" id="plot_series-7" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="main_quarto_files/figure-html/plot_series-output-8.svg" id="plot_series-8" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="main_quarto_files/figure-html/plot_series-output-9.svg" id="plot_series-9" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="main_quarto_files/figure-html/plot_series-output-10.svg" id="plot_series-10" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="main_quarto_files/figure-html/plot_series-output-11.svg" id="plot_series-11" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="main_quarto_files/figure-html/plot_series-output-12.svg" id="plot_series-12" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="main_quarto_files/figure-html/plot_series-output-13.svg" id="plot_series-13" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="main_quarto_files/figure-html/plot_series-output-14.svg" id="plot_series-14" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="main_quarto_files/figure-html/plot_series-output-15.svg" id="plot_series-15" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1629,7 +1674,25 @@ Notes.
 </div>
 </div>
 </div>
-<p>Now that we know that the plots work and look ok, let</p>
+<p>Here comes the outline for the analysis:</p>
+<p>Task before:</p>
+<ul>
+<li>Write up the model part with the equations and how things look in steady state</li>
+</ul>
+<ol type="1">
+<li>Show a decomposition of hiring into replacement hiring and job creation</li>
+<li>Show a decomposition of replacement hires into job-to-job transitions to show that the relationship should hold.</li>
+</ol>
+<ul>
+<li>Here however this may undermine my argument / I will have to credibly argue that the data is systematially missing these kinds of transitions because it is just quarterly</li>
+<li>At the same time, these series are very similar</li>
+<li>I should think about this more =&gt; well actually the hires that they show there are from a different data set and only concern main jobs. Moreover, there is this weirdness about the employment series.</li>
+</ul>
+<ol start="3" type="1">
+<li>Construct the two possible ways to get at the number of replaceable positions. <em>a)</em> like Alek’s WP and <em>b)</em> like me own</li>
+<li>Compare these two versions and then go over to the models</li>
+<li></li>
+</ol>
 </section>
 </section>
 
@@ -2200,7 +2263,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","selector":".lightbox","openEffect":"zoom","loop":false,"closeEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","loop":false,"selector":".lightbox","openEffect":"zoom","descPosition":"bottom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {

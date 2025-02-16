@@ -681,24 +681,24 @@ def fun_plot_three_bars(df_orig, date_col, value_col1, value_col2, value_col3, t
     # Show the plot
     plt.show()
 
-# Example usage:
-fun_plot_three_bars(
-    df_orig=df_qwi_filtered,
-    date_col="date",
-    value_col1="HirAEndRepl",
-    value_col2="HirAEnd",
-    value_col3="HirA",
-    title="Labor Market Indicators Over Time",
-    xlabel="Date",
-    ylabel="Levels (in millions)",
-    color1="#023047",
-    color2="#34a937",
-    color3="#bc5090",
-    legend1="Replacement",
-    legend2="Hires",
-    legend3="All Hires",
-    scale_factor=1000000
-)
+## Example usage:
+# fun_plot_three_bars(
+#     df_orig=df_qwi_filtered,
+#     date_col="date",
+#     value_col1="HirAEndRepl",
+#     value_col2="HirAEnd",
+#     value_col3="HirA",
+#     title="Labor Market Indicators Over Time",
+#     xlabel="Date",
+#     ylabel="Levels (in millions)",
+#     color1="#023047",
+#     color2="#34a937",
+#     color3="#bc5090",
+#     legend1="Replacement",
+#     legend2="Hires",
+#     legend3="All Hires",
+#     scale_factor=1000000
+# )
 
 
 
@@ -747,27 +747,27 @@ def fun_plot_three_bars_line(df_orig, date_col, value_col1, value_col2, value_co
     # Show the plot
     plt.show()
 
-# Example usage:
-fun_plot_three_bars_line(
-    df_orig=df_qwi_filtered,
-    date_col="date",
-    value_col1="HirAEndRepl",
-    value_col2="HirAEnd",
-    value_col3="HirAEnd",
-    line_col="HirAEndRepl",  # Additional line over bars
-    title="Labor Market Indicators Over Time",
-    xlabel="Date",
-    ylabel="Levels (in millions)",
-    color1="#023047",
-    color2="#34a937",
-    color3="#bc5090",
-    line_color="black",
-    line_legend="Total Employment",
-    legend1="Replacement",
-    legend2="Hires",
-    legend3="All Hires",
-    scale_factor=1000000
-)
+## Example usage:
+# fun_plot_three_bars_line(
+#     df_orig=df_qwi_filtered,
+#     date_col="date",
+#     value_col1="HirAEndRepl",
+#     value_col2="HirAEnd",
+#     value_col3="HirAEnd",
+#     line_col="HirAEndRepl",  # Additional line over bars
+#     title="Labor Market Indicators Over Time",
+#     xlabel="Date",
+#     ylabel="Levels (in millions)",
+#     color1="#023047",
+#     color2="#34a937",
+#     color3="#bc5090",
+#     line_color="black",
+#     line_legend="Total Employment",
+#     legend1="Replacement",
+#     legend2="Hires",
+#     legend3="All Hires",
+#     scale_factor=1000000
+# )
 
 
 def fun_plot_two_bars_line(df_orig, date_col, value_col1, value_col2, line_col=None, title="Stacked Bar Chart", xlabel="Date", ylabel="Value", color1="#023047", color2="#34a937", line_color="black", line_legend="Reference Line", legend1="Series 1", legend2="Series 2", scale_factor=1):
@@ -813,24 +813,24 @@ def fun_plot_two_bars_line(df_orig, date_col, value_col1, value_col2, line_col=N
     # Show the plot
     plt.show()
 
-# Example usage:
-fun_plot_two_bars_line(
-    df_orig=df_qwi_filtered,
-    date_col="date",
-    value_col1="HirAEndRepl",
-    value_col2="HirAEndRepl",
-    line_col="HirAEndRepl",  # Additional line over bars
-    title="Labor Market Indicators Over Time",
-    xlabel="Date",
-    ylabel="Levels (in millions)",
-    color1="#023047",
-    color2="#34a937",
-    line_color="black",
-    line_legend="Total Employment",
-    legend1="Replacement",
-    legend2="Hires",
-    scale_factor=1000000
-)
+## Example usage:
+# fun_plot_two_bars_line(
+#     df_orig=df_qwi_filtered,
+#     date_col="date",
+#     value_col1="HirAEndRepl",
+#     value_col2="HirAEndRepl",
+#     line_col="HirAEndRepl",  # Additional line over bars
+#     title="Labor Market Indicators Over Time",
+#     xlabel="Date",
+#     ylabel="Levels (in millions)",
+#     color1="#023047",
+#     color2="#34a937",
+#     line_color="black",
+#     line_legend="Total Employment",
+#     legend1="Replacement",
+#     legend2="Hires",
+#     scale_factor=1000000
+# )
 
 
 
@@ -898,4 +898,20 @@ fun_plot_three_ts(
 :::
 
 
-Now that we know that the plots work and look ok, let
+Here comes the outline for the analysis:
+
+Task before:
+
+- Write up the model part with the equations and how things look in steady state
+
+
+1. Show a decomposition of hiring into replacement hiring and job creation
+2. Show a decomposition of replacement hires into job-to-job transitions to show that the relationship should hold.
+
+- Here however this may undermine my argument / I will have to credibly argue that the data is systematially missing these kinds of transitions because it is just quarterly
+- At the same time, these series are very similar
+- I should think about this more => well actually the hires that they show there are from a different data set and only concern main jobs. Moreover, there is this weirdness about the employment series.
+
+3. Construct the two possible ways to get at the number of replaceable positions. *a)* like Alek's WP and *b)* like me own
+4. Compare these two versions and then go over to the models
+5.
