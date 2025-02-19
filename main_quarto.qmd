@@ -6,10 +6,10 @@ subtitle: "Understanding the Impact of Uncertainty on Replacement Hiring"
 author: "Moritz Scheidenberger"
 date-modified: "today"
 abstract: "In the labor market, transitions in and out of unemployment are driven by two wheels.
-One wheel is the classical cycle of job creation and job destruction. Firms create jobs for which they hire unemployed workers. Simulatenously, some already filled jobs are destroyed and the associated workers become unemployed.
-The second wheel is driven by churn. Some already employed workers are hired by another firm and leave behind an empty position which, subsequently, may be filled by another already employed worker who themselves leaves behind a position. So the churn wheel keeps turning until the empty position is filled by a previously unemployed worker.
-The conventional view is that models of the labor market model can abstract from the churn wheel when mainly interested in unemployment dynamics. Since job creation must equal job destruction, the number of UE transitions is determined by the EU transitions. EE transitions offset eachother and do not matter for unemploymend dynamics. Yet, disregarding replacement hiring dynamics risks missing essential labor market effects when economic shocks alter firms' quit replacement decisions through mechanisms beyond the usual business cycle impact.
-I provide novel evidence that uncertainty shocks directly impact firms' replacement hiring decisions. The reluctance to rehire under uncertainty arises because firms treat existing positions as valuable but sunk investments, leading to a wait-and-see approach."
+    One wheel is the classical cycle of job creation and job destruction. Firms create jobs for which they hire unemployed workers. Simulatenously, some already filled jobs are destroyed and the associated workers become unemployed.
+    The second wheel is driven by churn. Some already employed workers are hired by another firm and leave behind an empty position which, subsequently, may be filled by another already employed worker who themselves leaves behind a position. So the churn wheel keeps turning until the empty position is filled by a previously unemployed worker.
+    The conventional view is that models of the labor market model can abstract from the churn wheel when mainly interested in unemployment dynamics. Since job creation must equal job destruction, the number of UE transitions is determined by the EU transitions. EE transitions offset eachother and do not matter for unemploymend dynamics. Yet, disregarding replacement hiring dynamics risks missing essential labor market effects when economic shocks alter firms' quit replacement decisions through mechanisms beyond the usual business cycle impact.
+    I provide novel evidence that uncertainty shocks directly impact firms' replacement hiring decisions. The reluctance to rehire under uncertainty arises because firms treat existing positions as valuable but sunk investments, leading to a wait-and-see approach."
 
 format:
   html:
@@ -70,6 +70,79 @@ execute:
 # reticulate::py_config()
 
 ```
+
+
+# Motivation
+## The Role of Replacement Hiring
+
+**The Job Ladder is Important**
+
+*(Job-to-Job transitions (henceforth also EE transitions) are at the heart of the job ladder. While already employed, workers eventually encounter job offers at other firms that constitute an improvement in their career. In other words, by transitioning from one employer to the other, workers typically climb another rung on the job ladder, towards their ultimate career-goal job).*
+
+1. Half or all hires are EEs i.e. EE flows = EU flows in terms of size
+2. EE transitions collapse in recessions
+3. On-the-job search is very effective (Faberman et al. 2022)
+4. EE flows affect income, consumption, productivity, inflation (See BKMS 2024, MPV 2023)
+
+Additional Notes:
+
+- Job security matters a lot for people staying in their job (German data I think)
+
+*Story:*
+
+- The response of replacement hiring to uncertainty matters because it could indicate that the job ladder collapses temporarily
+- This goes well with what Gottfries said about that discount factor shocks matter less for labor markets because of the high turn-over / people don't stay in jobs that long so their discounting matters less. However, replacement hiring could affect the age of jobs / how quickly the hiring chain breaks down
+
+
+**Replacement hiring as *pendant* to capital utilization**
+
+*Story building:*
+
+- Frame it such that job creation is what builds a stock of jobs over time and replacement hiring determines how quickly this stock depreciates & how much it is utilized
+- These empty positions in response to uncertainty come from the waiting
+-
+
+
+**Why does it differ from Job Creation**
+- Why do we care where vacancies come from?
+
+
+
+## How to Measure Replacement Hiring
+While there exists data on the number of replacement hires, firms' decisions to rehire for workers that leave cannot be inferred directly. Since the number of replacement hires is capped by the number of workers quitting their positions, any change in worker quits mechanically reduces the number of replacement hires. Thus, to estimate the number of quits that remain unreplaced, one has to control for any movement in replacement hiring that is driven by a change in the number of workers quitting their jobs and leaving behind a viable position.
+
+One may be tempted to think that simply using the number of quits as a proxy for the number of empty positions left behind by workers leaving their firm. However, this approach is flawed for two reasons.
+Firstly, recent work by Carillo-Tuleda et al. (2021) shows that in non-recession years about 39% of layoffs also leave behind a viable position. The motive of such layoffs being worker performance (termed bad match quality in the literature) rather than job destruction. Still, simply adding a constant share of layoffs to the number of quits to get at the number of replaceable positions may be problematic if the share of replaceable layoffs varies structurally over the cycle. At the onset of recessions, layoffs spike while quits fall. How does the share of match-quality motivated layoffs change in recessions? Does it rise because worker performance matters more during downturns? Or does it fall because the motive of job destruction becomes more prevalent?
+Secondly, labor markets are not just driven by flows. Job openings do not vanish after the last day of a quarter. Instead, there exists a stock of job openings on the labor market. At any given moment, new jobs are posted and added to the stock, existing jobs openings are filled by searching workers and some job openings expire without finding a matching worker. Therefore, the short-term response of labor market variables is not only driven by the flows but also by how such changes in the flows affect the stocks.
+
+We are left with two options:
+
+1. Construct a series of viable positions left behind by quits and layoffs, assuming that the share of layoffs that leave behind a viable position is constant over the cycle. In an extension, one could try to come up with a proxy for the share of replaceable layoffs for which data exists.
+
+2. Infer the number of viable positions left behind from data on job-to-job transitions. The argument goes as follows:
+
+In models of the labor market, flows can be categorized into two "wheels". The first wheel is the classical cycle of job creation and job destruction. The second wheel is that of replacement hiring. EE transitions leave behind viable positions that are filled by other EE transitions. When looked at through this lense, the two wheels can be regarded as independent from eachother. Job creation and job destruction determine unemployment-to-employment (UE) and employment-to-unemployment (EU) flows respectively. EE tranistions offset eachother and do not matter for unemployment dynamics.
+Importantly, the two identities that these two wheels represent hold in aggregate, not at an individual level. At an individual level, we do observe quits into non-employment as well as EE transitions to newly created jobs in the data. Similarly, unemployed workers may be hired as the replacement instead of being hired for a newly created position. Still, in equilibrium, the number of jobs created must equal the number of jobs destroyed for unemployment to be constant. Likewise, the number of EE transitions must equal the number of replacement hires for employment to be constant.
+
+
+$$
+Job ~~ Creation = Job ~~ Destruction
+$$
+
+$$
+EE ~~ Transitions = Replacement ~~ Hires
+$$
+
+In this simplified view of the labor market, a fall in the share of empty but viable positions that are replaced would show itself in a rise of the share of EE transitions per replacement hire. In other words, workers still transition and leave viable positions behind but positions are not immediately reposted on the labor market. Clearly, this rise in the share of EE transitions per replacement hires can only be temporary, as the reduction in replacement hiring also reduces the number of positions that employed workers can find. Thus, fewer employed workers find a new job and the ratio returns towards it's long-run average.
+
+
+
+
+
+Think about if I can do anything about job destruction in excess of quits and layoffs etc.
+
+
+
 
 # Data and Methodology
 
@@ -512,297 +585,228 @@ os.remove("temp_df.csv")
 
 print("Data deseasonalized successfully.")
 
+df_qwi_filtered = pd.read_csv("qwi_data_seasadj.csv")
+```
+
+```{python}
+#| label: load_additional_data
+#| echo: false
 
 # We still need some data from FRED
+from fredapi import Fred
+import pandas as pd
+
+API_KEY = open(r"C:\Users\moritz\Nextcloud\PhD\Confidential\fred_api_key.txt").read().strip()
+fred = Fred(api_key=API_KEY)
+
+# Chose both nonfarm and totalprivate data
+fred_monthly_dict = {
+    "ts_jopen_nfarm_lvl_m": "JTSJOL", "ts_jopen_nfarm_rate_m": "JTSJOR",
+    "ts_jopen_tpriv_lvl_m": "JTS1000JOL", "ts_jopen_tpriv_rate_m": "JTS1000JOR",
+
+    "ts_quit_nfarm_lvl_m": "JTSQUL", "ts_quit_nfarm_rate_m": "JTSQUR",
+    "ts_quit_tpriv_lvl_m": "JTS1000QUL", "ts_quit_tpriv_rate_m": "JTS1000QUR",
+
+    "ts_hire_nfarm_lvl_m": "JTSHIL", "ts_hire_nfarm_rate_m": "JTSHIR",
+    "ts_hire_tpriv_lvl_m": "JTS1000HIL", "ts_hire_tpriv_rate_m": "JTS1000HIR",
+
+    "ts_layoff_nfarm_lvl_m": "JTSLDL", "ts_layoff_nfarm_rate_m": "JTSLDR",
+    "ts_layoff_tpriv_lvl_m": "JTS1000LDL", "ts_layoff_tpriv_rate_m": "JTS1000LDR",
+
+    "ts_osep_nfarm_lvl_m": "JTSOSL", "ts_osep_nfarm_rate_m": "JTSOSR",
+    "ts_osep_tpriv_lvl_m": "JTS1000OSL", "ts_osep_tpriv_rate_m": "JTS1000OSR",
+
+    "ts_tsep_nfarm_lvl_m": "JTSTSL", "ts_tsep_nfarm_rate_m": "JTSTSR",
+    "ts_tsep_tpriv_lvl_m": "JTS1000TSL", "ts_tsep_tpriv_rate_m": "JTS1000TSR",
+
+    "ts_jln_uncertainty_m": "JLNUM3M",
+
+    # Employment data
+    "ts_emp_lvl_CPS_m": "CE16OV",  # CPS employment level
+    "ts_emp_nfarm_CES_m": "PAYEMS",  # CES nonfarm payroll employment
+    "ts_emp_priv_CES_m": "USPRIV",  # CES private employment
+
+    # EE probability data
+    "ts_ee_prob_m": "FMPSA"
+}
+
+# Define date range
+start_date = "1990-01-01"
+end_date = "2025-01-01"
+
+# It's a pain to have all in the same df because of their different length availability
+for var_name, series_id in fred_monthly_dict.items():
+    df = fred.get_series(series_id, start_date, end_date).reset_index()
+    df.columns = ["Date", "Value"]
+    globals()[var_name] = df
+
+# Define aggregation methods
+taggr_methods = {
+    "sum": ["ts_jopen_nfarm_lvl_m", "ts_jopen_tpriv_lvl_m", "ts_quit_nfarm_lvl_m", "ts_quit_tpriv_lvl_m",
+             "ts_hire_nfarm_lvl_m", "ts_hire_tpriv_lvl_m", "ts_layoff_nfarm_lvl_m", "ts_layoff_tpriv_lvl_m",
+             "ts_osep_nfarm_lvl_m", "ts_osep_tpriv_lvl_m", "ts_tsep_nfarm_lvl_m", "ts_tsep_tpriv_lvl_m"],
+    "mean": ["ts_jopen_nfarm_rate_m", "ts_jopen_tpriv_rate_m", "ts_quit_nfarm_rate_m", "ts_quit_tpriv_rate_m",
+              "ts_hire_nfarm_rate_m", "ts_hire_tpriv_rate_m", "ts_layoff_nfarm_rate_m", "ts_layoff_tpriv_rate_m",
+              "ts_osep_nfarm_rate_m", "ts_osep_tpriv_rate_m", "ts_tsep_nfarm_rate_m", "ts_tsep_tpriv_rate_m",
+              "ts_jln_uncertainty_m", "ts_emp_lvl_CPS_m", "ts_emp_nfarm_CES_m", "ts_emp_priv_CES_m",
+              "ts_ee_prob_m"]
+}
+
+# Aggregate to quarterly data
+for method, series_list in taggr_methods.items():
+    for series in series_list:
+        df = globals()[series].copy()
+        df["Date"] = pd.to_datetime(df["Date"])
+        df.set_index("Date", inplace=True)
+        if method == "sum":
+            df_q = df.resample("QE").sum().reset_index()
+        else:  # mean
+            df_q = df.resample("QE").mean().reset_index()
+        globals()[series.replace("_m", "_q")] = df_q
 
 
 
 ```
 
 
-
 ```{python}
 #| label: figure_templates
+#| echo: false
 
-## Plotting
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from datetime import datetime
+import numpy as np
+
 
 # Load the adjusted data
 df_qwi_filtered = pd.read_csv("qwi_data_seasadj.csv")
 
+# Define color palettes
+palette = {
+    "palette_1": "#003f5c",
+    "palette_2": "#ffa600",
+    "palette_3": "#ff6361",
+    "palette_4": "#2db88b"
+}
 
-# plt.ioff()  # Plots only show when explicitly called in quarto
+extended_palette = {
+    "palette_1": "#003f5c",
+    "palette_2": "#58508d",
+    "palette_3": "#bc5090",
+    "palette_4": "#ff6361",
+    "palette_5": "#ffa600",
+    "palette_6": "#2db88b"
+}
 
-## Single Time Series
-def fun_plot_single_ts(df_orig, date_col, value_col, title="Time Series Plot", xlabel="Date", ylabel="Value", color="#023047", recession_shading=True, recessions=None, scale_factor=1):
-    # Convert date column to datetime format
-    df = df_orig.copy()
-    df[date_col] = pd.to_datetime(df[date_col])
+# Single Time Series
+def fun_plot_single_ts(df, title="Time Series Plot", xlabel="Date", ylabel="Value", color=palette["palette_1"], recession_shading=True, recessions=None, scale_factor=1):
+    df.iloc[:, 0] = pd.to_datetime(df.iloc[:, 0])
 
-    # Define default recession periods if none are provided
     if recessions is None:
-        recessions = [
-            ("2001-03-01", "2001-11-01"),
-            ("2007-12-01", "2009-06-01"),
-            ("2020-02-01", "2020-04-01")
-        ]
+        recessions = [("2001-03-01", "2001-11-01"), ("2007-12-01", "2009-06-01"), ("2020-02-01", "2020-04-01")]
 
-    # Convert recession dates to datetime format
     recession_periods = [(datetime.strptime(start, "%Y-%m-%d"), datetime.strptime(end, "%Y-%m-%d")) for start, end in recessions]
+    df.iloc[:, 1] /= scale_factor
 
-    # Apply scaling
-    df[value_col] /= scale_factor
-
-    # Create the figure and axis
     fig, ax = plt.subplots(figsize=(12, 6))
+    ax.plot(df.iloc[:, 0], df.iloc[:, 1], color=color, linewidth=2, label='_nolegend_')
 
-    # Plot the time series
-    ax.plot(df[date_col], df[value_col], color=color, linewidth=2, label='_nolegend_')
-
-    # Highlight recession periods with lighter shading
     if recession_shading:
         for start, end in recession_periods:
             ax.axvspan(start, end, color="grey", alpha=0.3)
 
-    # Labels and title
     ax.set_xlabel(xlabel, fontsize=14, fontweight="bold")
     ax.set_ylabel(ylabel, fontsize=14, fontweight="bold")
     ax.set_title(title, fontsize=16, fontweight="bold")
 
-    # Improve readability
-    ax.xaxis.set_major_locator(mdates.YearLocator(base=5))  # Show every 5 years
+    ax.xaxis.set_major_locator(mdates.YearLocator(base=5))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
     ax.tick_params(axis='x', rotation=45, labelsize=12)
     ax.tick_params(axis='y', labelsize=12)
-    ax.grid(False)  # Remove grid
-
-    # Adjust layout
+    ax.grid(False)
     plt.tight_layout()
-
-    # Show the plot
     plt.show()
 
-## Three Time Series
-def fun_plot_three_ts(df_orig, date_col, value_col1, value_col2, value_col3, title="Time Series Plot", xlabel="Date", ylabel="Value", color1="#023047", color2="#34a937", color3="#bc5090", line_type2="solid", line_type3="dashed", recession_shading=True, recessions=None, legend1="Series 1", legend2="Series 2", legend3="Series 3", scale_factor=1):
-    # Convert date column to datetime format
-    df = df_orig.copy()
-    df[date_col] = pd.to_datetime(df[date_col])
+# Three Time Series
+def fun_plot_three_ts(df1, df2, df3, title="Time Series Plot", xlabel="Date", ylabel="Value", color1=palette["palette_1"], color2=palette["palette_2"], color3=palette["palette_3"], line_type2="solid", line_type3="dashed", recession_shading=True, recessions=None, legend1="Series 1", legend2="Series 2", legend3="Series 3", scale_factor=1):
+    df1.iloc[:, 0] = pd.to_datetime(df1.iloc[:, 0])
+    df2.iloc[:, 0] = pd.to_datetime(df2.iloc[:, 0])
+    df3.iloc[:, 0] = pd.to_datetime(df3.iloc[:, 0])
 
-    # Define default recession periods if none are provided
+    df_combined = pd.merge(pd.merge(df1, df2, on=df1.columns[0], how='outer'), df3, on=df1.columns[0], how='outer')
+    df_combined.iloc[:, 1:] /= scale_factor
+
     if recessions is None:
-        recessions = [
-            ("2001-03-01", "2001-11-01"),
-            ("2007-12-01", "2009-06-01"),
-            ("2020-02-01", "2020-04-01")
-        ]
+        recessions = [("2001-03-01", "2001-11-01"), ("2007-12-01", "2009-06-01"), ("2020-02-01", "2020-04-01")]
 
-    # Convert recession dates to datetime format
     recession_periods = [(datetime.strptime(start, "%Y-%m-%d"), datetime.strptime(end, "%Y-%m-%d")) for start, end in recessions]
 
-    # Apply scaling
-    df[value_col1] /= scale_factor
-    df[value_col2] /= scale_factor
-    df[value_col3] /= scale_factor
-
-    # Create the figure and axis
     fig, ax = plt.subplots(figsize=(12, 6))
+    ax.plot(df_combined.iloc[:, 0], df_combined.iloc[:, 1], color=color1, linewidth=2, label=legend1)
+    ax.plot(df_combined.iloc[:, 0], df_combined.iloc[:, 2], color=color2, linewidth=2, linestyle=line_type2, label=legend2)
+    ax.plot(df_combined.iloc[:, 0], df_combined.iloc[:, 3], color=color3, linewidth=2, linestyle=line_type3, label=legend3)
 
-    # Plot the three time series
-    ax.plot(df[date_col], df[value_col1], color=color1, linewidth=2, label=legend1)
-    ax.plot(df[date_col], df[value_col2], color=color2, linewidth=2, linestyle=line_type2, label=legend2)
-    ax.plot(df[date_col], df[value_col3], color=color3, linewidth=2, linestyle=line_type3, label=legend3)
-
-    # Highlight recession periods with lighter shading
     if recession_shading:
         for start, end in recession_periods:
             ax.axvspan(start, end, color="grey", alpha=0.3)
 
-    # Labels and title
     ax.set_xlabel(xlabel, fontsize=14, fontweight="bold")
     ax.set_ylabel(ylabel, fontsize=14, fontweight="bold")
     ax.set_title(title, fontsize=16, fontweight="bold")
 
-    # Improve readability
-    ax.xaxis.set_major_locator(mdates.YearLocator(base=5))  # Show every 5 years
+    ax.xaxis.set_major_locator(mdates.YearLocator(base=5))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
     ax.tick_params(axis='x', rotation=45, labelsize=12)
     ax.tick_params(axis='y', labelsize=12)
-    ax.grid(False)  # Remove grid
+    ax.grid(False)
     ax.legend()
-
-    # Adjust layout
     plt.tight_layout()
-
-    # Show the plot
     plt.show()
 
 
-def fun_plot_three_bars(df_orig, date_col, value_col1, value_col2, value_col3, title="Stacked Bar Chart", xlabel="Date", ylabel="Value", color1="#023047", color2="#34a937", color3="#bc5090", legend1="Series 1", legend2="Series 2", legend3="Series 3", scale_factor=1):
-    # Convert date column to datetime format
-    df = df_orig.copy()
-    df[date_col] = pd.to_datetime(df[date_col])
+
+def fun_plot_three_bars(df1, df2, df3, date_col, value_col1, value_col2, value_col3, line_col=None, line_color='#FFA600', line_legend='Trend Line', title="Labor Market Indicators Over Time", xlabel="Date", ylabel="Levels (in millions)", color1="#003f5c", color2="#58508d", color3="#bc5090", legend1="Replacement", legend2="Hires", legend3="All Hires", scale_factor=1000000):
+    # Convert date columns to datetime format
+    df1 = df1.copy()
+    df2 = df2.copy()
+    df3 = df3.copy()
+    df1[date_col] = pd.to_datetime(df1[date_col])
+    df2[date_col] = pd.to_datetime(df2[date_col])
+    df3[date_col] = pd.to_datetime(df3[date_col])
 
     # Apply scaling
-    df[value_col1] /= scale_factor
-    df[value_col2] /= scale_factor
-    df[value_col3] /= scale_factor
+    df1[value_col1] /= scale_factor
+    df2[value_col2] /= scale_factor
+    df3[value_col3] /= scale_factor
 
-    # Calculate bar width dynamically
-    date_range = df[date_col].max() - df[date_col].min()
-    avg_time_interval = date_range / len(df)
-    bar_width = avg_time_interval.days * 0.8  # Adjust factor to control width
+    # Merge dataframes on date column
+    df = df1.merge(df2, on=date_col, how='outer').merge(df3, on=date_col, how='outer')
+    df = df.sort_values(by=date_col)
+
+    # Set x positions with uniform spacing
+    x_pos = np.arange(len(df))
+    bar_width = 1.0  # Ensure bars are tightly packed with no white space
 
     # Create stacked bar chart
     fig, ax = plt.subplots(figsize=(12, 6))
-    x = df[date_col]
     y1 = df[value_col1]
     y2 = df[value_col2]
     y3 = df[value_col3]
 
-    ax.bar(x, y1, color=color1, label=legend1, width=bar_width)
-    ax.bar(x, y2, bottom=y1, color=color2, label=legend2, width=bar_width)
-    ax.bar(x, y3, bottom=y1 + y2, color=color3, label=legend3, width=bar_width)
-
-    # Format x-axis for dates with major ticks every few years
-    ax.xaxis.set_major_locator(mdates.YearLocator(base=5))  # Show every 5 years
-    ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))  # Format as Year
-    plt.xticks(rotation=45)  # Rotate for better readability
-
-    # Labels and title
-    ax.set_xlabel(xlabel, fontsize=14, fontweight="bold")
-    ax.set_ylabel(ylabel, fontsize=14, fontweight="bold")
-    ax.set_title(title, fontsize=16, fontweight="bold")
-    ax.legend()
-
-    # Show the plot
-    plt.show()
-
-## Example usage:
-# fun_plot_three_bars(
-#     df_orig=df_qwi_filtered,
-#     date_col="date",
-#     value_col1="HirAEndRepl",
-#     value_col2="HirAEnd",
-#     value_col3="HirA",
-#     title="Labor Market Indicators Over Time",
-#     xlabel="Date",
-#     ylabel="Levels (in millions)",
-#     color1="#023047",
-#     color2="#34a937",
-#     color3="#bc5090",
-#     legend1="Replacement",
-#     legend2="Hires",
-#     legend3="All Hires",
-#     scale_factor=1000000
-# )
-
-
-
-def fun_plot_three_bars_line(df_orig, date_col, value_col1, value_col2, value_col3, line_col=None, title="Stacked Bar Chart", xlabel="Date", ylabel="Value", color1="#023047", color2="#34a937", color3="#bc5090", line_color="black", line_legend="Reference Line", legend1="Series 1", legend2="Series 2", legend3="Series 3", scale_factor=1):
-    # Convert date column to datetime format
-    df = df_orig.copy()
-    df[date_col] = pd.to_datetime(df[date_col])
-
-    # Apply scaling
-    df[value_col1] /= scale_factor
-    df[value_col2] /= scale_factor
-    df[value_col3] /= scale_factor
-
-    df[line_col] /= scale_factor
-
-    # Calculate bar width dynamically
-    date_range = df[date_col].max() - df[date_col].min()
-    avg_time_interval = date_range / len(df)
-    bar_width = avg_time_interval.days * 0.8  # Adjust factor to control width
-
-    # Create stacked bar chart
-    fig, ax = plt.subplots(figsize=(12, 6))
-    x = df[date_col]
-    y1 = df[value_col1]
-    y2 = df[value_col2]
-    y3 = df[value_col3]
-
-    ax.bar(x, y1, color=color1, label=legend1, width=bar_width)
-    ax.bar(x, y2, bottom=y1, color=color2, label=legend2, width=bar_width)
-    ax.bar(x, y3, bottom=y1 + y2, color=color3, label=legend3, width=bar_width)
-
-    # Add optional line plot
-    ax.plot(x, df[line_col], color=line_color, linewidth=2, linestyle="dashed", label=line_legend)
-
-    # Format x-axis for dates with major ticks every few years
-    ax.xaxis.set_major_locator(mdates.YearLocator(base=5))  # Show every 5 years
-    ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))  # Format as Year
-    plt.xticks(rotation=45)  # Rotate for better readability
-
-    # Labels and title
-    ax.set_xlabel(xlabel, fontsize=14, fontweight="bold")
-    ax.set_ylabel(ylabel, fontsize=14, fontweight="bold")
-    ax.set_title(title, fontsize=16, fontweight="bold")
-    ax.legend()
-
-    # Show the plot
-    plt.show()
-
-## Example usage:
-# fun_plot_three_bars_line(
-#     df_orig=df_qwi_filtered,
-#     date_col="date",
-#     value_col1="HirAEndRepl",
-#     value_col2="HirAEnd",
-#     value_col3="HirAEnd",
-#     line_col="HirAEndRepl",  # Additional line over bars
-#     title="Labor Market Indicators Over Time",
-#     xlabel="Date",
-#     ylabel="Levels (in millions)",
-#     color1="#023047",
-#     color2="#34a937",
-#     color3="#bc5090",
-#     line_color="black",
-#     line_legend="Total Employment",
-#     legend1="Replacement",
-#     legend2="Hires",
-#     legend3="All Hires",
-#     scale_factor=1000000
-# )
-
-
-def fun_plot_two_bars_line(df_orig, date_col, value_col1, value_col2, line_col=None, title="Stacked Bar Chart", xlabel="Date", ylabel="Value", color1="#023047", color2="#34a937", line_color="black", line_legend="Reference Line", legend1="Series 1", legend2="Series 2", scale_factor=1):
-    # Convert date column to datetime format
-    df = df_orig.copy()
-    df[date_col] = pd.to_datetime(df[date_col])
-
-    # Apply scaling
-    df[value_col1] /= scale_factor
-    df[value_col2] /= scale_factor
-    if line_col:
-        df[line_col] /= scale_factor
-
-    # Calculate bar width dynamically
-    date_range = df[date_col].max() - df[date_col].min()
-    avg_time_interval = date_range / len(df)
-    bar_width = avg_time_interval.days * 0.8  # Adjust factor to control width
-
-    # Create stacked bar chart
-    fig, ax = plt.subplots(figsize=(12, 6))
-    x = df[date_col]
-    y1 = df[value_col1]
-    y2 = df[value_col2]
-
-    ax.bar(x, y1, color=color1, label=legend1, width=bar_width)
-    ax.bar(x, y2, bottom=y1, color=color2, label=legend2, width=bar_width)
+    ax.bar(x_pos, y1, color=color1, label=legend1, width=bar_width, align='edge', edgecolor='none')
+    ax.bar(x_pos, y2, bottom=y1, color=color2, label=legend2, width=bar_width, align='edge', edgecolor='none')
+    ax.bar(x_pos, y3, bottom=y1 + y2, color=color3, label=legend3, width=bar_width, align='edge', edgecolor='none')
 
     # Add optional line plot
     if line_col:
-        ax.plot(x, df[line_col], color=line_color, linewidth=2, linestyle="dashed", label=line_legend)
+        ax.plot(x_pos, df[line_col], color=line_color, linewidth=2, linestyle="solid", label=line_legend)
 
-    # Format x-axis for dates
-    ax.xaxis.set_major_locator(mdates.YearLocator(base=5))  # Show every 5 years
-    ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))  # Format as Year
-    plt.xticks(rotation=45)  # Rotate for better readability
+    # Set x-axis ticks correctly to show every year
+    ax.set_xticks(x_pos[::4])  # Assuming quarterly data, show every 4th entry (annually)
+    ax.set_xticklabels(df[date_col].dt.strftime('%Y')[::4], rotation=45, ha='right')
 
     # Labels and title
     ax.set_xlabel(xlabel, fontsize=14, fontweight="bold")
@@ -813,89 +817,61 @@ def fun_plot_two_bars_line(df_orig, date_col, value_col1, value_col2, line_col=N
     # Show the plot
     plt.show()
 
-## Example usage:
-# fun_plot_two_bars_line(
-#     df_orig=df_qwi_filtered,
-#     date_col="date",
-#     value_col1="HirAEndRepl",
-#     value_col2="HirAEndRepl",
-#     line_col="HirAEndRepl",  # Additional line over bars
-#     title="Labor Market Indicators Over Time",
-#     xlabel="Date",
-#     ylabel="Levels (in millions)",
-#     color1="#023047",
-#     color2="#34a937",
-#     line_color="black",
-#     line_legend="Total Employment",
-#     legend1="Replacement",
-#     legend2="Hires",
-#     scale_factor=1000000
-# )
 
+def fun_plot_two_bars(df1, df2, df_line=None, date_col=None, value_col1=None, value_col2=None, line_col=None, line_color='#ffa600', line_legend='Trend Line', title="Labor Market Indicators Over Time", xlabel="Date", ylabel="Levels (in millions)", color1="#003f5c", color2="#58508d", legend1="Replacement", legend2="Hires", scale_factor=1000000):
 
+    # Convert date columns to datetime format
+    df1 = df1.copy()
+    df2 = df2.copy()
+    df1[date_col] = pd.to_datetime(df1[date_col])
+    if df_line is not None:
+        df_line = df_line.copy()
+        df_line[date_col] = pd.to_datetime(df_line[date_col])
+    df2[date_col] = pd.to_datetime(df2[date_col])
 
-```
+    # Apply scaling
+    df1[value_col1] /= scale_factor
+    df2[value_col2] /= scale_factor
+    if df_line is not None and line_col:
+        df_line[line_col] /= scale_factor
 
+    # Merge dataframes on date column
+    df = df1.merge(df2, on=date_col, how='outer')
+    if df_line is not None:
+        df = df.merge(df_line, on=date_col, how='outer')
+    df = df.sort_values(by=date_col)
 
-```{python}
-#| label: plot_series
-#| echo: false
-#| fig-show: none
+    # Set x positions with uniform spacing
+    x_pos = np.arange(len(df))
+    bar_width = 1.0  # Ensure bars are tightly packed with no white space
 
-# Example usage:
-df_qwi_filtered = pd.read_csv("qwi_data_seasadj.csv")
-fun_plot_single_ts(
-    df_orig=df_qwi_filtered,
-    date_col="date",
-    value_col="HirAEndRepl",
-    title="Hiring Activity Over Time",
-    xlabel="Date",
-    ylabel="Replacement Hires (in millions)",
-    color="#023047",
-    recession_shading=True,
-    scale_factor=1000000
-)
+    # Create stacked bar chart
+    fig, ax = plt.subplots(figsize=(12, 6))
+    y1 = df[value_col1]
+    y2 = df[value_col2]
 
-# Example usage:
-fun_plot_three_ts(
-    df_orig=df_qwi_filtered,
-    date_col="date",
-    value_col1="HirAEndRepl",
-    value_col2="HirAEnd",
-    value_col3="HirA",
-    title="Labor Market Indicators Over Time",
-    xlabel="Date",
-    ylabel="Levels (in millions)",
-    color1="#023047",
-    color2="#34a937",
-    color3="#bc5090",
-    recession_shading=True,
-    legend1="Replacement",
-    legend2="Hires",
-    legend3="All Hires",
-    scale_factor=1000000
-)
+    ax.bar(x_pos, y1, color=color1, label=legend1, width=bar_width, align='edge', edgecolor='none')
+    ax.bar(x_pos, y2, bottom=y1, color=color2, label=legend2, width=bar_width, align='edge', edgecolor='none')
+
+    # Add optional line plot
+    if df_line is not None and line_col:
+        ax.plot(x_pos, df[line_col], color=line_color, linewidth=3, linestyle="solid", label=line_legend)
+
+    # Set x-axis ticks correctly to show every year
+    ax.set_xticks(x_pos[::4])  # Assuming quarterly data, show every 4th entry (annually)
+    ax.set_xticklabels(df[date_col].dt.strftime('%Y')[::4], rotation=45, ha='right')
+
+    # Labels and title
+    ax.set_xlabel(xlabel, fontsize=14, fontweight="bold")
+    ax.set_ylabel(ylabel, fontsize=14, fontweight="bold")
+    ax.set_title(title, fontsize=16, fontweight="bold")
+    ax.legend()
+
+    # Show the plot
+    plt.show()
 
 
 ```
-
-::: {layout-ncol=2}
-<div style="text-align: center;">
-  ![](main_quarto_files/figure-html/plot_series-output-1.svg){.lightbox}
-  <div style="font-size: 10px; width: 100%; text-align: justify;">Notes.</div>
-</div>
-
-<div style="text-align: center;">
-  ![](main_quarto_files/figure-html/plot_series-output-2.svg){.lightbox}
-  <div style="font-size: 10px; width: 100%; text-align: justify;">Notes.</div>
-</div>
-
-<div style="text-align: center;">
-  ![](main_quarto_files/figure-html/plot_series-output-3.svg){.lightbox}
-  <div style="font-size: 10px; width: 100%; text-align: justify;">Notes.</div>
-</div>HirA
-
-:::
 
 
 Here comes the outline for the analysis:
@@ -915,3 +891,71 @@ Task before:
 3. Construct the two possible ways to get at the number of replaceable positions. *a)* like Alek's WP and *b)* like me own
 4. Compare these two versions and then go over to the models
 5.
+
+
+```{python}
+#| label: plot_series
+#| echo: false
+
+
+## To simplify the plotting, let's extract some data from the QWI df
+df_qwi_ReplHires = df_qwi_filtered[["date", "HirAEndRepl"]].copy()
+df_qwi_Hires = df_qwi_filtered[["date", "HirAEnd"]].copy()
+df_qwi_JobCreation = df_qwi_filtered[["date", "FrmJbGn"]].copy()
+df_qwi_JobDestruction = df_qwi_filtered[["date", "FrmJbLs"]].copy()
+
+## due to NAs  and outliers, we shorten the time window for all series:
+
+start_date = "1993-07-01"
+end_date = "2023-01-01"
+
+df_qwi_ReplHires = df_qwi_ReplHires[(df_qwi_ReplHires["date"] >= start_date) & (df_qwi_ReplHires["date"] <= end_date)]
+df_qwi_Hires = df_qwi_Hires[(df_qwi_Hires["date"] >= start_date) & (df_qwi_Hires["date"] <= end_date)]
+df_qwi_JobCreation = df_qwi_JobCreation[(df_qwi_JobCreation["date"] >= start_date) & (df_qwi_JobCreation["date"] <= end_date)]
+df_qwi_JobDestruction = df_qwi_JobDestruction[(df_qwi_JobDestruction["date"] >= start_date) & (df_qwi_JobDestruction["date"] <= end_date)]
+
+
+
+
+
+
+## Plot: Replacement hiring per hire & its shortfalls
+
+# Construct share of replacement hires in total hires
+df_qwi_ReplShare = df_qwi_ReplHires.copy()
+df_qwi_ReplShare["ReplShare"] = df_qwi_ReplHires["HirAEndRepl"] / df_qwi_Hires["HirAEnd"]
+
+fun_plot_single_ts(
+    df=df_qwi_ReplShare,
+    title="Replacement Hires as Share of Total Hires",
+    xlabel="Date",
+    ylabel="Share of Replacement Hires",
+    recession_shading=True,
+    scale_factor=1
+)
+
+
+# Call function with HirA as the line series
+fun_plot_two_bars(
+    df_qwi_ReplHires, df_qwi_JobCreation, df_line=df_qwi_Hires,
+    date_col="date",
+    value_col1="HirAEndRepl", value_col2="FrmJbGn",
+    line_col="HirAEnd", line_legend="Replacement Hires"
+)
+
+
+
+# Series of EE transitions per replacement hires: using the rates -> CPS EEs
+# Add the following series:
+
+```
+
+
+::: {.grid}
+::: {.g-col-6}
+![](main_quarto_files/plot_series/plot_series-output-1.svg){.lightbox}
+:::
+::: {.g-col-6}
+![](main_quarto_files/plot_series/plot_series-output-2.svg){.lightbox}
+:::
+:::
