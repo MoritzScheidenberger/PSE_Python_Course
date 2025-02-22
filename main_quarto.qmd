@@ -132,6 +132,7 @@ The LEHD provides various data sets for the US based on Census data. While the s
 Of these private firms, the LEHD data covers about 95% of employees, given that the data is based on unemployment insurance records.
 The data is available at the quarterly frequency and not seasonally adjusted except when downloaded through their proprietary acces portal.
 
+Note that the data on EE transitions as well as some key macroeconomic time series are obtained directly through the FRED, the API of the St. Louis Federal Reserve.
 
 <details>
 <summary> **LEHD Data Naming Convention** (Click to Expand)</summary>
@@ -572,6 +573,7 @@ df_qwi_filtered = pd.read_csv("qwi_data_seasadj.csv")
 ```{python}
 #| label: load_additional_data
 #| echo: false
+#| warning: false
 
 # We still need some data from FRED
 from fredapi import Fred
@@ -613,7 +615,7 @@ fred_monthly_dict = {
 
 # Define date range
 start_date = "1990-01-01"
-end_date = "2025-01-01"
+end_date = "2023-01-01"
 
 # It's a pain to have all in the same df because of their different length availability
 for var_name, series_id in fred_monthly_dict.items():
@@ -625,26 +627,33 @@ for var_name, series_id in fred_monthly_dict.items():
 taggr_methods = {
     "sum": ["ts_jopen_nfarm_lvl_m", "ts_jopen_tpriv_lvl_m", "ts_quit_nfarm_lvl_m", "ts_quit_tpriv_lvl_m",
              "ts_hire_nfarm_lvl_m", "ts_hire_tpriv_lvl_m", "ts_layoff_nfarm_lvl_m", "ts_layoff_tpriv_lvl_m",
-             "ts_osep_nfarm_lvl_m", "ts_osep_tpriv_lvl_m", "ts_tsep_nfarm_lvl_m", "ts_tsep_tpriv_lvl_m"],
+             "ts_osep_nfarm_lvl_m", "ts_osep_tpriv_lvl_m", "ts_tsep_nfarm_lvl_m", "ts_tsep_tpriv_lvl_m", "ts_ee_prob_m"],
     "mean": ["ts_jopen_nfarm_rate_m", "ts_jopen_tpriv_rate_m", "ts_quit_nfarm_rate_m", "ts_quit_tpriv_rate_m",
               "ts_hire_nfarm_rate_m", "ts_hire_tpriv_rate_m", "ts_layoff_nfarm_rate_m", "ts_layoff_tpriv_rate_m",
               "ts_osep_nfarm_rate_m", "ts_osep_tpriv_rate_m", "ts_tsep_nfarm_rate_m", "ts_tsep_tpriv_rate_m",
-              "ts_jln_uncertainty_m", "ts_emp_lvl_CPS_m", "ts_emp_nfarm_CES_m", "ts_emp_priv_CES_m",
-              "ts_ee_prob_m"]
+              "ts_jln_uncertainty_m", "ts_emp_lvl_CPS_m", "ts_emp_nfarm_CES_m", "ts_emp_priv_CES_m"]
 }
 
-# Aggregate to quarterly data
+# Getting the dates right seems difficult
 for method, series_list in taggr_methods.items():
     for series in series_list:
         df = globals()[series].copy()
         df["Date"] = pd.to_datetime(df["Date"])
         df.set_index("Date", inplace=True)
-        if method == "sum":
-            df_q = df.resample("QE").sum().reset_index()
-        else:  # mean
-            df_q = df.resample("QE").mean().reset_index()
-        globals()[series.replace("_m", "_q")] = df_q
 
+        if method == "sum":
+            df_q = df.resample("Q").sum()
+        else:  # mean
+            df_q = df.resample("Q").mean()
+
+        # Adjust dates to the start of the quarter
+        df_q.index = df_q.index.to_period("Q").to_timestamp(how="S")  # 'S' for Start of Period
+
+        # Drop quarters with missing data
+        df_q = df_q.dropna()
+
+        df_q = df_q.reset_index()
+        globals()[series.replace("_m", "_q")] = df_q
 
 
 ```
@@ -874,6 +883,7 @@ df_qwi_ReplHires = df_qwi_filtered[["date", "HirAEndRepl"]].copy()
 df_qwi_Hires = df_qwi_filtered[["date", "HirAEnd"]].copy()
 df_qwi_JobCreation = df_qwi_filtered[["date", "FrmJbGn"]].copy()
 df_qwi_JobDestruction = df_qwi_filtered[["date", "FrmJbLs"]].copy()
+df_qwi_Emp = df_qwi_filtered[["date", "Emp"]].copy()
 
 ## due to NAs  and outliers, we shorten the time window for all series:
 
@@ -884,7 +894,7 @@ df_qwi_ReplHires = df_qwi_ReplHires[(df_qwi_ReplHires["date"] >= start_date) & (
 df_qwi_Hires = df_qwi_Hires[(df_qwi_Hires["date"] >= start_date) & (df_qwi_Hires["date"] <= end_date)]
 df_qwi_JobCreation = df_qwi_JobCreation[(df_qwi_JobCreation["date"] >= start_date) & (df_qwi_JobCreation["date"] <= end_date)]
 df_qwi_JobDestruction = df_qwi_JobDestruction[(df_qwi_JobDestruction["date"] >= start_date) & (df_qwi_JobDestruction["date"] <= end_date)]
-
+df_qwi_Emp = df_qwi_Emp[(df_qwi_Emp["date"] >= start_date) & (df_qwi_Emp["date"] <= end_date)]
 
 
 ## Plot: Replacement hiring per hire & its shortfalls
@@ -912,20 +922,46 @@ fun_plot_two_bars(
 ```
 
 
-Here comes the outline for the analysis:
+Next, we can go on to construct the series of job-to-job (EE) transitions relative to replacement hires with which we intend to track firms' replacement behavior.
+Since the data on EE transitions (constructed by Postel-Vinay and Moscarini) is based on the CPS (which samples the whole population), we need align it with the fact that the QWI only covers employees in the private sector.
+For now, this is done by multiplying the EE transition rate (i.e. the percentage of employees who switch jobs) with the total employment in the private sector (QWI).
+By doing so, we implicitly assume that the transition rates do not differ significantly between the sample of all private employees and the whole population.
+Given that private employment dominates total employment, this assumption seems reasonable.
 
-Task before:
+```{python}
+#| label: plot_ee_repl
+#| fig-cap: "Charts"
+#| fig-subcap:
+#|   - "The measure of replaceable positions is constructed by dividing the EE transitions by replacement hires. It shows the number of job-to-job transitions per replacement hire. Note that the data for EE transitions is based on CPS data while that of replacement hires is based on census data for all private firms. Adjustments were made to make these series comparable."
+#| layout-ncol: 1
 
-- Write up the model part with the equations and how things look in steady state
+## Construct EE transitions relative to replacement hires
+
+# need to restrict Emp version to 1995-10-1 to 2023-1-1 first because EE data starts in 1995
+df_qwi_Emp_short = df_qwi_Emp[(df_qwi_Emp["date"].copy() >= "1995-10-01") & (df_qwi_Emp["date"].copy() <= end_date)]
+
+# These indices in python are weird to work with :/ Now it finally works.
+ts_EE_in_qwiEmp = ts_ee_prob_q.copy()
+ts_EE_in_qwiEmp["Value"] = df_qwi_Emp_short["Emp"].values * (ts_ee_prob_q["Value"].values / 100)
+
+# Shorten HirAEndRepl first (tedious...)
+ts_HirAEndRepl_short = df_qwi_ReplHires[(df_qwi_ReplHires["date"] >= "1995-10-01") & (df_qwi_ReplHires["date"] <= end_date)]
+
+ts_replaceablePositions = ts_EE_in_qwiEmp.copy()
+ts_replaceablePositions["Value"] = ts_EE_in_qwiEmp["Value"].values / ts_HirAEndRepl_short["HirAEndRepl"].values
+
+# shorten ts_replaceablePositions because of outliers in last period
+ts_replaceablePositions = ts_replaceablePositions[ts_replaceablePositions["Date"] < "2022-10-01"]
+
+fun_plot_single_ts(
+    df=ts_replaceablePositions,
+    title="Measure of Replaceable Positions",
+    xlabel="Date",
+    ylabel="Job-to-Job Transitions per Replacement Hire",
+    recession_shading=True,
+    scale_factor=1
+)
 
 
-1. Show a decomposition of hiring into replacement hiring and job creation
-2. Show a decomposition of replacement hires into job-to-job transitions to show that the relationship should hold.
 
-- Here however this may undermine my argument / I will have to credibly argue that the data is systematially missing these kinds of transitions because it is just quarterly
-- At the same time, these series are very similar
-- I should think about this more => well actually the hires that they show there are from a different data set and only concern main jobs. Moreover, there is this weirdness about the employment series.
-
-3. Construct the two possible ways to get at the number of replaceable positions. *a)* like Alek's WP and *b)* like me own
-4. Compare these two versions and then go over to the models
-5.
+```

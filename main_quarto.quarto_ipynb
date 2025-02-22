@@ -57,7 +57,7 @@
         "\n",
         "---"
       ],
-      "id": "93629133"
+      "id": "5d638e3a"
     },
     {
       "cell_type": "code",
@@ -148,6 +148,7 @@
         "Of these private firms, the LEHD data covers about 95% of employees, given that the data is based on unemployment insurance records.\n",
         "The data is available at the quarterly frequency and not seasonally adjusted except when downloaded through their proprietary acces portal.\n",
         "\n",
+        "Note that the data on EE transitions as well as some key macroeconomic time series are obtained directly through the FRED, the API of the St. Louis Federal Reserve.\n",
         "\n",
         "<details>\n",
         "<summary> **LEHD Data Naming Convention** (Click to Expand)</summary>\n",
@@ -203,7 +204,7 @@
         "\n",
         "---\n"
       ],
-      "id": "e713643d"
+      "id": "a11fc747"
     },
     {
       "cell_type": "code",
@@ -301,7 +302,7 @@
       "source": [
         "---"
       ],
-      "id": "538ff23a"
+      "id": "8e9f7ffb"
     },
     {
       "cell_type": "markdown",
@@ -309,7 +310,7 @@
       "source": [
         "Now let's take a quick look at the data to know what we are working with and how to proceed."
       ],
-      "id": "f74e407b"
+      "id": "13c69def"
     },
     {
       "cell_type": "code",
@@ -561,7 +562,7 @@
         "\n",
         "<details>\n"
       ],
-      "id": "5ed48b70"
+      "id": "e37f23d9"
     },
     {
       "cell_type": "code",
@@ -607,7 +608,7 @@
       "source": [
         "It turns out that we need to use R (together with python) to use the usual seasonal adjustment with X13-ARIMA."
       ],
-      "id": "8558b54b"
+      "id": "9979ba22"
     },
     {
       "cell_type": "code",
@@ -637,6 +638,7 @@
       "source": [
         "#| label: load_additional_data\n",
         "#| echo: false\n",
+        "#| warning: false\n",
         "\n",
         "# We still need some data from FRED\n",
         "from fredapi import Fred\n",
@@ -678,7 +680,7 @@
         "\n",
         "# Define date range\n",
         "start_date = \"1990-01-01\"\n",
-        "end_date = \"2025-01-01\"\n",
+        "end_date = \"2023-01-01\"\n",
         "\n",
         "# It's a pain to have all in the same df because of their different length availability\n",
         "for var_name, series_id in fred_monthly_dict.items():\n",
@@ -690,24 +692,32 @@
         "taggr_methods = {\n",
         "    \"sum\": [\"ts_jopen_nfarm_lvl_m\", \"ts_jopen_tpriv_lvl_m\", \"ts_quit_nfarm_lvl_m\", \"ts_quit_tpriv_lvl_m\",\n",
         "             \"ts_hire_nfarm_lvl_m\", \"ts_hire_tpriv_lvl_m\", \"ts_layoff_nfarm_lvl_m\", \"ts_layoff_tpriv_lvl_m\",\n",
-        "             \"ts_osep_nfarm_lvl_m\", \"ts_osep_tpriv_lvl_m\", \"ts_tsep_nfarm_lvl_m\", \"ts_tsep_tpriv_lvl_m\"],\n",
+        "             \"ts_osep_nfarm_lvl_m\", \"ts_osep_tpriv_lvl_m\", \"ts_tsep_nfarm_lvl_m\", \"ts_tsep_tpriv_lvl_m\", \"ts_ee_prob_m\"],\n",
         "    \"mean\": [\"ts_jopen_nfarm_rate_m\", \"ts_jopen_tpriv_rate_m\", \"ts_quit_nfarm_rate_m\", \"ts_quit_tpriv_rate_m\",\n",
         "              \"ts_hire_nfarm_rate_m\", \"ts_hire_tpriv_rate_m\", \"ts_layoff_nfarm_rate_m\", \"ts_layoff_tpriv_rate_m\",\n",
         "              \"ts_osep_nfarm_rate_m\", \"ts_osep_tpriv_rate_m\", \"ts_tsep_nfarm_rate_m\", \"ts_tsep_tpriv_rate_m\",\n",
-        "              \"ts_jln_uncertainty_m\", \"ts_emp_lvl_CPS_m\", \"ts_emp_nfarm_CES_m\", \"ts_emp_priv_CES_m\",\n",
-        "              \"ts_ee_prob_m\"]\n",
+        "              \"ts_jln_uncertainty_m\", \"ts_emp_lvl_CPS_m\", \"ts_emp_nfarm_CES_m\", \"ts_emp_priv_CES_m\"]\n",
         "}\n",
         "\n",
-        "# Aggregate to quarterly data\n",
+        "# Getting the dates right seems difficult\n",
         "for method, series_list in taggr_methods.items():\n",
         "    for series in series_list:\n",
         "        df = globals()[series].copy()\n",
         "        df[\"Date\"] = pd.to_datetime(df[\"Date\"])\n",
         "        df.set_index(\"Date\", inplace=True)\n",
+        "\n",
         "        if method == \"sum\":\n",
-        "            df_q = df.resample(\"QE\").sum().reset_index()\n",
+        "            df_q = df.resample(\"Q\").sum()\n",
         "        else:  # mean\n",
-        "            df_q = df.resample(\"QE\").mean().reset_index()\n",
+        "            df_q = df.resample(\"Q\").mean()\n",
+        "\n",
+        "        # Adjust dates to the start of the quarter\n",
+        "        df_q.index = df_q.index.to_period(\"Q\").to_timestamp(how=\"S\")  # 'S' for Start of Period\n",
+        "\n",
+        "        # Drop quarters with missing data\n",
+        "        df_q = df_q.dropna()\n",
+        "\n",
+        "        df_q = df_q.reset_index()\n",
         "        globals()[series.replace(\"_m\", \"_q\")] = df_q\n"
       ],
       "id": "load_additional_data",
@@ -720,7 +730,7 @@
       "source": [
         "# Replacement Hiring in the Data\n"
       ],
-      "id": "7770afac"
+      "id": "ee6a5e7a"
     },
     {
       "cell_type": "code",
@@ -934,36 +944,19 @@
       "cell_type": "markdown",
       "metadata": {},
       "source": [
-        "Here comes the outline for the analysis:\n",
-        "\n",
-        "Task before:\n",
-        "\n",
-        "- Write up the model part with the equations and how things look in steady state\n",
-        "\n",
-        "\n",
-        "1. Show a decomposition of hiring into replacement hiring and job creation\n",
-        "2. Show a decomposition of replacement hires into job-to-job transitions to show that the relationship should hold.\n",
-        "\n",
-        "- Here however this may undermine my argument / I will have to credibly argue that the data is systematially missing these kinds of transitions because it is just quarterly\n",
-        "- At the same time, these series are very similar\n",
-        "- I should think about this more => well actually the hires that they show there are from a different data set and only concern main jobs. Moreover, there is this weirdness about the employment series.\n",
-        "\n",
-        "3. Construct the two possible ways to get at the number of replaceable positions. *a)* like Alek's WP and *b)* like me own\n",
-        "4. Compare these two versions and then go over to the models\n",
-        "5.\n"
+        "First, let us take a look at replacement hiring in the data. These two figures give us a glance both at the volatility and cyclicality of replacement hiring as well as its role in total hires.\n"
       ],
-      "id": "82fd4ecf"
+      "id": "dfc26270"
     },
     {
       "cell_type": "code",
       "metadata": {},
       "source": [
         "#| label: plot_series\n",
-        "#| echo: false\n",
         "#| fig-cap: Charts\n",
         "#| fig-subcap:\n",
         "#|   - We can immediately see that replacement hiring is very volatile and strongly decreases in recessions.\n",
-        "#|   - The decomposition of hires into replacement hires and job creation holds in the data.\n",
+        "#|   - 'The decomposition of hires into replacement hires and job creation holds in the data. Moreover, the importance is for total hires becomes clear.'\n",
         "#| layout-ncol: 2\n",
         "\n",
         "\n",
@@ -972,6 +965,7 @@
         "df_qwi_Hires = df_qwi_filtered[[\"date\", \"HirAEnd\"]].copy()\n",
         "df_qwi_JobCreation = df_qwi_filtered[[\"date\", \"FrmJbGn\"]].copy()\n",
         "df_qwi_JobDestruction = df_qwi_filtered[[\"date\", \"FrmJbLs\"]].copy()\n",
+        "df_qwi_Emp = df_qwi_filtered[[\"date\", \"Emp\"]].copy()\n",
         "\n",
         "## due to NAs  and outliers, we shorten the time window for all series:\n",
         "\n",
@@ -982,7 +976,7 @@
         "df_qwi_Hires = df_qwi_Hires[(df_qwi_Hires[\"date\"] >= start_date) & (df_qwi_Hires[\"date\"] <= end_date)]\n",
         "df_qwi_JobCreation = df_qwi_JobCreation[(df_qwi_JobCreation[\"date\"] >= start_date) & (df_qwi_JobCreation[\"date\"] <= end_date)]\n",
         "df_qwi_JobDestruction = df_qwi_JobDestruction[(df_qwi_JobDestruction[\"date\"] >= start_date) & (df_qwi_JobDestruction[\"date\"] <= end_date)]\n",
-        "\n",
+        "df_qwi_Emp = df_qwi_Emp[(df_qwi_Emp[\"date\"] >= start_date) & (df_qwi_Emp[\"date\"] <= end_date)]\n",
         "\n",
         "\n",
         "## Plot: Replacement hiring per hire & its shortfalls\n",
@@ -1008,6 +1002,59 @@
         ")"
       ],
       "id": "plot_series",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Next, we can go on to construct the series of job-to-job (EE) transitions relative to replacement hires with which we intend to track firms' replacement behavior.\n",
+        "Since the data on EE transitions (constructed by Postel-Vinay and Moscarini) is based on the CPS (which samples the whole population), we need align it with the fact that the QWI only covers employees in the private sector.\n",
+        "For now, this is done by multiplying the EE transition rate (i.e. the percentage of employees who switch jobs) with the total employment in the private sector (QWI).\n",
+        "By doing so, we implicitly assume that the transition rates do not differ significantly between the sample of all private employees and the whole population.\n",
+        "Given that private employment dominates total employment, this assumption seems reasonable."
+      ],
+      "id": "7ed630be"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: plot_ee_repl\n",
+        "#| fig-cap: Charts\n",
+        "#| fig-subcap:\n",
+        "#|   - The measure of replaceable positions is constructed by dividing the EE transitions by replacement hires. It shows the number of job-to-job transitions per replacement hire. Note that the data for EE transitions is based on CPS data while that of replacement hires is based on census data for all private firms. Adjustments were made to make these series comparable.\n",
+        "#| layout-ncol: 1\n",
+        "\n",
+        "## Construct EE transitions relative to replacement hires\n",
+        "\n",
+        "# need to restrict Emp version to 1995-10-1 to 2023-1-1 first because EE data starts in 1995\n",
+        "df_qwi_Emp_short = df_qwi_Emp[(df_qwi_Emp[\"date\"].copy() >= \"1995-10-01\") & (df_qwi_Emp[\"date\"].copy() <= end_date)]\n",
+        "\n",
+        "# These indices in python are weird to work with :/ Now it finally works.\n",
+        "ts_EE_in_qwiEmp = ts_ee_prob_q.copy()\n",
+        "ts_EE_in_qwiEmp[\"Value\"] = df_qwi_Emp_short[\"Emp\"].values * (ts_ee_prob_q[\"Value\"].values / 100)\n",
+        "\n",
+        "# Shorten HirAEndRepl first (tedious...)\n",
+        "ts_HirAEndRepl_short = df_qwi_ReplHires[(df_qwi_ReplHires[\"date\"] >= \"1995-10-01\") & (df_qwi_ReplHires[\"date\"] <= end_date)]\n",
+        "\n",
+        "ts_replaceablePositions = ts_EE_in_qwiEmp.copy()\n",
+        "ts_replaceablePositions[\"Value\"] = ts_EE_in_qwiEmp[\"Value\"].values / ts_HirAEndRepl_short[\"HirAEndRepl\"].values\n",
+        "\n",
+        "# shorten ts_replaceablePositions because of outliers in last period\n",
+        "ts_replaceablePositions = ts_replaceablePositions[ts_replaceablePositions[\"Date\"] < \"2022-10-01\"]\n",
+        "\n",
+        "fun_plot_single_ts(\n",
+        "    df=ts_replaceablePositions,\n",
+        "    title=\"Measure of Replaceable Positions\",\n",
+        "    xlabel=\"Date\",\n",
+        "    ylabel=\"Job-to-Job Transitions per Replacement Hire\",\n",
+        "    recession_shading=True,\n",
+        "    scale_factor=1\n",
+        ")\n"
+      ],
+      "id": "plot_ee_repl",
       "execution_count": null,
       "outputs": []
     }
