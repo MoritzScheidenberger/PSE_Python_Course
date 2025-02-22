@@ -7,8 +7,8 @@ author: "Moritz Scheidenberger"
 date-modified: "today"
 abstract: "In the labor market, transitions in and out of unemployment are driven by two wheels.
     One wheel is the classical cycle of job creation and job destruction. Firms create jobs for which they hire unemployed workers. Simulatenously, some already filled jobs are destroyed and the associated workers become unemployed.
-    The second wheel is driven by churn. Some already employed workers are hired by another firm and leave behind an empty position which, subsequently, may be filled by another already employed worker who themselves leaves behind a position. So the churn wheel keeps turning until the empty position is filled by a previously unemployed worker.
-    The conventional view is that models of the labor market model can abstract from the churn wheel when mainly interested in unemployment dynamics. Since job creation must equal job destruction, the number of UE transitions is determined by the EU transitions. EE transitions offset eachother and do not matter for unemploymend dynamics. Yet, disregarding replacement hiring dynamics risks missing essential labor market effects when economic shocks alter firms' quit replacement decisions through mechanisms beyond the usual business cycle impact.
+    The second wheel is driven by churn. Some already employed workers are hired by ohter firms and leave behind an empty position which, subsequently, may be filled by another already employed worker who themselves leaves behind a position. So the churn wheel keeps turning until the empty position is filled by a previously unemployed worker.
+    The conventional view is that models of the labor market model can abstract from the churn wheel when mainly interested in unemployment dynamics. Since job creation must equal job destruction, the number of UE transitions (unemployement to employment) is determined by the EU transitions (employment to unemployment). EE transitions (employment to employment) offset eachother and do not matter for unemploymend dynamics. Yet, disregarding replacement hiring dynamics risks missing essential labor market effects when economic shocks alter firms' quit replacement decisions through mechanisms beyond the usual business cycle impact.
     I provide novel evidence that uncertainty shocks directly impact firms' replacement hiring decisions. The reluctance to rehire under uncertainty arises because firms treat existing positions as valuable but sunk investments, leading to a wait-and-see approach."
 
 format:
@@ -42,7 +42,7 @@ jupyter: quarto_env  # Use the Conda environment
 execute:
   eval: true
   freeze: auto
-  fig-show: false
+  fig-show: none  # Prevent automatic figure display
 
   # warning: false  # This suppresses all warnings globally
 # engine: knitr
@@ -73,43 +73,30 @@ execute:
 
 
 # Motivation
+From the literature that followed the Great Recession, the consensus has emerged that such uncertainty shocks have substantial negative effects on investment and unemployment.
+While the impact on investment can be rationalized through the standard real options channel, models of the labor market have struggled to replicate the sizable rise in unemployment observed in the data.
+This project is the start of an investigation into whether accounting for changes in firms' replacement hiring decisions can overcome this discrepancy between theory and data.
+
 ## The Role of Replacement Hiring
+While job creation and job destruction have been the focal point of attention of labor economists for decades, the role of replacement hiring has only recently received attention.
+Replacement hiring is the process by which firms fill positions left behind by workers who quit or are laid off.
+Mechanically connected to on-the-job transitions (that is, workers moving from one employer to another), replacement hiring is a crucial part of the job ladder.
+The job ladder is the sequence of jobs that workers climb over their career. When a worker climbs a rung on the job ladder by transitioning to another employer, they leave behind a viable position that can be filled by another worker.
+This empty positions constitutes the opportunity for another worker to themselves climb a rung on the job ladder and so on.
+In this way, the job ladder is a dynamic process that is constantly turning as workers transition between employers.
+The job ladder itself plays a crucial role for e.g. productivity growth and wage growth, though the details of this are beyond the scope of this project.
 
-**The Job Ladder is Important**
+Before turning to the measurement of replacement hiring, here are some key points to keep in mind:
 
-*(Job-to-Job transitions (henceforth also EE transitions) are at the heart of the job ladder. While already employed, workers eventually encounter job offers at other firms that constitute an improvement in their career. In other words, by transitioning from one employer to the other, workers typically climb another rung on the job ladder, towards their ultimate career-goal job).*
-
-1. Half or all hires are EEs i.e. EE flows = EU flows in terms of size
-2. EE transitions collapse in recessions
-3. On-the-job search is very effective (Faberman et al. 2022)
-4. EE flows affect income, consumption, productivity, inflation (See BKMS 2024, MPV 2023)
-
-Additional Notes:
-
-- Job security matters a lot for people staying in their job (German data I think)
-
-*Story:*
-
-- The response of replacement hiring to uncertainty matters because it could indicate that the job ladder collapses temporarily
-- This goes well with what Gottfries said about that discount factor shocks matter less for labor markets because of the high turn-over / people don't stay in jobs that long so their discounting matters less. However, replacement hiring could affect the age of jobs / how quickly the hiring chain breaks down
-
-
-**Replacement hiring as *pendant* to capital utilization**
-
-*Story building:*
-
-- Frame it such that job creation is what builds a stock of jobs over time and replacement hiring determines how quickly this stock depreciates & how much it is utilized
-- These empty positions in response to uncertainty come from the waiting
--
-
-
-**Why does it differ from Job Creation**
-- Why do we care where vacancies come from?
-
+- Half of all hires are replacement hires. This is synonymous to saying that half of all hires are EE transitions.
+- The size of EE flows is about equal the size of EU flows. This highlights the importance of EE transitions for the labor market.
 
 
 ## How to Measure Replacement Hiring
-While there exists data on the number of replacement hires, firms' decisions to rehire for workers that leave cannot be inferred directly. Since the number of replacement hires is capped by the number of workers quitting their positions, any change in worker quits mechanically reduces the number of replacement hires. Thus, to estimate the number of quits that remain unreplaced, one has to control for any movement in replacement hiring that is driven by a change in the number of workers quitting their jobs and leaving behind a viable position.
+While there exists data on the number of replacement hires, firms' actual decisions to replacement hire cannot be inferred directly.
+Since the number of replacement hires is capped by the number of workers quitting their positions, any change in worker quits mechanically reduces the number of replacement hires.
+In other words, an observed fall in replacement hiring could be both the consequence of firms' reluctance to rehire or simply a fall in the number of quits.
+Thus, to estimate the number of quits that remain unreplaced, one has to control for any movement in replacement hiring that is driven by a change in the number of workers quitting their jobs and leaving behind a viable position.
 
 One may be tempted to think that simply using the number of quits as a proxy for the number of empty positions left behind by workers leaving their firm. However, this approach is flawed for two reasons.
 Firstly, recent work by Carillo-Tuleda et al. (2021) shows that in non-recession years about 39% of layoffs also leave behind a viable position. The motive of such layoffs being worker performance (termed bad match quality in the literature) rather than job destruction. Still, simply adding a constant share of layoffs to the number of quits to get at the number of replaceable positions may be problematic if the share of replaceable layoffs varies structurally over the cycle. At the onset of recessions, layoffs spike while quits fall. How does the share of match-quality motivated layoffs change in recessions? Does it rise because worker performance matters more during downturns? Or does it fall because the motive of job destruction becomes more prevalent?
@@ -119,7 +106,7 @@ We are left with two options:
 
 1. Construct a series of viable positions left behind by quits and layoffs, assuming that the share of layoffs that leave behind a viable position is constant over the cycle. In an extension, one could try to come up with a proxy for the share of replaceable layoffs for which data exists.
 
-2. Infer the number of viable positions left behind from data on job-to-job transitions. The argument goes as follows:
+2. Infer the number of viable positions left behind from data on job-to-job transitions. **This is the approach I go for in this project.** The argument goes as follows:
 
 In models of the labor market, flows can be categorized into two "wheels". The first wheel is the classical cycle of job creation and job destruction. The second wheel is that of replacement hiring. EE transitions leave behind viable positions that are filled by other EE transitions. When looked at through this lense, the two wheels can be regarded as independent from eachother. Job creation and job destruction determine unemployment-to-employment (UE) and employment-to-unemployment (EU) flows respectively. EE tranistions offset eachother and do not matter for unemployment dynamics.
 Importantly, the two identities that these two wheels represent hold in aggregate, not at an individual level. At an individual level, we do observe quits into non-employment as well as EE transitions to newly created jobs in the data. Similarly, unemployed workers may be hired as the replacement instead of being hired for a newly created position. Still, in equilibrium, the number of jobs created must equal the number of jobs destroyed for unemployment to be constant. Likewise, the number of EE transitions must equal the number of replacement hires for employment to be constant.
@@ -134,13 +121,6 @@ EE ~~ Transitions = Replacement ~~ Hires
 $$
 
 In this simplified view of the labor market, a fall in the share of empty but viable positions that are replaced would show itself in a rise of the share of EE transitions per replacement hire. In other words, workers still transition and leave viable positions behind but positions are not immediately reposted on the labor market. Clearly, this rise in the share of EE transitions per replacement hires can only be temporary, as the reduction in replacement hiring also reduces the number of positions that employed workers can find. Thus, fewer employed workers find a new job and the ratio returns towards it's long-run average.
-
-
-
-
-
-Think about if I can do anything about job destruction in excess of quits and layoffs etc.
-
 
 
 
@@ -896,6 +876,11 @@ Task before:
 ```{python}
 #| label: plot_series
 #| echo: false
+#| fig-cap: "Charts"
+#| fig-subcap:
+#|   - "First"
+#|   - "Second"
+#| layout-ncol: 2
 
 
 ## To simplify the plotting, let's extract some data from the QWI df
@@ -913,9 +898,6 @@ df_qwi_ReplHires = df_qwi_ReplHires[(df_qwi_ReplHires["date"] >= start_date) & (
 df_qwi_Hires = df_qwi_Hires[(df_qwi_Hires["date"] >= start_date) & (df_qwi_Hires["date"] <= end_date)]
 df_qwi_JobCreation = df_qwi_JobCreation[(df_qwi_JobCreation["date"] >= start_date) & (df_qwi_JobCreation["date"] <= end_date)]
 df_qwi_JobDestruction = df_qwi_JobDestruction[(df_qwi_JobDestruction["date"] >= start_date) & (df_qwi_JobDestruction["date"] <= end_date)]
-
-
-
 
 
 
@@ -949,13 +931,3 @@ fun_plot_two_bars(
 # Add the following series:
 
 ```
-
-
-::: {.grid}
-::: {.g-col-6}
-![](main_quarto_files/plot_series/plot_series-output-1.svg){.lightbox}
-:::
-::: {.g-col-6}
-![](main_quarto_files/plot_series/plot_series-output-2.svg){.lightbox}
-:::
-:::
