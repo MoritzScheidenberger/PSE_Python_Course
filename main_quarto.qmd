@@ -128,7 +128,10 @@ In this simplified view of the labor market, a fall in the share of empty but vi
 
 ## File Naming Convention for LEHD Data
 
-The LEHD provides various data sets for the US based on Census data. ...
+The LEHD provides various data sets for the US based on Census data. While the state-level data also contains local and state civil servants, the national aggregates are for private firms only.
+Of these private firms, the LEHD data covers about 95% of employees, given that the data is based on unemployment insurance records.
+The data is available at the quarterly frequency and not seasonally adjusted except when downloaded through their proprietary acces portal.
+
 
 <details>
 <summary> **LEHD Data Naming Convention** (Click to Expand)</summary>
@@ -181,13 +184,11 @@ The LEHD provides various data sets for the US based on Census data. ...
 
 </details>
 
-<span style="color: red;">**Note: National QWI data is only available for Private ownership!**</span>
 
 ---
 
 ```{python}
 #| label: obtain_data
-#| echo: false
 
 ## Downloading and extracting the data
 
@@ -211,6 +212,8 @@ os.makedirs(EXTRACT_DIR, exist_ok=True)
 
 # User-defined filter (Set to None for all files, or specify exact match criteria)
 FILTER_CRITERIA = "qwi_us_sa_f_gn_ns_op_u.csv.gz"  # Specify the exact filename needed
+# This is the file name for the most basic aggregate data.
+# Future analysis will require more detailed data which is why I downloaded it all already.
 
 # Fetch webpage content
 response = requests.get(BASE_URL)
@@ -234,6 +237,7 @@ if not file_links:
 original_stdout = sys.stdout
 sys.stdout = open(os.devnull, 'w')
 
+# gave some issues about printing the chunk size all the time.
 try:
     for file_url in file_links:
         file_name = os.path.join(DOWNLOAD_DIR, os.path.basename(file_url))
@@ -274,7 +278,6 @@ Now let's take a quick look at the data to know what we are working with and how
 
 ```{python}
 #| label: select_data
-#| echo: false
 
 ## Work with the data
 
@@ -514,8 +517,6 @@ The categorical variables show us additional levels of detail that we can ge, be
 
 <details>
 
-## First Analysis
-Let us further filter the data because we are only interested in the aggregate series for now.
 
 ```{python}
 #| label: View_the_data
@@ -647,6 +648,9 @@ for method, series_list in taggr_methods.items():
 
 
 ```
+
+
+# Replacement Hiring in the Data
 
 
 ```{python}
@@ -853,33 +857,15 @@ def fun_plot_two_bars(df1, df2, df_line=None, date_col=None, value_col1=None, va
 
 ```
 
-
-Here comes the outline for the analysis:
-
-Task before:
-
-- Write up the model part with the equations and how things look in steady state
-
-
-1. Show a decomposition of hiring into replacement hiring and job creation
-2. Show a decomposition of replacement hires into job-to-job transitions to show that the relationship should hold.
-
-- Here however this may undermine my argument / I will have to credibly argue that the data is systematially missing these kinds of transitions because it is just quarterly
-- At the same time, these series are very similar
-- I should think about this more => well actually the hires that they show there are from a different data set and only concern main jobs. Moreover, there is this weirdness about the employment series.
-
-3. Construct the two possible ways to get at the number of replaceable positions. *a)* like Alek's WP and *b)* like me own
-4. Compare these two versions and then go over to the models
-5.
+First, let us take a look at replacement hiring in the data. These two figures give us a glance both at the volatility and cyclicality of replacement hiring as well as its role in total hires.
 
 
 ```{python}
 #| label: plot_series
-#| echo: false
 #| fig-cap: "Charts"
 #| fig-subcap:
-#|   - "First"
-#|   - "Second"
+#|   - "We can immediately see that replacement hiring is very volatile and strongly decreases in recessions."
+#|   - "The decomposition of hires into replacement hires and job creation holds in the data. Moreover, the importance is for total hires becomes clear."
 #| layout-ncol: 2
 
 
@@ -911,13 +897,11 @@ fun_plot_single_ts(
     df=df_qwi_ReplShare,
     title="Replacement Hires as Share of Total Hires",
     xlabel="Date",
-    ylabel="Share of Replacement Hires",
+    ylabel="Share of Replacement Hires (in millions)",
     recession_shading=True,
-    scale_factor=1
+    scale_factor=1000000
 )
 
-
-# Call function with HirA as the line series
 fun_plot_two_bars(
     df_qwi_ReplHires, df_qwi_JobCreation, df_line=df_qwi_Hires,
     date_col="date",
@@ -925,9 +909,23 @@ fun_plot_two_bars(
     line_col="HirAEnd", line_legend="Replacement Hires"
 )
 
-
-
-# Series of EE transitions per replacement hires: using the rates -> CPS EEs
-# Add the following series:
-
 ```
+
+
+Here comes the outline for the analysis:
+
+Task before:
+
+- Write up the model part with the equations and how things look in steady state
+
+
+1. Show a decomposition of hiring into replacement hiring and job creation
+2. Show a decomposition of replacement hires into job-to-job transitions to show that the relationship should hold.
+
+- Here however this may undermine my argument / I will have to credibly argue that the data is systematially missing these kinds of transitions because it is just quarterly
+- At the same time, these series are very similar
+- I should think about this more => well actually the hires that they show there are from a different data set and only concern main jobs. Moreover, there is this weirdness about the employment series.
+
+3. Construct the two possible ways to get at the number of replaceable positions. *a)* like Alek's WP and *b)* like me own
+4. Compare these two versions and then go over to the models
+5.

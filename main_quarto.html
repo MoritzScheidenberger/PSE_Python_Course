@@ -173,8 +173,8 @@ window.Quarto = {
   <li><a href="#data-and-methodology" id="toc-data-and-methodology" class="nav-link" data-scroll-target="#data-and-methodology"><span class="header-section-number">2</span> Data and Methodology</a>
   <ul class="collapse">
   <li><a href="#file-naming-convention-for-lehd-data" id="toc-file-naming-convention-for-lehd-data" class="nav-link" data-scroll-target="#file-naming-convention-for-lehd-data"><span class="header-section-number">2.1</span> File Naming Convention for LEHD Data</a></li>
-  <li><a href="#first-analysis" id="toc-first-analysis" class="nav-link" data-scroll-target="#first-analysis"><span class="header-section-number">2.2</span> First Analysis</a></li>
   </ul></li>
+  <li><a href="#replacement-hiring-in-the-data" id="toc-replacement-hiring-in-the-data" class="nav-link" data-scroll-target="#replacement-hiring-in-the-data"><span class="header-section-number">3</span> Replacement Hiring in the Data</a></li>
   </ul>
 </nav>
 </div>
@@ -209,7 +209,7 @@ window.Quarto = {
 <p><span class="math display">\[
 Job ~~ Creation = Job ~~ Destruction
 \]</span></p>
-<p><span class="math display">\[Th
+<p><span class="math display">\[
 EE ~~ Transitions = Replacement ~~ Hires
 \]</span></p>
 <p>In this simplified view of the labor market, a fall in the share of empty but viable positions that are replaced would show itself in a rise of the share of EE transitions per replacement hire. In other words, workers still transition and leave viable positions behind but positions are not immediately reposted on the labor market. Clearly, this rise in the share of EE transitions per replacement hires can only be temporary, as the reduction in replacement hiring also reduces the number of positions that employed workers can find. Thus, fewer employed workers find a new job and the ratio returns towards it’s long-run average.</p>
@@ -219,7 +219,7 @@ EE ~~ Transitions = Replacement ~~ Hires
 <h1 data-number="2"><span class="header-section-number">2</span> Data and Methodology</h1>
 <section id="file-naming-convention-for-lehd-data" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="file-naming-convention-for-lehd-data"><span class="header-section-number">2.1</span> File Naming Convention for LEHD Data</h2>
-<p>The LEHD provides various data sets for the US based on Census data. …</p>
+<p>The LEHD provides various data sets for the US based on Census data. While the state-level data also contains local and state civil servants, the national aggregates are for private firms only. Of these private firms, the LEHD data covers about 95% of employees, given that the data is based on unemployment insurance records. The data is available at the quarterly frequency and not seasonally adjusted except when downloaded through their proprietary acces portal.</p>
 <details>
 <summary>
 <strong>LEHD Data Naming Convention</strong> (Click to Expand)
@@ -403,9 +403,90 @@ EE ~~ Transitions = Replacement ~~ Hires
 <p><em>Source: <a href="https://lehd.ces.census.gov/data/schema/V4.12.0/lehd_csv_naming.html">LEHD CSV Naming Convention</a></em></p>
 <p><strong>Quick Example Breakdown</strong> - <strong>qwi</strong> → Quarterly Workforce Indicators (QWI) Counts - <strong>us</strong> → National-level data - <strong>sa</strong> → Sex by Age - <strong>f</strong> → No firm size or age breakdown - <strong>gn</strong> → National (50 states + DC) - <strong>ns</strong> → NAICS sectors - <strong>op</strong> → All Private ownership - <strong>u</strong> → Not seasonally adjusted</p>
 </details>
-<p><span style="color: red;"><strong>Note: National QWI data is only available for Private ownership!</strong></span></p>
 <hr>
 <div id="obtain_data" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Downloading and extracting the data</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gzip</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> shutil</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Base URL</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>BASE_URL <span class="op">=</span> <span class="st">"https://lehd.ces.census.gov/data/qwi/latest_release/us/"</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Directory setup</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>BASE_PATH <span class="op">=</span> <span class="vs">r"C:\Users\moritz\Nextcloud\PhD\Projects\uncertainty_labor\data"</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>DOWNLOAD_DIR <span class="op">=</span> os.path.join(BASE_PATH, <span class="st">"qwi_data"</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>EXTRACT_DIR <span class="op">=</span> os.path.join(BASE_PATH, <span class="st">"qwi_extracted"</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>os.makedirs(DOWNLOAD_DIR, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>os.makedirs(EXTRACT_DIR, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># User-defined filter (Set to None for all files, or specify exact match criteria)</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>FILTER_CRITERIA <span class="op">=</span> <span class="st">"qwi_us_sa_f_gn_ns_op_u.csv.gz"</span>  <span class="co"># Specify the exact filename needed</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># This is the file name for the most basic aggregate data.</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Future analysis will require more detailed data which is why I downloaded it all already.</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch webpage content</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(BASE_URL)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> response.status_code <span class="op">!=</span> <span class="dv">200</span>:</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    sys.exit()  <span class="co"># Exit silently on failure</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Parse HTML</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>soup <span class="op">=</span> BeautifulSoup(response.text, <span class="st">"html.parser"</span>)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract .csv.gz file links</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>file_links <span class="op">=</span> [BASE_URL <span class="op">+</span> a[<span class="st">'href'</span>] <span class="cf">for</span> a <span class="kw">in</span> soup.find_all(<span class="st">'a'</span>, href<span class="op">=</span><span class="va">True</span>) <span class="cf">if</span> a[<span class="st">'href'</span>].endswith(<span class="st">'.csv.gz'</span>)]</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply exact filename filtering</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> FILTER_CRITERIA:</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    file_links <span class="op">=</span> [link <span class="cf">for</span> link <span class="kw">in</span> file_links <span class="cf">if</span> FILTER_CRITERIA <span class="kw">in</span> link]</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> file_links:</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    sys.exit()  <span class="co"># Exit silently if no files are found</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Suppress all printing by redirecting stdout</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>original_stdout <span class="op">=</span> sys.stdout</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>sys.stdout <span class="op">=</span> <span class="bu">open</span>(os.devnull, <span class="st">'w'</span>)</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="co"># gave some issues about printing the chunk size all the time.</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> file_url <span class="kw">in</span> file_links:</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>        file_name <span class="op">=</span> os.path.join(DOWNLOAD_DIR, os.path.basename(file_url))</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Download file (silent)</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> requests.get(file_url, stream<span class="op">=</span><span class="va">True</span>) <span class="im">as</span> r:</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> <span class="bu">open</span>(file_name, <span class="st">"wb"</span>) <span class="im">as</span> f:</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> chunk <span class="kw">in</span> r.iter_content(chunk_size<span class="op">=</span><span class="dv">8192</span>):</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>                    f.write(chunk)</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Extract file (silent)</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>        extracted_file_name <span class="op">=</span> os.path.join(EXTRACT_DIR, os.path.basename(file_name).replace(<span class="st">".gz"</span>, <span class="st">""</span>))</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> gzip.<span class="bu">open</span>(file_name, <span class="st">'rb'</span>) <span class="im">as</span> f_in, <span class="bu">open</span>(extracted_file_name, <span class="st">'wb'</span>) <span class="im">as</span> f_out:</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>            shutil.copyfileobj(f_in, f_out)</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Read CSV (silent)</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>        df <span class="op">=</span> pd.read_csv(extracted_file_name)</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="cf">finally</span>:</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Restore original stdout</span></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>    sys.stdout <span class="op">=</span> original_stdout</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data downloaded &amp; extracted successfully."</span>)</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="co"># Load dataset into a DataFrame for further analysis</span></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_qwi_data():</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>    data_path <span class="op">=</span> os.path.join(EXTRACT_DIR, FILTER_CRITERIA.replace(<span class="st">".gz"</span>, <span class="st">""</span>))</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> os.path.exists(data_path):</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> pd.read_csv(data_path)  <span class="co"># No print statements</span></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span>  <span class="co"># Silent failure</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Data downloaded &amp; extracted successfully.</code></pre>
 </div>
@@ -413,6 +494,30 @@ EE ~~ Transitions = Replacement ~~ Hires
 <hr>
 <p>Now let’s take a quick look at the data to know what we are working with and how to proceed.</p>
 <div id="select_data" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Work with the data</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Take a look at all the different variables</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df_qwi <span class="op">=</span> load_qwi_data()</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> df_qwi <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Column Names (formatted):"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> textwrap</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>column_list <span class="op">=</span> <span class="st">" | "</span>.join(df_qwi.columns)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(textwrap.fill(column_list, width<span class="op">=</span><span class="dv">100</span>))</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Print unique values for specific columns</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>columns_to_check <span class="op">=</span> [<span class="st">"seasonadj"</span>, <span class="st">"geo_level"</span>, <span class="st">"ind_level"</span>, <span class="st">"industry"</span>, <span class="st">"ownercode"</span>, <span class="st">"sex"</span>, <span class="st">"agegrp"</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"race"</span>, <span class="st">"ethnicity"</span>, <span class="st">"education"</span>, <span class="st">"firmage"</span>, <span class="st">"firmsize"</span>]  <span class="co"># Adjust column names as needed</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> columns_to_check:</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> col <span class="kw">in</span> df_qwi.columns:</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        unique_values <span class="op">=</span> <span class="st">", "</span>.join(<span class="bu">map</span>(<span class="bu">str</span>, <span class="bu">sorted</span>(df_qwi[col].dropna().unique())))</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>unique_values<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Warning: Column '</span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">' not found in DataFrame."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Column Names (formatted):
 periodicity | seasonadj | geo_level | geography | ind_level | industry | ownercode | sex | agegrp |
@@ -1319,39 +1424,35 @@ firmsize: 0</code></pre>
 </table>
 <p><em>Source: <a href="https://lehd.ces.census.gov/data/schema/V4.12.0/lehd_public_use_schema.html">LEHD Public Use Schema</a></em></p>
 <details>
-</details></details></section>
-<section id="first-analysis" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="first-analysis"><span class="header-section-number">2.2</span> First Analysis</h2>
-<p>Let us further filter the data because we are only interested in the aggregate series for now.</p>
 <div id="view_the_data" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Create date variable</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered <span class="op">=</span> df_qwi[</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"sex"</span>] <span class="op">==</span> <span class="dv">0</span>) <span class="op">&amp;</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"agegrp"</span>] <span class="op">==</span> <span class="st">"A00"</span>) <span class="op">&amp;</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"industry"</span>] <span class="op">==</span> <span class="st">"00"</span>) <span class="op">&amp;</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"ind_level"</span>] <span class="op">==</span> <span class="st">"A"</span>)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>].copy()  <span class="co"># Copy to avoid modifying the original DataFrame</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered[<span class="st">"date"</span>] <span class="op">=</span> pd.PeriodIndex(</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    df_qwi_filtered[<span class="st">"year"</span>].astype(<span class="bu">str</span>) <span class="op">+</span> <span class="st">"Q"</span> <span class="op">+</span> df_qwi_filtered[<span class="st">"quarter"</span>].astype(<span class="bu">str</span>),</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    freq<span class="op">=</span><span class="st">"Q"</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>).to_timestamp()</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop unnecessary columns</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered.drop(columns<span class="op">=</span>[<span class="st">"periodicity"</span>, <span class="st">"seasonadj"</span>, <span class="st">"geo_level"</span>, <span class="st">"ind_level"</span>, <span class="st">"industry"</span>,</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"ownercode"</span>, <span class="st">"sex"</span>, <span class="st">"agegrp"</span>, <span class="st">"race"</span>, <span class="st">"ethnicity"</span>, <span class="st">"education"</span>,</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"firmage"</span>, <span class="st">"firmsize"</span>, <span class="st">"year"</span>, <span class="st">"quarter"</span>, <span class="st">"geography"</span>], inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure "date" is the first column</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered <span class="op">=</span> df_qwi_filtered[[<span class="st">"date"</span>] <span class="op">+</span> [col <span class="cf">for</span> col <span class="kw">in</span> df_qwi_filtered.columns <span class="cf">if</span> col <span class="op">!=</span> <span class="st">"date"</span>]]</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Export to deseasonalize in R</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered.to_csv(<span class="st">"temp_df.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data filtered and ready for deseasonalization."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Create date variable</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered <span class="op">=</span> df_qwi[</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"sex"</span>] <span class="op">==</span> <span class="dv">0</span>) <span class="op">&amp;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"agegrp"</span>] <span class="op">==</span> <span class="st">"A00"</span>) <span class="op">&amp;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"industry"</span>] <span class="op">==</span> <span class="st">"00"</span>) <span class="op">&amp;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    (df_qwi[<span class="st">"ind_level"</span>] <span class="op">==</span> <span class="st">"A"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>].copy()  <span class="co"># Copy to avoid modifying the original DataFrame</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered[<span class="st">"date"</span>] <span class="op">=</span> pd.PeriodIndex(</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    df_qwi_filtered[<span class="st">"year"</span>].astype(<span class="bu">str</span>) <span class="op">+</span> <span class="st">"Q"</span> <span class="op">+</span> df_qwi_filtered[<span class="st">"quarter"</span>].astype(<span class="bu">str</span>),</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    freq<span class="op">=</span><span class="st">"Q"</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>).to_timestamp()</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop unnecessary columns</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered.drop(columns<span class="op">=</span>[<span class="st">"periodicity"</span>, <span class="st">"seasonadj"</span>, <span class="st">"geo_level"</span>, <span class="st">"ind_level"</span>, <span class="st">"industry"</span>,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"ownercode"</span>, <span class="st">"sex"</span>, <span class="st">"agegrp"</span>, <span class="st">"race"</span>, <span class="st">"ethnicity"</span>, <span class="st">"education"</span>,</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"firmage"</span>, <span class="st">"firmsize"</span>, <span class="st">"year"</span>, <span class="st">"quarter"</span>, <span class="st">"geography"</span>], inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure "date" is the first column</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered <span class="op">=</span> df_qwi_filtered[[<span class="st">"date"</span>] <span class="op">+</span> [col <span class="cf">for</span> col <span class="kw">in</span> df_qwi_filtered.columns <span class="cf">if</span> col <span class="op">!=</span> <span class="st">"date"</span>]]</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Export to deseasonalize in R</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered.to_csv(<span class="st">"temp_df.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data filtered and ready for deseasonalization."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Data filtered and ready for deseasonalization.</code></pre>
@@ -1361,22 +1462,26 @@ firmsize: 0</code></pre>
 <div id="seasonal_adjustment" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> subprocess</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the R script</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>subprocess.run([<span class="st">"Rscript"</span>, <span class="st">"sheet_seas_adjust.r"</span>], check<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean up by deleting the temp file</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>os.remove(<span class="st">"temp_df.csv"</span>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data deseasonalized successfully."</span>)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered <span class="op">=</span> pd.read_csv(<span class="st">"qwi_data_seasadj.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> subprocess</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the R script</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>subprocess.run([<span class="st">"Rscript"</span>, <span class="st">"sheet_seas_adjust.r"</span>], check<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean up by deleting the temp file</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>os.remove(<span class="st">"temp_df.csv"</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data deseasonalized successfully."</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>df_qwi_filtered <span class="op">=</span> pd.read_csv(<span class="st">"qwi_data_seasadj.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Data deseasonalized successfully.</code></pre>
 </div>
 </div>
+</details></details></section>
+</section>
+<section id="replacement-hiring-in-the-data" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Replacement Hiring in the Data</h1>
 <p>Here comes the outline for the analysis:</p>
 <p>Task before:</p>
 <ul>
@@ -1424,7 +1529,6 @@ firmsize: 0</code></pre>
 </div>
 </div>
 </div>
-</section>
 </section>
 
 </main>
