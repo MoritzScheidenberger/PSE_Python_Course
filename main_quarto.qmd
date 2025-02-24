@@ -1,7 +1,7 @@
 ---
 title: |
   ![](main_quarto_files/pse_logo.png){style="float: right; width: 100px;"}
-  Writing a Story
+  Uncertainty & the Labor Market
 subtitle: "Understanding the Impact of Uncertainty on Replacement Hiring"
 author: "Moritz Scheidenberger"
 date-modified: "today"
@@ -574,7 +574,6 @@ df_qwi_filtered = pd.read_csv("qwi_data_seasadj.csv")
 #| label: load_additional_data
 #| echo: false
 #| warning: false
-
 # We still need some data from FRED
 from fredapi import Fred
 import pandas as pd
@@ -610,7 +609,12 @@ fred_monthly_dict = {
     "ts_emp_priv_CES_m": "USPRIV",  # CES private employment
 
     # EE probability data
-    "ts_ee_prob_m": "FMPSA"
+    "ts_ee_prob_m": "FMPSA",
+
+    # Additional macroeconomic indicators
+    "ts_cpi_m": "CPIAUCSL",
+    "ts_unrate_m": "UNRATE",
+    "ts_fedfunds_m": "FEDFUNDS"
 }
 
 # Define date range
@@ -631,7 +635,8 @@ taggr_methods = {
     "mean": ["ts_jopen_nfarm_rate_m", "ts_jopen_tpriv_rate_m", "ts_quit_nfarm_rate_m", "ts_quit_tpriv_rate_m",
               "ts_hire_nfarm_rate_m", "ts_hire_tpriv_rate_m", "ts_layoff_nfarm_rate_m", "ts_layoff_tpriv_rate_m",
               "ts_osep_nfarm_rate_m", "ts_osep_tpriv_rate_m", "ts_tsep_nfarm_rate_m", "ts_tsep_tpriv_rate_m",
-              "ts_jln_uncertainty_m", "ts_emp_lvl_CPS_m", "ts_emp_nfarm_CES_m", "ts_emp_priv_CES_m"]
+              "ts_jln_uncertainty_m", "ts_emp_lvl_CPS_m", "ts_emp_nfarm_CES_m", "ts_emp_priv_CES_m",
+              "ts_cpi_m", "ts_unrate_m", "ts_fedfunds_m"]
 }
 
 # Getting the dates right seems difficult
@@ -654,7 +659,6 @@ for method, series_list in taggr_methods.items():
 
         df_q = df_q.reset_index()
         globals()[series.replace("_m", "_q")] = df_q
-
 
 ```
 
@@ -871,7 +875,7 @@ First, let us take a look at replacement hiring in the data. These two figures g
 
 ```{python}
 #| label: plot_series
-#| fig-cap: "Charts"
+#| fig-cap: ""
 #| fig-subcap:
 #|   - "We can immediately see that replacement hiring is very volatile and strongly decreases in recessions."
 #|   - "The decomposition of hires into replacement hires and job creation holds in the data. Moreover, the importance is for total hires becomes clear."
@@ -930,10 +934,11 @@ Given that private employment dominates total employment, this assumption seems 
 
 ```{python}
 #| label: plot_ee_repl
-#| fig-cap: "Charts"
+#| fig-cap: ""
 #| fig-subcap:
 #|   - "The measure of replaceable positions is constructed by dividing the EE transitions by replacement hires. It shows the number of job-to-job transitions per replacement hire. Note that the data for EE transitions is based on CPS data while that of replacement hires is based on census data for all private firms. Adjustments were made to make these series comparable."
-#| layout-ncol: 1
+#|   - "In essence, uncertainty is measured as the unforecastable component at any point in time. When it rises, it can be interpreted as the future becoming more uncertain / harder to forecast. For details, see the AER paper by Jurado et al. (2015)."
+#| layout-ncol: 2
 
 ## Construct EE transitions relative to replacement hires
 
@@ -948,7 +953,7 @@ ts_EE_in_qwiEmp["Value"] = df_qwi_Emp_short["Emp"].values * (ts_ee_prob_q["Value
 ts_HirAEndRepl_short = df_qwi_ReplHires[(df_qwi_ReplHires["date"] >= "1995-10-01") & (df_qwi_ReplHires["date"] <= end_date)]
 
 ts_replaceablePositions = ts_EE_in_qwiEmp.copy()
-ts_replaceablePositions["Value"] = ts_EE_in_qwiEmp["Value"].values / ts_HirAEndRepl_short["HirAEndRepl"].values
+ts_replaceablePositions["Value"] = 100*ts_EE_in_qwiEmp["Value"].values / ts_HirAEndRepl_short["HirAEndRepl"].values
 
 # shorten ts_replaceablePositions because of outliers in last period
 ts_replaceablePositions = ts_replaceablePositions[ts_replaceablePositions["Date"] < "2022-10-01"]
@@ -962,6 +967,98 @@ fun_plot_single_ts(
     scale_factor=1
 )
 
+# Let's add the measure for uncertainty
+fun_plot_single_ts(
+    df=ts_jln_uncertainty_q,
+    title="Uncertainty Measure",
+    xlabel="Date",
+    ylabel="Uncertainty (by Jurado et al.)",
+    recession_shading=True,
+    scale_factor=1
+)
+
+```
+
+From these figures, we do see a similarity in the cyclicality. The number of unreplaced quits (i.e. share of EE transitions per replacement hire) rises spikes when uncertainty spikes and otherwise returns to a rather stable value of 0.9.
+Moreover, the value of 0.9 seems reasonable. In theory, one would expect a value of 1 in normal times i.e. when all quits are replaced. However, factors such as quits into non-employment (retirement etc.) imply that there are more positions to be replaced than EE transitions.
+
+
+```{python}
+#| label: VAR_estimation
+#| echo: false
+#| warning: false
+#| fig-cap: "IRFs to a one std. shock to uncertainty. Identification  relies on cholesky ordering is identical to that of the subfigures. Ordering follows the literature."
+
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+import matplotlib.pyplot as plt
+from statsmodels.tsa.api import VAR
+
+# Variable list:
+# - Uncertainty: ts_jln_uncertainty_q
+# - Replaceable Positions: ts_replaceablePositions
+# - Unemployment Rate: ts_unrate_q
+# - CPI: ts_cpi_q (take log)
+# - Interest Rate: ts_fedfunds_q
+
+ts_CPIlog_q = ts_cpi_q.copy()
+ts_CPIlog_q["Value"] = np.log(ts_CPIlog_q["Value"])
+
+# Align the sample
+start_date = "1995-10-01"
+end_date = "2022-10-01"
+
+ts_jln_uncertainty_q_var = ts_jln_uncertainty_q[(ts_jln_uncertainty_q["Date"] >= start_date) & (ts_jln_uncertainty_q["Date"] <= end_date)].rename(columns={"Value": "Uncertainty"})
+ts_replaceablePositions_var = ts_replaceablePositions[(ts_replaceablePositions["Date"] >= start_date) & (ts_replaceablePositions["Date"] <= end_date)].rename(columns={"Value": "Unreplaced_Quits"})
+ts_unrate_q_var = ts_unrate_q[(ts_unrate_q["Date"] >= start_date) & (ts_unrate_q["Date"] <= end_date)].rename(columns={"Value": "Unemployment_Rate"})
+ts_CPIlog_var = ts_CPIlog_q[(ts_CPIlog_q["Date"] >= start_date) & (ts_CPIlog_q["Date"] <= end_date)].rename(columns={"Value": "Log_CPI"})
+ts_fedfunds_var = ts_fedfunds_q[(ts_fedfunds_q["Date"] >= start_date) & (ts_fedfunds_q["Date"] <= end_date)].rename(columns={"Value": "Interest_Rate"})
+
+# List of DataFrames containing time series data
+dataframes = [ts_jln_uncertainty_q_var, ts_replaceablePositions_var, ts_unrate_q_var, ts_CPIlog_var, ts_fedfunds_var]
+
+# Merge all dataframes on the 'Date' column
+merged_df = dataframes[0]
+for df in dataframes[1:]:
+    merged_df = pd.merge(merged_df, df, on='Date', how='inner')
+
+# Convert 'Date' to datetime format and set it as the index
+merged_df['Date'] = pd.to_datetime(merged_df['Date'])
+merged_df.set_index('Date', inplace=True)
+
+# Fit the VAR model
+model = VAR(merged_df)
+results = model.fit(maxlags=8, ic='aic', trend='c')
+
+
+# Select shock
+shock_variable = merged_df.columns[0]
+
+# Plot Impulse Response Functions (IRFs) using Cholesky decomposition
+irf = results.irf(12)
+irf.plot(impulse=shock_variable, orth=True)
+plt.show()
 
 
 ```
+
+
+The IRFs suggest that a shock to uncertainty raises the share of EE transitions to replacement hires.
+In other words, replacement hires fall more than EE transition.
+This implies that firms choose to replace fewer quits than usual in response to uncertainty.
+Whether these replacements are postponed or completely cancelled is something to tackle in future research.
+
+We can conclude that firms' willingness to replacement hire falls in response to uncertainty.
+This stands in contrast to how labor markets were modeled in the literature so far.
+In future work of mine, I plan to adjust the theoretical modeling to rationalize such changes in replacement hiring.
+
+:::{.callout-note}
+## Conclusion
+While much work remains to be done, the initial evidence seems promising.
+The relationship between uncertainty shocks and changes in replacement hiring behavior looks solid.
+Now, both a convincing theory as well as a battery of robustness checks are needed to confirm the findings.
+:::
+
+
+

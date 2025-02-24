@@ -8,7 +8,7 @@
 
 <meta name="author" content="Moritz Scheidenberger">
 
-<title> Writing a Story</title>
+<title> Uncertainty &amp; the Labor Market</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -127,7 +127,7 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title"><p><img src="main_quarto_files/pse_logo.png" class="img-fluid" style="float: right; width: 100px;"> Writing a Story</p></h1>
+      <h1 class="title"><p><img src="main_quarto_files/pse_logo.png" class="img-fluid" style="float: right; width: 100px;"> Uncertainty &amp; the Labor Market</p></h1>
             <p class="subtitle lead">Understanding the Impact of Uncertainty on Replacement Hiring</p>
                       </div>
   </div>
@@ -146,7 +146,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">February 22, 2025</p>
+        <p class="date-modified">February 24, 2025</p>
       </div>
     </div>
       
@@ -220,6 +220,7 @@ EE ~~ Transitions = Replacement ~~ Hires
 <section id="file-naming-convention-for-lehd-data" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="file-naming-convention-for-lehd-data"><span class="header-section-number">2.1</span> File Naming Convention for LEHD Data</h2>
 <p>The LEHD provides various data sets for the US based on Census data. While the state-level data also contains local and state civil servants, the national aggregates are for private firms only. Of these private firms, the LEHD data covers about 95% of employees, given that the data is based on unemployment insurance records. The data is available at the quarterly frequency and not seasonally adjusted except when downloaded through their proprietary acces portal.</p>
+<p>Note that the data on EE transitions as well as some key macroeconomic time series are obtained directly through the FRED, the API of the St.&nbsp;Louis Federal Reserve.</p>
 <details>
 <summary>
 <strong>LEHD Data Naming Convention</strong> (Click to Expand)
@@ -1482,51 +1483,134 @@ firmsize: 0</code></pre>
 </section>
 <section id="replacement-hiring-in-the-data" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Replacement Hiring in the Data</h1>
-<p>Here comes the outline for the analysis:</p>
-<p>Task before:</p>
-<ul>
-<li>Write up the model part with the equations and how things look in steady state</li>
-</ul>
-<ol type="1">
-<li>Show a decomposition of hiring into replacement hiring and job creation</li>
-<li>Show a decomposition of replacement hires into job-to-job transitions to show that the relationship should hold.</li>
-</ol>
-<ul>
-<li>Here however this may undermine my argument / I will have to credibly argue that the data is systematially missing these kinds of transitions because it is just quarterly</li>
-<li>At the same time, these series are very similar</li>
-<li>I should think about this more =&gt; well actually the hires that they show there are from a different data set and only concern main jobs. Moreover, there is this weirdness about the employment series.</li>
-</ul>
-<ol start="3" type="1">
-<li>Construct the two possible ways to get at the number of replaceable positions. <em>a)</em> like Alek’s WP and <em>b)</em> like me own</li>
-<li>Compare these two versions and then go over to the models</li>
-<li></li>
-</ol>
-<div>
-
-</div>
-<div id="plot_series" class="cell quarto-layout-panel" data-layout-ncol="2" data-execution_count="8">
+<p>First, let us take a look at replacement hiring in the data. These two figures give us a glance both at the volatility and cyclicality of replacement hiring as well as its role in total hires.</p>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">## To simplify the plotting, let's extract some data from the QWI df</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df_qwi_ReplHires <span class="op">=</span> df_qwi_filtered[[<span class="st">"date"</span>, <span class="st">"HirAEndRepl"</span>]].copy()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>df_qwi_Hires <span class="op">=</span> df_qwi_filtered[[<span class="st">"date"</span>, <span class="st">"HirAEnd"</span>]].copy()</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>df_qwi_JobCreation <span class="op">=</span> df_qwi_filtered[[<span class="st">"date"</span>, <span class="st">"FrmJbGn"</span>]].copy()</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>df_qwi_JobDestruction <span class="op">=</span> df_qwi_filtered[[<span class="st">"date"</span>, <span class="st">"FrmJbLs"</span>]].copy()</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>df_qwi_Emp <span class="op">=</span> df_qwi_filtered[[<span class="st">"date"</span>, <span class="st">"Emp"</span>]].copy()</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">## due to NAs  and outliers, we shorten the time window for all series:</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>start_date <span class="op">=</span> <span class="st">"1993-07-01"</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>end_date <span class="op">=</span> <span class="st">"2023-01-01"</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>df_qwi_ReplHires <span class="op">=</span> df_qwi_ReplHires[(df_qwi_ReplHires[<span class="st">"date"</span>] <span class="op">&gt;=</span> start_date) <span class="op">&amp;</span> (df_qwi_ReplHires[<span class="st">"date"</span>] <span class="op">&lt;=</span> end_date)]</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>df_qwi_Hires <span class="op">=</span> df_qwi_Hires[(df_qwi_Hires[<span class="st">"date"</span>] <span class="op">&gt;=</span> start_date) <span class="op">&amp;</span> (df_qwi_Hires[<span class="st">"date"</span>] <span class="op">&lt;=</span> end_date)]</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>df_qwi_JobCreation <span class="op">=</span> df_qwi_JobCreation[(df_qwi_JobCreation[<span class="st">"date"</span>] <span class="op">&gt;=</span> start_date) <span class="op">&amp;</span> (df_qwi_JobCreation[<span class="st">"date"</span>] <span class="op">&lt;=</span> end_date)]</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>df_qwi_JobDestruction <span class="op">=</span> df_qwi_JobDestruction[(df_qwi_JobDestruction[<span class="st">"date"</span>] <span class="op">&gt;=</span> start_date) <span class="op">&amp;</span> (df_qwi_JobDestruction[<span class="st">"date"</span>] <span class="op">&lt;=</span> end_date)]</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>df_qwi_Emp <span class="op">=</span> df_qwi_Emp[(df_qwi_Emp[<span class="st">"date"</span>] <span class="op">&gt;=</span> start_date) <span class="op">&amp;</span> (df_qwi_Emp[<span class="st">"date"</span>] <span class="op">&lt;=</span> end_date)]</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">## Plot: Replacement hiring per hire &amp; its shortfalls</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct share of replacement hires in total hires</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>df_qwi_ReplShare <span class="op">=</span> df_qwi_ReplHires.copy()</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>df_qwi_ReplShare[<span class="st">"ReplShare"</span>] <span class="op">=</span> df_qwi_ReplHires[<span class="st">"HirAEndRepl"</span>] <span class="op">/</span> df_qwi_Hires[<span class="st">"HirAEnd"</span>]</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>fun_plot_single_ts(</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    df<span class="op">=</span>df_qwi_ReplShare,</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Replacement Hires as Share of Total Hires"</span>,</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">=</span><span class="st">"Date"</span>,</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    ylabel<span class="op">=</span><span class="st">"Share of Replacement Hires (in millions)"</span>,</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>    recession_shading<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>    scale_factor<span class="op">=</span><span class="dv">1000000</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>fun_plot_two_bars(</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>    df_qwi_ReplHires, df_qwi_JobCreation, df_line<span class="op">=</span>df_qwi_Hires,</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>    date_col<span class="op">=</span><span class="st">"date"</span>,</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>    value_col1<span class="op">=</span><span class="st">"HirAEndRepl"</span>, value_col2<span class="op">=</span><span class="st">"FrmJbGn"</span>,</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>    line_col<span class="op">=</span><span class="st">"HirAEnd"</span>, line_legend<span class="op">=</span><span class="st">"Replacement Hires"</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="plot_series" class="cell quarto-layout-panel" data-execution_count="8" data-layout-ncol="2">
 <div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="plot_series-1" class="quarto-figure quarto-figure-center anchored">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="main_quarto_files/figure-html/plot_series-output-1.svg" id="plot_series-1" class="img-fluid"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="main_quarto_files/figure-html/plot_series-output-2.svg" id="plot_series-2" class="img-fluid"></p>
+</div>
+</div>
+</div>
+<p>Next, we can go on to construct the series of job-to-job (EE) transitions relative to replacement hires with which we intend to track firms’ replacement behavior. Since the data on EE transitions (constructed by Postel-Vinay and Moscarini) is based on the CPS (which samples the whole population), we need align it with the fact that the QWI only covers employees in the private sector. For now, this is done by multiplying the EE transition rate (i.e.&nbsp;the percentage of employees who switch jobs) with the total employment in the private sector (QWI). By doing so, we implicitly assume that the transition rates do not differ significantly between the sample of all private employees and the whole population. Given that private employment dominates total employment, this assumption seems reasonable.</p>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Construct EE transitions relative to replacement hires</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># need to restrict Emp version to 1995-10-1 to 2023-1-1 first because EE data starts in 1995</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>df_qwi_Emp_short <span class="op">=</span> df_qwi_Emp[(df_qwi_Emp[<span class="st">"date"</span>].copy() <span class="op">&gt;=</span> <span class="st">"1995-10-01"</span>) <span class="op">&amp;</span> (df_qwi_Emp[<span class="st">"date"</span>].copy() <span class="op">&lt;=</span> end_date)]</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># These indices in python are weird to work with :/ Now it finally works.</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>ts_EE_in_qwiEmp <span class="op">=</span> ts_ee_prob_q.copy()</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>ts_EE_in_qwiEmp[<span class="st">"Value"</span>] <span class="op">=</span> df_qwi_Emp_short[<span class="st">"Emp"</span>].values <span class="op">*</span> (ts_ee_prob_q[<span class="st">"Value"</span>].values <span class="op">/</span> <span class="dv">100</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Shorten HirAEndRepl first (tedious...)</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>ts_HirAEndRepl_short <span class="op">=</span> df_qwi_ReplHires[(df_qwi_ReplHires[<span class="st">"date"</span>] <span class="op">&gt;=</span> <span class="st">"1995-10-01"</span>) <span class="op">&amp;</span> (df_qwi_ReplHires[<span class="st">"date"</span>] <span class="op">&lt;=</span> end_date)]</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>ts_replaceablePositions <span class="op">=</span> ts_EE_in_qwiEmp.copy()</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>ts_replaceablePositions[<span class="st">"Value"</span>] <span class="op">=</span> <span class="dv">100</span><span class="op">*</span>ts_EE_in_qwiEmp[<span class="st">"Value"</span>].values <span class="op">/</span> ts_HirAEndRepl_short[<span class="st">"HirAEndRepl"</span>].values</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co"># shorten ts_replaceablePositions because of outliers in last period</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>ts_replaceablePositions <span class="op">=</span> ts_replaceablePositions[ts_replaceablePositions[<span class="st">"Date"</span>] <span class="op">&lt;</span> <span class="st">"2022-10-01"</span>]</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>fun_plot_single_ts(</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    df<span class="op">=</span>ts_replaceablePositions,</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Measure of Replaceable Positions"</span>,</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">=</span><span class="st">"Date"</span>,</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    ylabel<span class="op">=</span><span class="st">"Job-to-Job Transitions per Replacement Hire"</span>,</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    recession_shading<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    scale_factor<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's add the measure for uncertainty</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>fun_plot_single_ts(</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    df<span class="op">=</span>ts_jln_uncertainty_q,</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Uncertainty Measure"</span>,</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">=</span><span class="st">"Date"</span>,</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>    ylabel<span class="op">=</span><span class="st">"Uncertainty (by Jurado et al.)"</span>,</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    recession_shading<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>    scale_factor<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="plot_ee_repl" class="cell quarto-layout-panel" data-execution_count="9" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="main_quarto_files/figure-html/plot_ee_repl-output-1.svg" id="plot_ee_repl-1" class="img-fluid"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="main_quarto_files/figure-html/plot_ee_repl-output-2.svg" id="plot_ee_repl-2" class="img-fluid"></p>
+</div>
+</div>
+</div>
+<p>From these figures, we do see a similarity in the cyclicality. The number of unreplaced quits (i.e.&nbsp;share of EE transitions per replacement hire) rises spikes when uncertainty spikes and otherwise returns to a rather stable value of 0.9. Moreover, the value of 0.9 seems reasonable. In theory, one would expect a value of 1 in normal times i.e.&nbsp;when all quits are replaced. However, factors such as quits into non-employment (retirement etc.) imply that there are more positions to be replaced than EE transitions.</p>
+<div id="cell-VAR_estimation" class="cell" data-execution_count="10">
+<div class="cell-output cell-output-display">
+<div id="var_estimation" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<p><img src="main_quarto_files/figure-html/plot_series-output-1.svg" class="img-fluid figure-img"></p>
-<figcaption>First</figcaption>
+<p><img src="main_quarto_files/figure-html/var_estimation-output-1.svg" class="img-fluid figure-img"></p>
+<figcaption>IRFs to a one std. shock to uncertainty. Identification relies on cholesky ordering is identical to that of the subfigures. Ordering follows the literature.</figcaption>
 </figure>
 </div>
 </div>
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="plot_series-2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="main_quarto_files/figure-html/plot_series-output-2.svg" class="img-fluid figure-img"></p>
-<figcaption>Second</figcaption>
-</figure>
+</div>
+<p>The IRFs suggest that a shock to uncertainty raises the share of EE transitions to replacement hires. In other words, replacement hires fall more than EE transition. This implies that firms choose to replace fewer quits than usual in response to uncertainty. Whether these replacements are postponed or completely cancelled is something to tackle in future research.</p>
+<p>We can conclude that firms’ willingness to replacement hire falls in response to uncertainty. This stands in contrast to how labor markets were modeled in the literature so far. In future work of mine, I plan to adjust the theoretical modeling to rationalize such changes in replacement hiring.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Conclusion
 </div>
 </div>
-</div>
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<p>Charts</p>
-</div>
+<div class="callout-body-container callout-body">
+<p>While much work remains to be done, the initial evidence seems promising. The relationship between uncertainty shocks and changes in replacement hiring behavior looks solid. Now, both a convincing theory as well as a battery of robustness checks are needed to confirm the findings.</p>
 </div>
 </div>
 </section>
